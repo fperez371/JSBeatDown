@@ -1,11 +1,24 @@
 #main-content{
-  display: inline-block;
   padding: 0;
-  margin: 0;
+  margin-left: 200px;
   max-width: 512px !important; 
   max-height: 512px !important;
-  background: url('../images/arena.png') no-repeat -8px -29px;
+  background: url('../images/arena.png') no-repeat -8px -29px, url('../images/arena.png') no-repeat -532px -29px;
+
+  /* top: 50%; */
+
 };
 
-.canvas{
+html{
+  overflow: hidden;
+}
+
+body{
+  background-color: orange;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html, body{
+  height: 100%;
 }
