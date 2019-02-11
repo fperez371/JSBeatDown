@@ -119,14 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var currentFrame = 0;
 
   function animate() {
-    ctx.clearRect(32, 40, 512, 512); //draw each frame + place them in the middle
-
+    ctx.clearRect(32, 40, 512, 512);
     ctx.drawImage(img, shift, 0, frameWidth, frameHeight, 470, 470, frameWidth, frameHeight);
     shift += frameWidth + 1;
-    /*
-      Start at the beginning once you've reached the
-      end of your sprite!
-    */
 
     if (currentFrame == totalFrames) {
       shift = 0;
