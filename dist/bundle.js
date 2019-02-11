@@ -104,6 +104,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById('main-content').appendChild(canvas);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  img = new Image();
+  img.src = '../images/gokusprite.png';
+  img.addEventListener("load", loadImage, false);
+
+  function loadImage(e) {
+    animate();
+  }
+
+  var shift = 0;
+  var frameWidth = 32;
+  var frameHeight = 40;
+  var totalFrames = 20;
+  var currentFrame = 0;
+
+  function animate() {
+    ctx.clearRect(32, 40, 512, 512); //draw each frame + place them in the middle
+
+    ctx.drawImage(img, shift, 0, frameWidth, frameHeight, 470, 470, frameWidth, frameHeight);
+    shift += frameWidth + 1;
+    /*
+      Start at the beginning once you've reached the
+      end of your sprite!
+    */
+
+    if (currentFrame == totalFrames) {
+      shift = 0;
+      currentFrame = 0;
+    }
+
+    currentFrame++;
+    requestAnimationFrame(animate);
+  }
 });
 
 /***/ })
