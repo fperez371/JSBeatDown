@@ -1,13 +1,30 @@
 #main-content{
-  padding: 0;
-  margin-left: 200px;
+  padding-top: 0;
   max-width: 512px !important; 
   max-height: 512px !important;
   background: url('../images/arena.png') no-repeat -8px -29px, url('../images/arena.png') no-repeat -532px -29px;
-
+  display: block;
+  margin: auto;
   /* top: 50%; */
 
 };
+
+#mainer-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#title{
+  text-align: center;
+  color:#c3a343;
+
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.09),
+    -1px -1px 0 rgba(255, 220, 0, 0.670);
+  font-size:2em;
+}
 
 html{
   overflow: hidden;
@@ -21,4 +38,23 @@ body{
 
 html, body{
   height: 100%;
+}
+
+#link-div{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+#link{
+  display: inline-block;
+  max-width: 64px;
+  max-height: 64px;
+  padding: 20px;
+}
+
+img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
 }
