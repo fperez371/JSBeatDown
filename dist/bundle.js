@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var shift = 0;
   var frameWidth = 32;
   var frameHeight = 40;
-  var totalFrames = 20;
+  var totalFrames = 8;
   var currentFrame = 0;
 
   function animate() {
