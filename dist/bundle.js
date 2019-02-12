@@ -95,6 +95,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Goku; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -110,7 +111,7 @@ function () {
     this.width = 32;
     this.height = 40;
     this.img = new Image();
-    this.img.src = '../images/goku.png'; // img.addEventListener("load", loadImage, false);
+    this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png'; // img.addEventListener("load", loadImage, false);
 
     this.animate = this.animate.bind(this);
   }
@@ -124,8 +125,8 @@ function () {
       var totalFrames = 8;
       var currentFrame = 0;
       ctx.clearRect(32, 40, 512, 512);
-      ctx.drawImage(this.img, shift, 0, this.width, this.height, 470, 470, this.height, this.height);
-      shift += this.height + 1;
+      ctx.drawImage(this.img, shift, 0, this.width, this.height, 470, 470, this.width, this.height);
+      shift += this.width + 1;
 
       if (currentFrame == totalFrames) {
         shift = 0;
@@ -133,6 +134,7 @@ function () {
       }
 
       currentFrame++;
+      debugger;
       requestAnimationFrame(this.animate);
     }
   }]);
@@ -140,7 +142,7 @@ function () {
   return Goku;
 }();
 
-/* harmony default export */ __webpack_exports__["default"] = (Goku);
+
 
 /***/ }),
 
@@ -154,19 +156,20 @@ function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
-var _this = undefined;
-
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("webpack is running...");
-  var canvas = document.getElementById('canvas');
-  var ctx = canvas.getContext('2d'); // var background = new Image();
+  console.log("webpack is running..."); // var canvas = document.getElementById('canvas');
+  // var ctx = canvas.getContext('2d'); 
+  // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  _this.goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  goku.animate();
+  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
+
+  goku.img.onload = function () {
+    return goku.animate();
+  };
 });
 
 /***/ })
