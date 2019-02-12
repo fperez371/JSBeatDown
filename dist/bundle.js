@@ -86,51 +86,87 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/goku.js":
+/*!*********************!*\
+  !*** ./src/goku.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Goku =
+/*#__PURE__*/
+function () {
+  function Goku() {
+    _classCallCheck(this, Goku);
+
+    this.width = 32;
+    this.height = 40;
+    this.img = new Image();
+    this.img.src = '../images/goku.png'; // img.addEventListener("load", loadImage, false);
+
+    this.animate = this.animate.bind(this);
+  }
+
+  _createClass(Goku, [{
+    key: "animate",
+    value: function animate() {
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      var shift = 0;
+      var totalFrames = 8;
+      var currentFrame = 0;
+      ctx.clearRect(32, 40, 512, 512);
+      ctx.drawImage(this.img, shift, 0, this.width, this.height, 470, 470, this.height, this.height);
+      shift += this.height + 1;
+
+      if (currentFrame == totalFrames) {
+        shift = 0;
+        currentFrame = 0;
+      }
+
+      currentFrame++;
+      requestAnimationFrame(this.animate);
+    }
+  }]);
+
+  return Goku;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Goku);
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
+var _this = undefined;
+
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("webpack is running...");
-  var canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
+  var canvas = document.getElementById('canvas');
   var ctx = canvas.getContext('2d'); // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
 
-  document.getElementById('main-content').appendChild(canvas);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  img = new Image();
-  img.src = '../images/goku.png';
-  img.addEventListener("load", loadImage, false);
-
-  function loadImage(e) {
-    animate();
-  }
-
-  var shift = 0;
-  var frameWidth = 32;
-  var frameHeight = 40;
-  var totalFrames = 8;
-  var currentFrame = 0;
-
-  function animate() {
-    ctx.clearRect(32, 40, 512, 512);
-    ctx.drawImage(img, shift, 0, frameWidth, frameHeight, 470, 470, frameWidth, frameHeight);
-    shift += frameWidth + 1;
-
-    if (currentFrame == totalFrames) {
-      shift = 0;
-      currentFrame = 0;
-    }
-
-    currentFrame++;
-    requestAnimationFrame(animate);
-  }
+  _this.goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  goku.animate();
 });
 
 /***/ })
