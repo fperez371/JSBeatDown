@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
   img = new Image();
-  img.src = '../images/gokusprite.png';
+  img.src = '../images/goku.png';
   img.addEventListener("load", loadImage, false);
   
   function loadImage(e) {

@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('main-content').appendChild(canvas);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   img = new Image();
-  img.src = '../images/gokusprite.png';
+  img.src = '../images/goku.png';
   img.addEventListener("load", loadImage, false);
 
   function loadImage(e) {
