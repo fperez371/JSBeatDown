@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   var goku = new Goku();
-  goku.img.onload = () => goku.animate();
+  goku.animate();
+  // goku.img.onload = () => goku.animate();
 
 });

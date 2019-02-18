@@ -102,39 +102,100 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+// export default class Goku {
+//   constructor() {
+//     this.width = 33;
+//     this.height = 40;
+//     this.img = new Image();
+//     this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png';
+//     // img.addEventListener("load", loadImage, false);
+//     this.animate = this.animate.bind(this);
+//     this.canvas = document.getElementById('canvas');
+//     this.ctx = this.canvas.getContext('2d');
+//     this.shift = 0;
+//     this.totalFrames = 8;
+//     this.currentFrame = 1;
+//     this.pos = [470, 430];
+//   }
+//   animate() {
+//     this.ctx.clearRect(32, 40, 512, 512);
+//     this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height,
+//                       this.pos[0], this.pos[1], this.width, this.height);
+//     this.shift += this.width;
+//     debugger
+//     if (this.currentFrame == this.totalFrames) {
+//       this.shift = 0;
+//       this.currentFrame = 0;
+//     }
+//     this.currentFrame++;
+//     requestAnimationFrame(this.animate);
+//   }
+// }
 var Goku =
 /*#__PURE__*/
 function () {
   function Goku() {
     _classCallCheck(this, Goku);
 
-    this.width = 32;
+    this.width = 33;
     this.height = 40;
     this.img = new Image();
     this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png'; // img.addEventListener("load", loadImage, false);
 
     this.animate = this.animate.bind(this);
+    this.canvas = document.getElementById('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.shift = 0;
+    this.totalFrames = 8;
+    this.currentFrame = 1;
+    this.pos = [470, 430];
+    this.check = 0;
+    this.dir = 'right';
   }
 
   _createClass(Goku, [{
+    key: "handlekeydown",
+    value: function handlekeydown(e) {
+      e.preventdefault();
+
+      switch (e.key) {
+        case e.key === 'w':
+          this.dir = 'up';
+
+        case e.key === 'a':
+          this.dir = 'left';
+
+        case e.key === 's':
+          this.dir = 'down';
+
+        case e.key === 'd':
+          this.dir = 'right';
+
+        default:
+          break;
+      }
+    }
+  }, {
     key: "animate",
     value: function animate() {
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext('2d');
-      var shift = 0;
-      var totalFrames = 8;
-      var currentFrame = 0;
-      ctx.clearRect(32, 40, 512, 512);
-      ctx.drawImage(this.img, shift, 0, this.width, this.height, 470, 470, this.width, this.height);
-      shift += this.width + 1;
+      if (this.check < 4) {
+        this.ctx.clearRect(32, 40, 512, 512);
+        this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+        debugger;
 
-      if (currentFrame == totalFrames) {
-        shift = 0;
-        currentFrame = 0;
+        if (this.currentFrame == this.totalFrames) {
+          this.shift = 0;
+          this.currentFrame = 1;
+        }
+      } else {
+        this.ctx.clearRect(32, 40, 512, 512);
+        this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+        this.shift += this.width;
+        this.currentFrame++;
+        this.check = 0;
       }
 
-      currentFrame++;
-      debugger;
+      this.check++;
       requestAnimationFrame(this.animate);
     }
   }]);
@@ -166,10 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
-
-  goku.img.onload = function () {
-    return goku.animate();
-  };
+  goku.animate(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ })
