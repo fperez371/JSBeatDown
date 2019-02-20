@@ -181,14 +181,13 @@ function () {
       if (this.check < 4) {
         this.ctx.clearRect(32, 40, 512, 512);
         this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
-        debugger;
 
         if (this.currentFrame == this.totalFrames) {
           this.shift = 0;
           this.currentFrame = 1;
         }
       } else {
-        this.ctx.clearRect(32, 40, 512, 512);
+        this.ctx.clearRect(30, 40, 512, 512);
         this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
         this.shift += this.width;
         this.currentFrame++;

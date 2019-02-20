@@ -58,3 +58,7 @@ img {
   height: 64px;
   object-fit: contain;
 }
+
+.please-work{
+  border: none;
+}
