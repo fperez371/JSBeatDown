@@ -1,5 +1,6 @@
 import Goku from './goku';
 
+
 document.addEventListener("DOMContentLoaded", ()=>{
   console.log("webpack is running...");
   
@@ -12,7 +13,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   var goku = new Goku();
-  goku.animate();
+  goku.start();
   // goku.img.onload = () => goku.animate();
 
 });
+
