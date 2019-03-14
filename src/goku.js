@@ -102,6 +102,21 @@ export default class Goku {
       this.currentFrame = 1;
       this.totalFrames = this.TOTALFRAMES.idle;
     }
+    else if (this.dir === 'up' && this.shift[1] !== this.GOKUDIRS.idle[1]) {
+      this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png';
+      this.pos[1] = 450;
+      this.shift = this.GOKUDIRS.idle.slice();
+      this.height = this.HEIGHTS.idle;
+      this.currentFrame = 1;
+      this.totalFrames = this.TOTALFRAMES.idle;
+    } else if (this.dir === 'idle' && this.shift[1] !== this.GOKUDIRS.idle[1]) {
+      this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png';
+      this.pos[1] = 450;
+      this.shift = this.GOKUDIRS.idle.slice();
+      this.height = this.HEIGHTS.idle;
+      this.currentFrame = 1;
+      this.totalFrames = this.TOTALFRAMES.idle;
+    }
   }
 
 
@@ -110,11 +125,15 @@ export default class Goku {
 
     if (e.key === 'a') {
       this.dir = 'left';
+
+
       this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
       this.handleDir();
     }
     if (e.key === 'w') {
       this.dir = "up";
+      this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+      this.handleDir();
     }
     if (e.key === 'd') {
       this.dir = 'right';
@@ -123,6 +142,8 @@ export default class Goku {
     }
     if (e.key === 's') {
       this.dir = "down";
+      this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+      this.handleDir();
     }
   }
 
