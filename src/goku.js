@@ -3,7 +3,7 @@
 //     this.width = 33;
 //     this.height = 40;
 //     this.img = new Image();
-//     this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png';
+//     this.img.src = 'images/goku.png';
 //     // img.addEventListener("load", loadImage, false);
 //     this.animate = this.animate.bind(this);
 //     this.canvas = document.getElementById('canvas');
@@ -33,7 +33,7 @@ export default class Goku {
     this.width = 33;
     this.height = 40;
     this.img = new Image();
-    this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
+    this.img.src = "images/goku.png";
     // img.addEventListener("load", loadImage, false);
     this.animate = this.animate.bind(this);
     this.canvas = document.getElementById("canvas");
@@ -80,7 +80,7 @@ export default class Goku {
       this.dir === "right" &&
       (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)
     ) {
-      this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
+      this.img.src = "images/goku.png";
       this.pos[1] = 444;
       this.shift = this.GOKUDIRS.right.slice();
       this.height = this.HEIGHTS.running;
@@ -91,7 +91,7 @@ export default class Goku {
       this.dir === "left" &&
       (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)
     ) {
-      this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku_left.png";
+      this.img.src = "images/goku_left.png";
       this.pos[1] = 444;
       this.shift = this.GOKUDIRS.left.slice();
       this.height = this.HEIGHTS.running;
@@ -99,7 +99,7 @@ export default class Goku {
       this.currentFrame = 1;
       this.totalFrames = this.TOTALFRAMES.running;
     } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1]) {
-      this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
+      this.img.src = "images/goku.png";
       this.pos[1] = 450;
       this.shift = this.GOKUDIRS.idle.slice();
       this.height = this.HEIGHTS.idle;
