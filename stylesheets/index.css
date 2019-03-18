@@ -1,15 +1,19 @@
-#main-content{
+#main-content {
   padding-top: 0;
-  max-width: 512px !important; 
+  max-width: 512px !important;
   max-height: 512px !important;
-  background: url('../images/arena.png') no-repeat -8px -29px, url('../images/arena.png') no-repeat -532px -29px;
+  background: url("../images/arena.png") no-repeat -8px -29px,
+    url("../images/arena.png") no-repeat -532px -29px;
   display: block;
   margin: auto;
   /* top: 50%; */
+}
+@font-face {
+  font-family: dbz;
+  src: url(../font/Saiyan-Sans.ttf);
+}
 
-};
-
-#mainer-content{
+#mainer-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,36 +21,37 @@
   text-align: center;
 }
 
-#title{
+#title {
   text-align: center;
-  color:#c3a343;
-
+  color: blue;
+  font-family: "dbz";
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.09),
-    -1px -1px 0 rgba(255, 220, 0, 0.670);
-  font-size:2em;
+    -1px -1px 0 rgba(255, 220, 0, 0.67);
+  font-size: 4em;
 }
 
-html{
+html {
   overflow: hidden;
 }
 
-body{
+body {
   background-color: orange;
   margin: 0;
   box-sizing: border-box;
 }
 
-html, body{
+html,
+body {
   height: 100%;
 }
 
-#link-div{
+#link-div {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
-#link{
+#link {
   display: inline-block;
   max-width: 64px;
   max-height: 64px;
@@ -59,6 +64,6 @@ img {
   object-fit: contain;
 }
 
-.please-work{
+.please-work {
   border: none;
 }
