@@ -5,25 +5,39 @@
   background: url("../images/arena.png") no-repeat -8px -29px,
     url("../images/arena.png") no-repeat -532px -29px;
   display: block;
-  margin: auto;
+  margin: 5px;
   /* top: 50%; */
 }
 @font-face {
   font-family: dbz;
   src: url(../font/Saiyan-Sans.ttf);
 }
-
-#mainer-content {
+#myName {
+  font-family: "dbz";
+  font-size: 3rem;
+  color: black;
+}
+#link-div {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+}
+#mainer-content {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
   align-items: center;
   text-align: center;
+  min-width: 100vw;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+a {
+  margin: 5px;
 }
 
 #title {
   text-align: center;
-  color: blue;
+  color: black;
   font-family: "dbz";
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.09),
     -1px -1px 0 rgba(255, 220, 0, 0.67);
@@ -43,16 +57,21 @@ body {
 html,
 body {
   height: 100%;
+  font-family: "dbz";
 }
-
 #link-div {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  font-family: "dbz";
+  font-size: 1.5rem;
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 #link {
-  display: inline-block;
+  /* display: inline-block; */
+
+  display: flex;
+  flex-direction: row;
   max-width: 64px;
   max-height: 64px;
   padding: 20px;
@@ -64,6 +83,6 @@ img {
   object-fit: contain;
 }
 
-.please-work {
+/* .please-work {
   border: none;
-}
+} */
