@@ -34,7 +34,6 @@ export default class Goku {
     this.height = 40;
     this.img = new Image();
     this.img.src = "../images/goku.jpg";
-    // img.addEventListener("load", loadImage, false);
     this.animate = this.animate.bind(this);
     this.canvas = document.getElementById("canvas");
     this.ctx = this.canvas.getContext("2d");
