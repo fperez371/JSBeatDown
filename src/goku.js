@@ -1,33 +1,3 @@
-// export default class Goku {
-//   constructor() {
-//     this.width = 33;
-//     this.height = 40;
-//     this.img = new Image();
-//     this.img.src = 'images/goku.png';
-//     // img.addEventListener("load", loadImage, false);
-//     this.animate = this.animate.bind(this);
-//     this.canvas = document.getElementById('canvas');
-//     this.ctx = this.canvas.getContext('2d');
-//     this.shift = 0;
-//     this.totalFrames = 8;
-//     this.currentFrame = 1;
-//     this.pos = [470, 430];
-//   }
-
-//   animate() {
-//     this.ctx.clearRect(32, 40, 512, 512);
-//     this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height,
-//                       this.pos[0], this.pos[1], this.width, this.height);
-//     this.shift += this.width;
-//     if (this.currentFrame == this.totalFrames) {
-//       this.shift = 0;
-//       this.currentFrame = 0;
-//     }
-
-//     this.currentFrame++;
-//     requestAnimationFrame(this.animate);
-//   }
-// }
 export default class Goku {
   constructor() {
     this.width = 33;
