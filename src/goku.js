@@ -21,16 +21,15 @@ export default class Goku {
       left: [1151, 83],
       punching: [-4, 479],
     };
+    this.WIDTHS = {
+      idle: 33,
+      running: 33,
+      punching: 40,
+    };
 
     this.HEIGHTS = {
       idle: 40,
       running: 48,
-      punching: 40,
-    };
-
-    this.WIDTHS = {
-      idle: 33,
-      running: 33,
       punching: 40,
     };
 
