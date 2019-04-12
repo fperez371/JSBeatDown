@@ -102,34 +102,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// export default class Goku {
-//   constructor() {
-//     this.width = 33;
-//     this.height = 40;
-//     this.img = new Image();
-//     this.img.src = 'images/goku.png';
-//     // img.addEventListener("load", loadImage, false);
-//     this.animate = this.animate.bind(this);
-//     this.canvas = document.getElementById('canvas');
-//     this.ctx = this.canvas.getContext('2d');
-//     this.shift = 0;
-//     this.totalFrames = 8;
-//     this.currentFrame = 1;
-//     this.pos = [470, 430];
-//   }
-//   animate() {
-//     this.ctx.clearRect(32, 40, 512, 512);
-//     this.ctx.drawImage(this.img, this.shift, 0, this.width, this.height,
-//                       this.pos[0], this.pos[1], this.width, this.height);
-//     this.shift += this.width;
-//     if (this.currentFrame == this.totalFrames) {
-//       this.shift = 0;
-//       this.currentFrame = 0;
-//     }
-//     this.currentFrame++;
-//     requestAnimationFrame(this.animate);
-//   }
-// }
 var Goku =
 /*#__PURE__*/
 function () {
@@ -139,8 +111,7 @@ function () {
     this.width = 33;
     this.height = 40;
     this.img = new Image();
-    this.img.src = "../images/goku.jpg"; // img.addEventListener("load", loadImage, false);
-
+    this.img.src = "../images/goku.jpg";
     this.animate = this.animate.bind(this);
     this.canvas = document.getElementById("canvas");
     this.ctx = this.canvas.getContext("2d");
@@ -157,14 +128,14 @@ function () {
       left: [1151, 83],
       punching: [-4, 479]
     };
-    this.HEIGHTS = {
-      idle: 40,
-      running: 48,
-      punching: 40
-    };
     this.WIDTHS = {
       idle: 33,
       running: 33,
+      punching: 40
+    };
+    this.HEIGHTS = {
+      idle: 40,
+      running: 48,
       punching: 40
     };
     this.TOTALFRAMES = {
