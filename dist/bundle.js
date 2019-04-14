@@ -134,11 +134,14 @@ var Goku =
 /*#__PURE__*/
 function () {
   function Goku() {
+    var startPos = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [200, 450];
+
     _classCallCheck(this, Goku);
 
     this.width = 33;
     this.height = 40;
     this.img = new Image();
+    this.startPos = startPos;
     this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png"; // img.addEventListener("load", loadImage, false);
 
     this.animate = this.animate.bind(this);
@@ -147,15 +150,14 @@ function () {
     this.shift = [0, -1];
     this.totalFrames = 8;
     this.currentFrame = 1;
-    this.pos = [200, 450];
     this.check = 0;
     this.dir = "idle";
     this.handlekeydown = this.handlekeydown.bind(this);
     this.GOKUDIRS = {
-      idle: [0, -1],
+      idle: [1, 1],
       right: [-1, 83],
       left: [1151, 83],
-      punching: [-4, 479]
+      punching: [-1, 476]
     };
     this.HEIGHTS = {
       idle: 40,
@@ -165,7 +167,7 @@ function () {
     this.WIDTHS = {
       idle: 33,
       running: 33,
-      punching: 40
+      punching: 40.5
     };
     this.TOTALFRAMES = {
       idle: 8,
@@ -180,7 +182,7 @@ function () {
     value: function handleDir() {
       if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
         this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
-        this.pos[1] = 444;
+        this.startPos[1] = 444;
         this.shift = this.GOKUDIRS.right.slice();
         this.height = this.HEIGHTS.running;
         this.width = this.WIDTHS.running;
@@ -188,7 +190,7 @@ function () {
         this.totalFrames = this.TOTALFRAMES.running;
       } else if (this.dir === "left" && (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)) {
         this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku_left.png";
-        this.pos[1] = 444;
+        this.startPos[1] = 444;
         this.shift = this.GOKUDIRS.left.slice();
         this.height = this.HEIGHTS.running;
         this.width = this.WIDTHS.running;
@@ -196,7 +198,7 @@ function () {
         this.totalFrames = this.TOTALFRAMES.running;
       } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1]) {
         this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
-        this.pos[1] = 450;
+        this.startPos[1] = 450;
         this.shift = this.GOKUDIRS.idle.slice();
         this.height = this.HEIGHTS.idle;
         this.width = this.WIDTHS.idle;
@@ -217,19 +219,19 @@ function () {
 
       if (e.key === "a") {
         this.dir = "left";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        this.ctx.clearRect(this.startPos[0], this.startPos[1], 512, 512);
         this.handleDir();
       }
 
       if (e.key === "d") {
         this.dir = "right";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        this.ctx.clearRect(this.startPos[0], this.startPos[1], 512, 512);
         this.handleDir();
       }
 
       if (e.key === "j") {
         this.dir = "punching";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        this.ctx.clearRect(this.startPos[0], this.startPos[1], 512, 512);
         this.handleDir();
       }
     }
@@ -262,9 +264,9 @@ function () {
   }, {
     key: "inBounds",
     value: function inBounds() {
-      if (this.pos[0] > 480 && this.dir === "right") {
+      if (this.startPos[0] > 480 && this.dir === "right") {
         return false;
-      } else if (this.pos[0] < 0 && this.dir === "left") {
+      } else if (this.startPos[0] < 0 && this.dir === "left") {
         return false;
       }
 
@@ -276,28 +278,28 @@ function () {
       switch (dir) {
         case "right":
           if (this.inBounds()) {
-            this.pos[0] += 1;
+            this.startPos[0] += 1;
           }
 
           break;
 
         case "left":
           if (this.inBounds()) {
-            this.pos[0] -= 1;
+            this.startPos[0] -= 1;
           }
 
           break;
 
         case "up":
           if (this.inBounds()) {
-            this.pos[1] -= 1;
+            this.startPos[1] -= 1;
           }
 
           break;
 
         case "down":
           if (this.inBounds()) {
-            this.pos[1] += 1;
+            this.startPos[1] += 1;
           }
 
           break;
@@ -310,15 +312,15 @@ function () {
     key: "animate",
     value: function animate() {
       if (this.check < 7) {
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+        this.ctx.clearRect(this.startPos[0], this.startPos[1], 512, 512);
+        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.startPos[0], this.startPos[1], this.width, this.height);
 
         if (this.currentFrame === this.totalFrames) {
           this.shift = this.GOKUDIRS[this.dir].slice();
           this.currentFrame = 1;
         }
       } else {
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        this.ctx.clearRect(this.startPos[0], this.startPos[1], 512, 512);
 
         if (this.dir === "left") {
           this.shift[0] -= this.width;
@@ -326,9 +328,11 @@ function () {
           this.shift[0] += this.width;
         } else if (this.dir === "punching") {
           this.shift[0] += this.width;
+        } else {
+          this.shift[0] += this.width;
         }
 
-        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.startPos[0], this.startPos[1], this.width, this.height);
         this.currentFrame++;
         this.check = 0;
       }
@@ -359,14 +363,17 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("webpack is running..."); // var canvas = document.getElementById('canvas');
-  // var ctx = canvas.getContext('2d'); 
+  // var ctx = canvas.getContext('2d');
   // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  goku.start(); // goku.img.onload = () => goku.animate();
+  var stopKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]([155, 450]);
+  stopKu.start();
+  goku.start(); // debugger;
+  // goku.img.onload = () => goku.animate();
 });
 
 /***/ })
