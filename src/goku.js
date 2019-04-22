@@ -16,15 +16,15 @@ export default class Goku {
     this.handlekeydown = this.handlekeydown.bind(this);
 
     this.GOKUDIRS = {
-      idle: [0, -1],
+      idle: [1, 1],
       right: [-1, 83],
       left: [1151, 83],
-      punching: [-4, 479],
+      punching: [-1, 476],
     };
     this.WIDTHS = {
       idle: 33,
       running: 33,
-      punching: 40,
+      punching: 40.5,
     };
 
     this.HEIGHTS = {
@@ -186,6 +186,8 @@ export default class Goku {
       } else if (this.dir === "right") {
         this.shift[0] += this.width;
       } else if (this.dir === "punching") {
+        this.shift[0] += this.width;
+      } else {
         this.shift[0] += this.width;
       }
       this.ctx.drawImage(
