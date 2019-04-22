@@ -107,7 +107,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 //     this.width = 33;
 //     this.height = 40;
 //     this.img = new Image();
-//     this.img.src = '/Users/fp/Desktop/JSBeatDown/images/goku.png';
+//     this.img.src = './images/goku.png';
 //     // img.addEventListener("load", loadImage, false);
 //     this.animate = this.animate.bind(this);
 //     this.canvas = document.getElementById('canvas');
@@ -142,7 +142,7 @@ function () {
     this.height = 40;
     this.img = new Image();
     this.startPos = startPos;
-    this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png"; // img.addEventListener("load", loadImage, false);
+    this.img.src = "./images/goku.png"; // img.addEventListener("load", loadImage, false);
 
     this.animate = this.animate.bind(this);
     this.canvas = document.getElementById("canvas");
@@ -181,7 +181,7 @@ function () {
     key: "handleDir",
     value: function handleDir() {
       if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
-        this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
+        this.img.src = "./images/goku.png";
         this.startPos[1] = 444;
         this.shift = this.GOKUDIRS.right.slice();
         this.height = this.HEIGHTS.running;
@@ -189,7 +189,7 @@ function () {
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.running;
       } else if (this.dir === "left" && (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)) {
-        this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku_left.png";
+        this.img.src = "./images/goku_left.png";
         this.startPos[1] = 444;
         this.shift = this.GOKUDIRS.left.slice();
         this.height = this.HEIGHTS.running;
@@ -197,7 +197,7 @@ function () {
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.running;
       } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1]) {
-        this.img.src = "/Users/fp/Desktop/JSBeatDown/images/goku.png";
+        this.img.src = "./images/goku.png";
         this.startPos[1] = 450;
         this.shift = this.GOKUDIRS.idle.slice();
         this.height = this.HEIGHTS.idle;
@@ -369,9 +369,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  var stopKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]([155, 450]);
-  stopKu.start();
+  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"](); // var stopKu = new Goku([155, 450]);
+  // stopKu.start();
+
   goku.start(); // debugger;
   // goku.img.onload = () => goku.animate();
 });
