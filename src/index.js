@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   var goku = new Goku();
-  var stopKu = new Goku([155, 450]);
-  stopKu.start();
+  // var stopKu = new Goku([155, 450]);
+  // stopKu.start();
   goku.start();
   // debugger;
 
