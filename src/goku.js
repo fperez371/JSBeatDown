@@ -43,6 +43,10 @@ export default class Goku {
     // this.punch = this.punch.bind(this);
   }
 
+  pos() {
+    return this.pos;
+  }
+
   handleDir() {
     if (
       this.dir === "right" &&

@@ -147,6 +147,11 @@ function () {
   }
 
   _createClass(Goku, [{
+    key: "pos",
+    value: function pos() {
+      return this.pos;
+    }
+  }, {
     key: "handleDir",
     value: function handleDir() {
       if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
@@ -333,14 +338,17 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("webpack is running..."); // var canvas = document.getElementById('canvas');
-  // var ctx = canvas.getContext('2d'); 
+  // var ctx = canvas.getContext('2d');
   // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  goku.start(); // goku.img.onload = () => goku.animate();
+  goku.start();
+  setInterval(function () {
+    return console.log("goku.pos()");
+  }, 1000); // goku.img.onload = () => goku.animate();
 });
 
 /***/ })

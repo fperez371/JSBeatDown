@@ -1,12 +1,11 @@
-import Goku from './goku';
+import Goku from "./goku";
 
-
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
   console.log("webpack is running...");
-  
+
   // var canvas = document.getElementById('canvas');
 
-  // var ctx = canvas.getContext('2d'); 
+  // var ctx = canvas.getContext('2d');
   // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   var goku = new Goku();
   goku.start();
+  setInterval(() => console.log("goku.pos()"), 1000);
   // goku.img.onload = () => goku.animate();
-
 });
-
