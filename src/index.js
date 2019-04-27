@@ -13,6 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var goku = new Goku();
   goku.start();
-  setInterval(() => console.log("goku.pos()"), 1000);
+  goku.pos();
   // goku.img.onload = () => goku.animate();
 });

@@ -44,7 +44,7 @@ export default class Goku {
   }
 
   pos() {
-    return this.pos;
+    console.log(this.pos);
   }
 
   handleDir() {

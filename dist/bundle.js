@@ -149,7 +149,7 @@ function () {
   _createClass(Goku, [{
     key: "pos",
     value: function pos() {
-      return this.pos;
+      console.log(this.pos);
     }
   }, {
     key: "handleDir",
@@ -346,9 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
   goku.start();
-  setInterval(function () {
-    return console.log("goku.pos()");
-  }, 1000); // goku.img.onload = () => goku.animate();
+  goku.pos(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ })
