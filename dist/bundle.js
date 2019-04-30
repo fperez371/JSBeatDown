@@ -122,6 +122,7 @@ function () {
     this.check = 0;
     this.dir = "idle";
     this.handlekeydown = this.handlekeydown.bind(this);
+    this.getPos = this.getPos.bind(this);
     this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
@@ -147,8 +148,8 @@ function () {
   }
 
   _createClass(Goku, [{
-    key: "pos",
-    value: function pos() {
+    key: "getPos",
+    value: function getPos() {
       console.log(this.pos);
     }
   }, {
@@ -346,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
   goku.start();
-  goku.pos(); // goku.img.onload = () => goku.animate();
+  goku.getPos(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ })

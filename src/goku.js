@@ -14,7 +14,7 @@ export default class Goku {
     this.check = 0;
     this.dir = "idle";
     this.handlekeydown = this.handlekeydown.bind(this);
-
+    this.getPos = this.getPos.bind(this);
     this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
@@ -43,7 +43,7 @@ export default class Goku {
     // this.punch = this.punch.bind(this);
   }
 
-  pos() {
+  getPos() {
     console.log(this.pos);
   }
 
