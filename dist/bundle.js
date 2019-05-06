@@ -131,10 +131,10 @@ function (_Sprite) {
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
-    _this.img.src = props.imgUrl;
-    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.canvas = document.getElementById("canvas");
-    _this.ctx = _this.canvas.getContext("2d");
+    _this.img.src = props.imgUrl; // this.animate = this.animate.bind(this);
+    // this.canvas = document.getElementById("canvas");
+    // this.ctx = this.canvas.getContext("2d");
+
     _this.shift = [0, -1];
     _this.totalFrames = 8;
     _this.currentFrame = 1;
