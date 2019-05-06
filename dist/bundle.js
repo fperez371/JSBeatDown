@@ -96,61 +96,88 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Goku; });
+/* harmony import */ var _sprite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sprite */ "./src/sprite.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
 var Goku =
 /*#__PURE__*/
-function () {
-  function Goku() {
+function (_Sprite) {
+  _inherits(Goku, _Sprite);
+
+  function Goku(props) {
+    var _this;
+
     _classCallCheck(this, Goku);
 
-    this.width = 33;
-    this.height = 40;
-    this.img = new Image();
-    this.img.src = "images/goku.jpg";
-    this.animate = this.animate.bind(this);
-    this.canvas = document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
-    this.shift = [0, -1];
-    this.totalFrames = 8;
-    this.currentFrame = 1;
-    this.pos = [200, 450];
-    this.check = 0;
-    this.dir = "idle";
-    this.handlekeydown = this.handlekeydown.bind(this);
-    this.getPos = this.getPos.bind(this);
-    this.GOKUDIRS = {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Goku).call(this, props));
+    _this.width = props.width;
+    _this.height = props.height;
+    _this.img = new Image();
+    _this.img.src = props.imgUrl;
+    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.canvas = document.getElementById("canvas");
+    _this.ctx = _this.canvas.getContext("2d");
+    _this.shift = [0, -1];
+    _this.totalFrames = 8;
+    _this.currentFrame = 1;
+    _this.pos = props.startPos;
+    _this.check = 0;
+    _this.dir = "idle";
+    _this.handlekeydown = _this.handlekeydown.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.getPos = _this.getPos.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
       left: [1151, 83],
-      punching: [-1, 476]
+      punching: [-1, 476],
+      kicking: [1, 959]
     };
-    this.WIDTHS = {
+    _this.kickWidths = [58, 115, 172, 229, 286, 343, 400, 449, 498, 547];
+    _this.WIDTHS = {
       idle: 33,
       running: 33,
-      punching: 40.5
+      punching: 40.5,
+      kicking: 56
     };
-    this.HEIGHTS = {
+    _this.HEIGHTS = {
       idle: 40,
       running: 48,
-      punching: 40
+      punching: 40,
+      kicking: 48
     };
-    this.TOTALFRAMES = {
+    _this.TOTALFRAMES = {
       idle: 8,
       running: 8,
-      punching: 7
+      punching: 8,
+      kicking: 11
     }; // this.kick = this.kick.bind(this);
     // this.punch = this.punch.bind(this);
+
+    return _this;
   }
 
   _createClass(Goku, [{
     key: "getPos",
     value: function getPos() {
-      console.log(this.pos);
+      return this.pos;
     }
   }, {
     key: "handleDir",
@@ -183,9 +210,16 @@ function () {
         this.img.src = "images/goku.jpg";
         this.shift = this.GOKUDIRS.punching.slice();
         this.width = this.WIDTHS.punching;
-        this.heigth = this.HEIGHTS.punching;
+        this.height = this.HEIGHTS.punching;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.punching;
+      } else if (this.dir === "kicking") {
+        this.img.src = "images/goku.jpg";
+        this.shift = this.GOKUDIRS.kicking.slice();
+        this.height = this.HEIGHTS.kicking;
+        this.width = this.WIDTHS.kicking;
+        this.currentFrame = 1;
+        this.totalFrames = this.TOTALFRAMES.kicking;
       }
     }
   }, {
@@ -210,6 +244,12 @@ function () {
         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         this.handleDir();
       }
+
+      if (e.key === "k") {
+        this.dir = "kicking";
+        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        this.handleDir();
+      }
     }
   }, {
     key: "handlekeyup",
@@ -218,18 +258,15 @@ function () {
       this.handleDir();
     }
   }, {
-    key: "runRight",
-    value: function runRight() {}
-  }, {
     key: "start",
     value: function start() {
-      var _this = this;
+      var _this2 = this;
 
       document.addEventListener("keydown", function (key) {
-        return _this.handlekeydown(key);
+        return _this2.handlekeydown(key);
       });
       document.addEventListener("keyup", function () {
-        return _this.handlekeyup();
+        return _this2.handlekeyup();
       });
       this.animate();
     } // punch(){
@@ -287,6 +324,8 @@ function () {
   }, {
     key: "animate",
     value: function animate() {
+      var i = 0;
+
       if (this.check < 7) {
         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
@@ -304,6 +343,9 @@ function () {
           this.shift[0] += this.width;
         } else if (this.dir === "punching") {
           this.shift[0] += this.width;
+        } else if (this.dir === "kicking") {
+          this.shift[0] += this.kickWidths[i];
+          i++;
         } else {
           this.shift[0] += this.width;
         }
@@ -320,7 +362,7 @@ function () {
   }]);
 
   return Goku;
-}();
+}(_sprite__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 
@@ -345,10 +387,79 @@ document.addEventListener("DOMContentLoaded", function () {
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    width: 33,
+    height: 40,
+    imgUrl: "images/goku.jpg",
+    startPos: [200, 450]
+  });
   goku.start();
   goku.getPos(); // goku.img.onload = () => goku.animate();
 });
+
+/***/ }),
+
+/***/ "./src/sprite.js":
+/*!***********************!*\
+  !*** ./src/sprite.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Sprite =
+/*#__PURE__*/
+function () {
+  function Sprite(width, height, imgUrl, startPos) {
+    _classCallCheck(this, Sprite);
+
+    this.width = width;
+    this.height = height;
+    this.img = new Image();
+    this.img.src = imgUrl;
+    this.animate = this.animate.bind(this);
+    this.canvas = document.getElementById("canvas");
+    this.ctx = this.canvas.getContext("2d");
+    this.shift = [0, -1];
+    this.totalFrames = 8;
+    this.currentFrame = 1;
+    this.pos = startPos;
+    this.check = 0;
+    this.dir = "idle";
+    this.handlekeydown = this.handlekeydown.bind(this);
+    this.getPos = this.getPos.bind(this);
+  }
+
+  _createClass(Sprite, [{
+    key: "getPos",
+    value: function getPos() {
+      return this.pos;
+    }
+  }, {
+    key: "inBounds",
+    value: function inBounds() {
+      if (this.pos[0] > 480 && this.dir === "right") {
+        return false;
+      } else if (this.pos[0] < 0 && this.dir === "left") {
+        return false;
+      }
+
+      return true;
+    }
+  }]);
+
+  return Sprite;
+}();
+
+
 
 /***/ })
 
