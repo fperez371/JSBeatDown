@@ -1,88 +1,84 @@
 #main-content {
-  padding-top: 0;
-  max-width: 512px !important;
-  max-height: 512px !important;
-  background: url("../images/arena.png") no-repeat -8px -29px,
-    url("../images/arena.png") no-repeat -532px -29px;
-  display: block;
-  margin: 5px;
-  /* top: 50%; */
+    padding-top: 0;
+    max-width: 512px !important;
+    max-height: 512px !important;
+    background: url("../images/arena.png") no-repeat -8px -29px,
+        url("../images/arena.png") no-repeat -532px -29px;
+    display: block;
+    margin: 5px;
+    /* top: 50%; */
 }
 @font-face {
-  font-family: dbz;
-  src: url(../font/Saiyan-Sans.ttf);
+    font-family: dbz;
+    src: url(../font/Saiyan-Sans.ttf);
 }
 #myName {
-  font-family: "dbz";
-  font-size: 3rem;
-  color: black;
+    font-family: "dbz";
+    font-size: 3rem;
+    color: black;
 }
 #link-div {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 #mainer-content {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: center; */
-  align-items: center;
-  text-align: center;
-  min-width: 100vw;
-  padding-left: 7rem;
-  padding-right: 7rem;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-items: center;
+    text-align: center;
+    min-width: 100vw;
+    padding-left: 7rem;
+    padding-right: 7rem;
 }
 a {
-  margin: 5px;
+    margin: 5px;
 }
 
 #title {
-  text-align: center;
-  color: black;
-  font-family: "dbz";
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.09),
-    -1px -1px 0 rgba(255, 220, 0, 0.67);
-  font-size: 4em;
+    text-align: center;
+    color: black;
+    font-family: "dbz";
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.09),
+        -1px -1px 0 rgba(255, 220, 0, 0.67);
+    font-size: 4em;
 }
 
 html {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 body {
-  background-color: orange;
-  margin: 0;
-  box-sizing: border-box;
+    background-color: orange;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%;
-  font-family: "dbz";
+    height: 100%;
+    font-family: "dbz";
 }
 #link-div {
-  display: flex;
-  font-family: "dbz";
-  font-size: 1.5rem;
-  /* justify-content: center; */
-  /* align-items: center; */
+    display: flex;
+    font-family: "dbz";
+    font-size: 1.5rem;
+    /* justify-content: center; */
+    /* align-items: center; */
 }
 
 #link {
-  /* display: inline-block; */
+    /* display: inline-block; */
 
-  display: flex;
-  flex-direction: row;
-  max-width: 64px;
-  max-height: 64px;
-  padding: 20px;
+    display: flex;
+    flex-direction: row;
+    max-width: 64px;
+    max-height: 64px;
+    padding: 20px;
 }
 
 img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
 }
-
-/* .please-work {
-  border: none;
-} */

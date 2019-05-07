@@ -4,12 +4,8 @@ export default class Sprite {
         this.height = height;
         this.img = new Image();
         this.img.src = imgUrl;
-        this.animate = this.animate.bind(this);
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.shift = [0, -1];
-        this.totalFrames = 8;
-        this.currentFrame = 1;
         this.pos = startPos;
         this.check = 0;
         this.dir = "idle";

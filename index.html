@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>JSBeatDown</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="./stylesheets/index.css" />
-    <script src="./dist/bundle.js"></script>
-  </head>
-  <body>
-    <h3 id="title">JSBeatDown</h3>
-    <div id="mainer-content">
-      <div id="link-div">
-        <h3 id="myName">By Francisco Perez</h3>
-        <div id="link">
-          <h3>My github!</h3>
-          <a id="github" href="https://github.com/fperez371/JSBeatDown"
-            ><img src="./images/GitHub-Mark-64px.png" alt=""
-          /></a>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>JSBeatDown</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="./stylesheets/index.css" />
+        <script src="./dist/bundle.js"></script>
+    </head>
+    <body>
+        <h3 id="title">JSBeatDown</h3>
+        <div id="mainer-content">
+            <div id="link-div">
+                <h3 id="myName">By Francisco Perez</h3>
+                <div id="link">
+                    <h3>My github!</h3>
+                    <a
+                        id="github"
+                        href="https://github.com/fperez371/JSBeatDown"
+                        ><img src="./images/GitHub-Mark-64px.png" alt=""
+                    /></a>
+                </div>
+                <div id="link">
+                    <h3>Linkedin profile</h3>
+                    <a
+                        href="https://www.linkedin.com/in/francisco-perez-9455a377/"
+                        ><img
+                            className="linkedin"
+                            src="./images/Logo-2C-66px-R.png"
+                            alt=""
+                    /></a>
+                </div>
+            </div>
+            <div id="main-content">
+                <canvas width="512" height="512" id="canvas"></canvas>
+            </div>
+            <div id="instructions-text">
+                <h2>A to move left D to move right</h2>
+                <h2>Press J to punch and K to kick</h2>
+                <h2>Beat the other guy up!</h2>
+            </div>
         </div>
-        <div id="link">
-          <h3>Linkedin profile</h3>
-          <a href="https://www.linkedin.com/in/francisco-perez-9455a377/"
-            ><img className="linkedin" src="./images/Logo-2C-66px-R.png" alt=""
-          /></a>
-        </div>
-      </div>
-      <div id="main-content">
-        <canvas width="512" height="512" id="canvas"></canvas>
-      </div>
-      <div id="instructions-text">
-        <h2>A to move left D to move right</h2>
-        <h2>Press J to punch and K to kick</h2>
-        <h2>Beat the other guy up!</h2>
-      </div>
-    </div>
-  </body>
+    </body>
 </html>

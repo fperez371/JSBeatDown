@@ -131,13 +131,14 @@ function (_Sprite) {
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
-    _this.img.src = props.imgUrl; // this.animate = this.animate.bind(this);
-    // this.canvas = document.getElementById("canvas");
+    _this.img.src = props.imgUrl;
+    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.shift = [0, -1];
     _this.totalFrames = 8;
     _this.currentFrame = 1;
+    _this.player = props.player;
     _this.pos = props.startPos;
     _this.check = 0;
     _this.dir = "idle";
@@ -254,20 +255,25 @@ function (_Sprite) {
   }, {
     key: "handlekeyup",
     value: function handlekeyup() {
-      this.dir = "idle";
-      this.handleDir();
+      if (this.player) {
+        this.dir = "idle";
+        this.handleDir();
+      }
     }
   }, {
     key: "start",
     value: function start() {
       var _this2 = this;
 
-      document.addEventListener("keydown", function (key) {
-        return _this2.handlekeydown(key);
-      });
-      document.addEventListener("keyup", function () {
-        return _this2.handlekeyup();
-      });
+      if (this.player) {
+        document.addEventListener("keydown", function (key) {
+          return _this2.handlekeydown(key);
+        });
+        document.addEventListener("keyup", function () {
+          return _this2.handlekeyup();
+        });
+      }
+
       this.animate();
     } // punch(){
     // }
@@ -391,9 +397,18 @@ document.addEventListener("DOMContentLoaded", function () {
     width: 33,
     height: 40,
     imgUrl: "images/goku.jpg",
-    startPos: [200, 450]
+    startPos: [200, 450],
+    player: true
+  });
+  var otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    width: 33,
+    height: 40,
+    imgUrl: "images/goku.jpg",
+    startPos: [300, 450],
+    player: false
   });
   goku.start();
+  otherKu.start();
   goku.getPos(); // goku.img.onload = () => goku.animate();
 });
 
@@ -425,12 +440,8 @@ function () {
     this.height = height;
     this.img = new Image();
     this.img.src = imgUrl;
-    this.animate = this.animate.bind(this);
     this.canvas = document.getElementById("canvas");
     this.ctx = this.canvas.getContext("2d");
-    this.shift = [0, -1];
-    this.totalFrames = 8;
-    this.currentFrame = 1;
     this.pos = startPos;
     this.check = 0;
     this.dir = "idle";

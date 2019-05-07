@@ -7,12 +7,13 @@ export default class Goku extends Sprite {
         this.height = props.height;
         this.img = new Image();
         this.img.src = props.imgUrl;
-        // this.animate = this.animate.bind(this);
+        this.animate = this.animate.bind(this);
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
         this.shift = [0, -1];
         this.totalFrames = 8;
         this.currentFrame = 1;
+        this.player = props.player;
         this.pos = props.startPos;
         this.check = 0;
         this.dir = "idle";
@@ -132,13 +133,19 @@ export default class Goku extends Sprite {
     }
 
     handlekeyup() {
-        this.dir = "idle";
-        this.handleDir();
+        if (this.player) {
+            this.dir = "idle";
+            this.handleDir();
+        }
     }
 
     start() {
-        document.addEventListener("keydown", key => this.handlekeydown(key));
-        document.addEventListener("keyup", () => this.handlekeyup());
+        if (this.player) {
+            document.addEventListener("keydown", key =>
+                this.handlekeydown(key)
+            );
+            document.addEventListener("keyup", () => this.handlekeyup());
+        }
         this.animate();
     }
 
