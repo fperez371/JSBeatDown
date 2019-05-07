@@ -18,15 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
         startPos: [200, 450],
         player: true,
     });
-    var otherKu = new Goku({
-        width: 33,
-        height: 40,
-        imgUrl: "images/goku.jpg",
-        startPos: [300, 450],
-        player: false,
-    });
+    // var otherKu = new Goku({
+    //     width: 33,
+    //     height: 40,
+    //     imgUrl: "images/goku.jpg",
+    //     startPos: [300, 450],
+    //     player: false,
+    // });
     goku.start();
-    otherKu.start();
+    // otherKu.start();
     goku.getPos();
     // goku.img.onload = () => goku.animate();
 });

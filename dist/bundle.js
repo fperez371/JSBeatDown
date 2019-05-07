@@ -399,16 +399,16 @@ document.addEventListener("DOMContentLoaded", function () {
     imgUrl: "images/goku.jpg",
     startPos: [200, 450],
     player: true
-  });
-  var otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    width: 33,
-    height: 40,
-    imgUrl: "images/goku.jpg",
-    startPos: [300, 450],
-    player: false
-  });
-  goku.start();
-  otherKu.start();
+  }); // var otherKu = new Goku({
+  //     width: 33,
+  //     height: 40,
+  //     imgUrl: "images/goku.jpg",
+  //     startPos: [300, 450],
+  //     player: false,
+  // });
+
+  goku.start(); // otherKu.start();
+
   goku.getPos(); // goku.img.onload = () => goku.animate();
 });
 
