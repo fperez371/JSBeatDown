@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
         startPos: [300, 450],
         player: false,
     });
-    goku.start();
-    otherKu.start();
 
     function animate() {
         let j = 0;

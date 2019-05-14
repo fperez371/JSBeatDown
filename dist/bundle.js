@@ -395,8 +395,6 @@ document.addEventListener("DOMContentLoaded", function () {
     startPos: [300, 450],
     player: false
   });
-  goku.start();
-  otherKu.start();
 
   function animate() {
     var j = 0;
@@ -547,8 +545,6 @@ function () {
     this.pos = startPos;
     this.check = 0;
     this.dir = "idle";
-    this.handlekeydown = this.handlekeydown.bind(this);
-    this.getPos = this.getPos.bind(this);
   }
 
   _createClass(Sprite, [{

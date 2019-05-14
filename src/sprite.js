@@ -9,8 +9,6 @@ export default class Sprite {
         this.pos = startPos;
         this.check = 0;
         this.dir = "idle";
-        this.handlekeydown = this.handlekeydown.bind(this);
-        this.getPos = this.getPos.bind(this);
     }
 
     getPos() {
