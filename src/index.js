@@ -6,6 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
     var canvas = document.getElementById("canvas");
 
     var ctx = canvas.getContext("2d");
+    ctx.font = "30px Arial";
+    ctx.fillText("Press space to start", 125, 200);
+    document.addEventListener("keydown", function(key) {
+        if (key.keyCode === 32) {
+            ctx.clearRect(0, 0, 512, 512);
+            start();
+        }
+    });
     // var background = new Image();
     // background.src = "../images/arena.png";
     // background.addEventListener("load", loadImage, false);
@@ -206,6 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         animate();
     }
-    start();
+    // start();
     // goku.img.onload = () => goku.animate();
 });

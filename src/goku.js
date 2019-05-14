@@ -17,7 +17,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.dir = "idle";
-
+        this.health = 100;
         this.GOKUDIRS = {
             idle: [1, 1],
             right: [-1, 83],
@@ -99,7 +99,6 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.kicking;
         }
     }
-
     // handlekeydown(e) {
     //     e.preventDefault();
 

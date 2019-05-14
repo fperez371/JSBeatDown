@@ -141,6 +141,7 @@ function (_Sprite) {
     _this.pos = props.startPos;
     _this.check = 0;
     _this.dir = "idle";
+    _this.health = 100;
     _this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
@@ -364,7 +365,15 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", function () {
   console.log("webpack is running...");
   var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d"); // var background = new Image();
+  var ctx = canvas.getContext("2d");
+  ctx.font = "30px Arial";
+  ctx.fillText("Press space to start", 125, 200);
+  document.addEventListener("keydown", function (key) {
+    if (key.keyCode === 32) {
+      ctx.clearRect(0, 0, 512, 512);
+      start();
+    }
+  }); // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -543,9 +552,9 @@ document.addEventListener("DOMContentLoaded", function () {
       return handlekeyup();
     });
     animate();
-  }
+  } // start();
+  // goku.img.onload = () => goku.animate();
 
-  start(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ }),
