@@ -17,8 +17,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.dir = "idle";
-        this.handlekeydown = this.handlekeydown.bind(this);
-        this.getPos = this.getPos.bind(this);
+        // this.handlekeydown = this.handlekeydown.bind(this);
         this.GOKUDIRS = {
             idle: [1, 1],
             right: [-1, 83],
@@ -103,47 +102,47 @@ export default class Goku extends Sprite {
         }
     }
 
-    handlekeydown(e) {
-        e.preventDefault();
+    // handlekeydown(e) {
+    //     e.preventDefault();
 
-        if (e.key === "a") {
-            this.dir = "left";
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            this.handleDir();
-        }
-        if (e.key === "d") {
-            this.dir = "right";
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            this.handleDir();
-        }
-        if (e.key === "j") {
-            this.dir = "punching";
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            this.handleDir();
-        }
-        if (e.key === "k") {
-            this.dir = "kicking";
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            this.handleDir();
-        }
-    }
+    //     if (e.key === "a") {
+    //         this.dir = "left";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "d") {
+    //         this.dir = "right";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "j") {
+    //         this.dir = "punching";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "k") {
+    //         this.dir = "kicking";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    // }
 
-    handlekeyup() {
-        if (this.player) {
-            this.dir = "idle";
-            this.handleDir();
-        }
-    }
+    // handlekeyup() {
+    //     if (this.player) {
+    //         this.dir = "idle";
+    //         this.handleDir();
+    //     }
+    // }
 
-    start() {
-        if (this.player) {
-            document.addEventListener("keydown", key =>
-                this.handlekeydown(key)
-            );
-            document.addEventListener("keyup", () => this.handlekeyup());
-        }
-        // this.animate();
-    }
+    // start() {
+    //     if (this.player) {
+    //         document.addEventListener("keydown", key =>
+    //             this.handlekeydown(key)
+    //         );
+    //         document.addEventListener("keyup", () => this.handlekeyup());
+    //     }
+    //     // this.animate();
+    // }
 
     // punch(){
 

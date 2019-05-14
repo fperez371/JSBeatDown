@@ -107,13 +107,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -141,9 +141,8 @@ function (_Sprite) {
     _this.player = props.player;
     _this.pos = props.startPos;
     _this.check = 0;
-    _this.dir = "idle";
-    _this.handlekeydown = _this.handlekeydown.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.getPos = _this.getPos.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.dir = "idle"; // this.handlekeydown = this.handlekeydown.bind(this);
+
     _this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
@@ -217,59 +216,45 @@ function (_Sprite) {
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.kicking;
       }
-    }
-  }, {
-    key: "handlekeydown",
-    value: function handlekeydown(e) {
-      e.preventDefault();
-
-      if (e.key === "a") {
-        this.dir = "left";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.handleDir();
-      }
-
-      if (e.key === "d") {
-        this.dir = "right";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.handleDir();
-      }
-
-      if (e.key === "j") {
-        this.dir = "punching";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.handleDir();
-      }
-
-      if (e.key === "k") {
-        this.dir = "kicking";
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.handleDir();
-      }
-    }
-  }, {
-    key: "handlekeyup",
-    value: function handlekeyup() {
-      if (this.player) {
-        this.dir = "idle";
-        this.handleDir();
-      }
-    }
-  }, {
-    key: "start",
-    value: function start() {
-      var _this2 = this;
-
-      if (this.player) {
-        document.addEventListener("keydown", function (key) {
-          return _this2.handlekeydown(key);
-        });
-        document.addEventListener("keyup", function () {
-          return _this2.handlekeyup();
-        });
-      } // this.animate();
-
-    } // punch(){
+    } // handlekeydown(e) {
+    //     e.preventDefault();
+    //     if (e.key === "a") {
+    //         this.dir = "left";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "d") {
+    //         this.dir = "right";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "j") {
+    //         this.dir = "punching";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    //     if (e.key === "k") {
+    //         this.dir = "kicking";
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.handleDir();
+    //     }
+    // }
+    // handlekeyup() {
+    //     if (this.player) {
+    //         this.dir = "idle";
+    //         this.handleDir();
+    //     }
+    // }
+    // start() {
+    //     if (this.player) {
+    //         document.addEventListener("keydown", key =>
+    //             this.handlekeydown(key)
+    //         );
+    //         document.addEventListener("keyup", () => this.handlekeyup());
+    //     }
+    //     // this.animate();
+    // }
+    // punch(){
     // }
     // kick() {
     // }
@@ -416,7 +401,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   goku.start();
   otherKu.start();
-  debugger;
 
   function animate() {
     var j = 0;
@@ -488,7 +472,50 @@ document.addEventListener("DOMContentLoaded", function () {
     requestAnimationFrame(animate);
   }
 
-  animate(); // goku.img.onload = () => goku.animate();
+  function handlekeydown(e) {
+    e.preventDefault();
+
+    if (e.key === "a") {
+      goku.dir = "left";
+      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.handleDir();
+    }
+
+    if (e.key === "d") {
+      goku.dir = "right";
+      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.handleDir();
+    }
+
+    if (e.key === "j") {
+      goku.dir = "punching";
+      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.handleDir();
+    }
+
+    if (e.key === "k") {
+      goku.dir = "kicking";
+      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.handleDir();
+    }
+  }
+
+  function handlekeyup() {
+    goku.dir = "idle";
+    goku.handleDir();
+  }
+
+  function start() {
+    document.addEventListener("keydown", function (key) {
+      return handlekeydown(key);
+    });
+    document.addEventListener("keyup", function () {
+      return handlekeyup();
+    });
+    animate();
+  }
+
+  start(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ }),

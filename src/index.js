@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     goku.start();
     otherKu.start();
-    debugger;
+
     function animate() {
         let j = 0;
         if (otherKu.check < 7) {
@@ -132,6 +132,43 @@ document.addEventListener("DOMContentLoaded", () => {
         goku.check++;
         requestAnimationFrame(animate);
     }
-    animate();
+
+    function handlekeydown(e) {
+        e.preventDefault();
+
+        if (e.key === "a") {
+            goku.dir = "left";
+            goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            goku.handleDir();
+        }
+        if (e.key === "d") {
+            goku.dir = "right";
+            goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            goku.handleDir();
+        }
+        if (e.key === "j") {
+            goku.dir = "punching";
+            goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            goku.handleDir();
+        }
+        if (e.key === "k") {
+            goku.dir = "kicking";
+            goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            goku.handleDir();
+        }
+    }
+
+    function handlekeyup() {
+        goku.dir = "idle";
+        goku.handleDir();
+    }
+
+    function start() {
+        document.addEventListener("keydown", key => handlekeydown(key));
+        document.addEventListener("keyup", () => handlekeyup());
+
+        animate();
+    }
+    start();
     // goku.img.onload = () => goku.animate();
 });
