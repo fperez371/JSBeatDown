@@ -131,8 +131,8 @@ function (_Sprite) {
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
-    _this.img.src = props.imgUrl;
-    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.canvas = document.getElementById("canvas");
+    _this.img.src = props.imgUrl; // this.animate = this.animate.bind(this);
+    // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.shift = [0, -1];
@@ -176,11 +176,6 @@ function (_Sprite) {
   }
 
   _createClass(Goku, [{
-    key: "getPos",
-    value: function getPos() {
-      return this.pos;
-    }
-  }, {
     key: "handleDir",
     value: function handleDir() {
       if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
@@ -272,9 +267,8 @@ function (_Sprite) {
         document.addEventListener("keyup", function () {
           return _this2.handlekeyup();
         });
-      }
+      } // this.animate();
 
-      this.animate();
     } // punch(){
     // }
     // kick() {
@@ -326,45 +320,58 @@ function (_Sprite) {
         default:
           return;
       }
-    }
-  }, {
-    key: "animate",
-    value: function animate() {
-      var i = 0;
+    } // animate() {
+    //     let i = 0;
+    //     if (this.check < 7) {
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.ctx.drawImage(
+    //             this.img,
+    //             this.shift[0],
+    //             this.shift[1],
+    //             this.width,
+    //             this.height,
+    //             this.pos[0],
+    //             this.pos[1],
+    //             this.width,
+    //             this.height
+    //         );
+    //         if (this.currentFrame === this.totalFrames) {
+    //             this.shift = this.GOKUDIRS[this.dir].slice();
+    //             this.currentFrame = 1;
+    //         }
+    //     } else {
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         if (this.dir === "left") {
+    //             this.shift[0] -= this.width;
+    //         } else if (this.dir === "right") {
+    //             this.shift[0] += this.width;
+    //         } else if (this.dir === "punching") {
+    //             this.shift[0] += this.width;
+    //         } else if (this.dir === "kicking") {
+    //             this.shift[0] += this.kickWidths[i];
+    //             i++;
+    //         } else {
+    //             this.shift[0] += this.width;
+    //         }
+    //         this.ctx.drawImage(
+    //             this.img,
+    //             this.shift[0],
+    //             this.shift[1],
+    //             this.width,
+    //             this.height,
+    //             this.pos[0],
+    //             this.pos[1],
+    //             this.width,
+    //             this.height
+    //         );
+    //         this.currentFrame++;
+    //         this.check = 0;
+    //     }
+    //     this.move(this.dir);
+    //     this.check++;
+    //     requestAnimationFrame(this.animate);
+    // }
 
-      if (this.check < 7) {
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
-
-        if (this.currentFrame === this.totalFrames) {
-          this.shift = this.GOKUDIRS[this.dir].slice();
-          this.currentFrame = 1;
-        }
-      } else {
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-
-        if (this.dir === "left") {
-          this.shift[0] -= this.width;
-        } else if (this.dir === "right") {
-          this.shift[0] += this.width;
-        } else if (this.dir === "punching") {
-          this.shift[0] += this.width;
-        } else if (this.dir === "kicking") {
-          this.shift[0] += this.kickWidths[i];
-          i++;
-        } else {
-          this.shift[0] += this.width;
-        }
-
-        this.ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
-        this.currentFrame++;
-        this.check = 0;
-      }
-
-      this.move(this.dir);
-      this.check++;
-      requestAnimationFrame(this.animate);
-    }
   }]);
 
   return Goku;
@@ -386,9 +393,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("webpack is running..."); // var canvas = document.getElementById('canvas');
-  // var ctx = canvas.getContext('2d');
-  // var background = new Image();
+  console.log("webpack is running...");
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d"); // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -399,17 +406,89 @@ document.addEventListener("DOMContentLoaded", function () {
     imgUrl: "images/goku.jpg",
     startPos: [200, 450],
     player: true
-  }); // var otherKu = new Goku({
-  //     width: 33,
-  //     height: 40,
-  //     imgUrl: "images/goku.jpg",
-  //     startPos: [300, 450],
-  //     player: false,
-  // });
+  });
+  var otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    width: 33,
+    height: 40,
+    imgUrl: "images/goku.jpg",
+    startPos: [300, 450],
+    player: false
+  });
+  goku.start();
+  otherKu.start();
+  debugger;
 
-  goku.start(); // otherKu.start();
+  function animate() {
+    var j = 0;
 
-  goku.getPos(); // goku.img.onload = () => goku.animate();
+    if (otherKu.check < 7) {
+      ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+      ctx.drawImage(otherKu.img, otherKu.shift[0], otherKu.shift[1], otherKu.width, otherKu.height, otherKu.pos[0], otherKu.pos[1], otherKu.width, otherKu.height);
+
+      if (otherKu.currentFrame === otherKu.totalFrames) {
+        otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
+        otherKu.currentFrame = 1;
+      }
+    } else {
+      ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+
+      if (otherKu.dir === "left") {
+        otherKu.shift[0] -= otherKu.width;
+      } else if (otherKu.dir === "right") {
+        otherKu.shift[0] += otherKu.width;
+      } else if (otherKu.dir === "punching") {
+        otherKu.shift[0] += otherKu.width;
+      } else if (otherKu.dir === "kicking") {
+        otherKu.shift[0] += otherKu.kickWidths[j];
+        j++;
+      } else {
+        otherKu.shift[0] += otherKu.width;
+      }
+
+      ctx.drawImage(otherKu.img, otherKu.shift[0], otherKu.shift[1], otherKu.width, otherKu.height, otherKu.pos[0], otherKu.pos[1], otherKu.width, otherKu.height);
+      otherKu.currentFrame++;
+      otherKu.check = 0;
+    }
+
+    otherKu.move(otherKu.dir);
+    otherKu.check++;
+    var i = 0;
+
+    if (goku.check < 7) {
+      ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      ctx.drawImage(goku.img, goku.shift[0], goku.shift[1], goku.width, goku.height, goku.pos[0], goku.pos[1], goku.width, goku.height);
+
+      if (goku.currentFrame === goku.totalFrames) {
+        goku.shift = goku.GOKUDIRS[goku.dir].slice();
+        goku.currentFrame = 1;
+      }
+    } else {
+      ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+
+      if (goku.dir === "left") {
+        goku.shift[0] -= goku.width;
+      } else if (goku.dir === "right") {
+        goku.shift[0] += goku.width;
+      } else if (goku.dir === "punching") {
+        goku.shift[0] += goku.width;
+      } else if (goku.dir === "kicking") {
+        goku.shift[0] += goku.kickWidths[i];
+        i++;
+      } else {
+        goku.shift[0] += goku.width;
+      }
+
+      ctx.drawImage(goku.img, goku.shift[0], goku.shift[1], goku.width, goku.height, goku.pos[0], goku.pos[1], goku.width, goku.height);
+      goku.currentFrame++;
+      goku.check = 0;
+    }
+
+    goku.move(goku.dir);
+    goku.check++;
+    requestAnimationFrame(animate);
+  }
+
+  animate(); // goku.img.onload = () => goku.animate();
 });
 
 /***/ }),

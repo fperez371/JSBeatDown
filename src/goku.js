@@ -7,7 +7,7 @@ export default class Goku extends Sprite {
         this.height = props.height;
         this.img = new Image();
         this.img.src = props.imgUrl;
-        this.animate = this.animate.bind(this);
+        // this.animate = this.animate.bind(this);
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
         this.shift = [0, -1];
@@ -50,10 +50,6 @@ export default class Goku extends Sprite {
 
         // this.kick = this.kick.bind(this);
         // this.punch = this.punch.bind(this);
-    }
-
-    getPos() {
-        return this.pos;
     }
 
     handleDir() {
@@ -146,7 +142,7 @@ export default class Goku extends Sprite {
             );
             document.addEventListener("keyup", () => this.handlekeyup());
         }
-        this.animate();
+        // this.animate();
     }
 
     // punch(){
@@ -192,57 +188,57 @@ export default class Goku extends Sprite {
         }
     }
 
-    animate() {
-        let i = 0;
-        if (this.check < 7) {
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            this.ctx.drawImage(
-                this.img,
-                this.shift[0],
-                this.shift[1],
-                this.width,
-                this.height,
-                this.pos[0],
-                this.pos[1],
-                this.width,
-                this.height
-            );
+    // animate() {
+    //     let i = 0;
+    //     if (this.check < 7) {
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         this.ctx.drawImage(
+    //             this.img,
+    //             this.shift[0],
+    //             this.shift[1],
+    //             this.width,
+    //             this.height,
+    //             this.pos[0],
+    //             this.pos[1],
+    //             this.width,
+    //             this.height
+    //         );
 
-            if (this.currentFrame === this.totalFrames) {
-                this.shift = this.GOKUDIRS[this.dir].slice();
-                this.currentFrame = 1;
-            }
-        } else {
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            if (this.dir === "left") {
-                this.shift[0] -= this.width;
-            } else if (this.dir === "right") {
-                this.shift[0] += this.width;
-            } else if (this.dir === "punching") {
-                this.shift[0] += this.width;
-            } else if (this.dir === "kicking") {
-                this.shift[0] += this.kickWidths[i];
-                i++;
-            } else {
-                this.shift[0] += this.width;
-            }
-            this.ctx.drawImage(
-                this.img,
-                this.shift[0],
-                this.shift[1],
-                this.width,
-                this.height,
-                this.pos[0],
-                this.pos[1],
-                this.width,
-                this.height
-            );
+    //         if (this.currentFrame === this.totalFrames) {
+    //             this.shift = this.GOKUDIRS[this.dir].slice();
+    //             this.currentFrame = 1;
+    //         }
+    //     } else {
+    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+    //         if (this.dir === "left") {
+    //             this.shift[0] -= this.width;
+    //         } else if (this.dir === "right") {
+    //             this.shift[0] += this.width;
+    //         } else if (this.dir === "punching") {
+    //             this.shift[0] += this.width;
+    //         } else if (this.dir === "kicking") {
+    //             this.shift[0] += this.kickWidths[i];
+    //             i++;
+    //         } else {
+    //             this.shift[0] += this.width;
+    //         }
+    //         this.ctx.drawImage(
+    //             this.img,
+    //             this.shift[0],
+    //             this.shift[1],
+    //             this.width,
+    //             this.height,
+    //             this.pos[0],
+    //             this.pos[1],
+    //             this.width,
+    //             this.height
+    //         );
 
-            this.currentFrame++;
-            this.check = 0;
-        }
-        this.move(this.dir);
-        this.check++;
-        requestAnimationFrame(this.animate);
-    }
+    //         this.currentFrame++;
+    //         this.check = 0;
+    //     }
+    //     this.move(this.dir);
+    //     this.check++;
+    //     requestAnimationFrame(this.animate);
+    // }
 }

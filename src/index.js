@@ -3,9 +3,9 @@ import Goku from "./goku";
 document.addEventListener("DOMContentLoaded", () => {
     console.log("webpack is running...");
 
-    // var canvas = document.getElementById('canvas');
+    var canvas = document.getElementById("canvas");
 
-    // var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext("2d");
     // var background = new Image();
     // background.src = "../images/arena.png";
     // background.addEventListener("load", loadImage, false);
@@ -18,15 +18,120 @@ document.addEventListener("DOMContentLoaded", () => {
         startPos: [200, 450],
         player: true,
     });
-    // var otherKu = new Goku({
-    //     width: 33,
-    //     height: 40,
-    //     imgUrl: "images/goku.jpg",
-    //     startPos: [300, 450],
-    //     player: false,
-    // });
+    var otherKu = new Goku({
+        width: 33,
+        height: 40,
+        imgUrl: "images/goku.jpg",
+        startPos: [300, 450],
+        player: false,
+    });
     goku.start();
-    // otherKu.start();
-    goku.getPos();
+    otherKu.start();
+    debugger;
+    function animate() {
+        let j = 0;
+        if (otherKu.check < 7) {
+            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+            ctx.drawImage(
+                otherKu.img,
+                otherKu.shift[0],
+                otherKu.shift[1],
+                otherKu.width,
+                otherKu.height,
+                otherKu.pos[0],
+                otherKu.pos[1],
+                otherKu.width,
+                otherKu.height
+            );
+
+            if (otherKu.currentFrame === otherKu.totalFrames) {
+                otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
+                otherKu.currentFrame = 1;
+            }
+        } else {
+            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+            if (otherKu.dir === "left") {
+                otherKu.shift[0] -= otherKu.width;
+            } else if (otherKu.dir === "right") {
+                otherKu.shift[0] += otherKu.width;
+            } else if (otherKu.dir === "punching") {
+                otherKu.shift[0] += otherKu.width;
+            } else if (otherKu.dir === "kicking") {
+                otherKu.shift[0] += otherKu.kickWidths[j];
+                j++;
+            } else {
+                otherKu.shift[0] += otherKu.width;
+            }
+            ctx.drawImage(
+                otherKu.img,
+                otherKu.shift[0],
+                otherKu.shift[1],
+                otherKu.width,
+                otherKu.height,
+                otherKu.pos[0],
+                otherKu.pos[1],
+                otherKu.width,
+                otherKu.height
+            );
+
+            otherKu.currentFrame++;
+            otherKu.check = 0;
+        }
+        otherKu.move(otherKu.dir);
+        otherKu.check++;
+
+        let i = 0;
+        if (goku.check < 7) {
+            ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            ctx.drawImage(
+                goku.img,
+                goku.shift[0],
+                goku.shift[1],
+                goku.width,
+                goku.height,
+                goku.pos[0],
+                goku.pos[1],
+                goku.width,
+                goku.height
+            );
+
+            if (goku.currentFrame === goku.totalFrames) {
+                goku.shift = goku.GOKUDIRS[goku.dir].slice();
+                goku.currentFrame = 1;
+            }
+        } else {
+            ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+            if (goku.dir === "left") {
+                goku.shift[0] -= goku.width;
+            } else if (goku.dir === "right") {
+                goku.shift[0] += goku.width;
+            } else if (goku.dir === "punching") {
+                goku.shift[0] += goku.width;
+            } else if (goku.dir === "kicking") {
+                goku.shift[0] += goku.kickWidths[i];
+                i++;
+            } else {
+                goku.shift[0] += goku.width;
+            }
+            ctx.drawImage(
+                goku.img,
+                goku.shift[0],
+                goku.shift[1],
+                goku.width,
+                goku.height,
+                goku.pos[0],
+                goku.pos[1],
+                goku.width,
+                goku.height
+            );
+
+            goku.currentFrame++;
+            goku.check = 0;
+        }
+        goku.move(goku.dir);
+        goku.check++;
+        requestAnimationFrame(animate);
+    }
+    animate();
     // goku.img.onload = () => goku.animate();
 });
