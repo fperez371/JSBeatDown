@@ -7,7 +7,7 @@ export default class Goku extends Sprite {
         this.height = props.height;
         this.img = new Image();
         this.img.src = props.imgUrl;
-        // this.animate = this.animate.bind(this);
+
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
         this.shift = [0, -1];
@@ -17,7 +17,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.dir = "idle";
-        // this.handlekeydown = this.handlekeydown.bind(this);
+
         this.GOKUDIRS = {
             idle: [1, 1],
             right: [-1, 83],
@@ -46,9 +46,6 @@ export default class Goku extends Sprite {
             punching: 8,
             kicking: 11,
         };
-
-        // this.kick = this.kick.bind(this);
-        // this.punch = this.punch.bind(this);
     }
 
     handleDir() {

@@ -131,8 +131,7 @@ function (_Sprite) {
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
-    _this.img.src = props.imgUrl; // this.animate = this.animate.bind(this);
-    // this.canvas = document.getElementById("canvas");
+    _this.img.src = props.imgUrl; // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.shift = [0, -1];
@@ -141,8 +140,7 @@ function (_Sprite) {
     _this.player = props.player;
     _this.pos = props.startPos;
     _this.check = 0;
-    _this.dir = "idle"; // this.handlekeydown = this.handlekeydown.bind(this);
-
+    _this.dir = "idle";
     _this.GOKUDIRS = {
       idle: [1, 1],
       right: [-1, 83],
@@ -168,9 +166,7 @@ function (_Sprite) {
       running: 8,
       punching: 8,
       kicking: 11
-    }; // this.kick = this.kick.bind(this);
-    // this.punch = this.punch.bind(this);
-
+    };
     return _this;
   }
 
