@@ -39,8 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return false;
         } else if (char.pos[0] < 0 && char.dir === "left") {
             return false;
-        }
-        if (char.pos[0] < otherKu.pos[0] + 33 && char.dir === "left") {
+        } else if (char.pos[0] > otherKu.pos[0] - 33 && char.dir === "right") {
+            return false;
+        } else if (char.pos[0] > otherKu.pos[0] + 33 && char.dir === "left") {
             return false;
         }
         return true;
@@ -76,54 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function animate() {
         let j = 0;
         let i = 0;
-        if (otherKu.check < 7) {
-            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-            ctx.drawImage(
-                otherKu.img,
-                otherKu.shift[0],
-                otherKu.shift[1],
-                otherKu.width,
-                otherKu.height,
-                otherKu.pos[0],
-                otherKu.pos[1],
-                otherKu.width,
-                otherKu.height
-            );
-
-            if (otherKu.currentFrame === otherKu.totalFrames) {
-                otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
-                otherKu.currentFrame = 1;
-            }
-        } else {
-            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-            if (otherKu.dir === "left") {
-                otherKu.shift[0] -= otherKu.width;
-            } else if (otherKu.dir === "right") {
-                otherKu.shift[0] += otherKu.width;
-            } else if (otherKu.dir === "punching") {
-                otherKu.shift[0] += otherKu.width;
-            } else if (otherKu.dir === "kicking") {
-                otherKu.shift[0] += otherKu.kickWidths[j];
-                j++;
-            } else {
-                otherKu.shift[0] += otherKu.width;
-            }
-            ctx.drawImage(
-                otherKu.img,
-                otherKu.shift[0],
-                otherKu.shift[1],
-                otherKu.width,
-                otherKu.height,
-                otherKu.pos[0],
-                otherKu.pos[1],
-                otherKu.width,
-                otherKu.height
-            );
-
-            otherKu.currentFrame++;
-            otherKu.check = 0;
-        }
-
         if (goku.check < 7) {
             ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             ctx.drawImage(
@@ -176,6 +129,53 @@ document.addEventListener("DOMContentLoaded", () => {
         move(otherKu.dir, otherKu);
         otherKu.check++;
         requestAnimationFrame(animate);
+        if (otherKu.check < 7) {
+            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+            ctx.drawImage(
+                otherKu.img,
+                otherKu.shift[0],
+                otherKu.shift[1],
+                otherKu.width,
+                otherKu.height,
+                otherKu.pos[0],
+                otherKu.pos[1],
+                otherKu.width,
+                otherKu.height
+            );
+
+            if (otherKu.currentFrame === otherKu.totalFrames) {
+                otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
+                otherKu.currentFrame = 1;
+            }
+        } else {
+            ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+            if (otherKu.dir === "left") {
+                otherKu.shift[0] -= otherKu.width;
+            } else if (otherKu.dir === "right") {
+                otherKu.shift[0] += otherKu.width;
+            } else if (otherKu.dir === "punching") {
+                otherKu.shift[0] += otherKu.width;
+            } else if (otherKu.dir === "kicking") {
+                otherKu.shift[0] += otherKu.kickWidths[j];
+                j++;
+            } else {
+                otherKu.shift[0] += otherKu.width;
+            }
+            ctx.drawImage(
+                otherKu.img,
+                otherKu.shift[0],
+                otherKu.shift[1],
+                otherKu.width,
+                otherKu.height,
+                otherKu.pos[0],
+                otherKu.pos[1],
+                otherKu.width,
+                otherKu.height
+            );
+
+            otherKu.currentFrame++;
+            otherKu.check = 0;
+        }
     }
 
     function handlekeydown(e) {
