@@ -91,6 +91,7 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.punching;
         } else if (this.dir === "kicking") {
             this.img.src = "images/goku.jpg";
+            this.pos[1] = 444;
             this.shift = this.GOKUDIRS.kicking.slice();
             this.height = this.HEIGHTS.kicking;
             this.width = this.WIDTHS.kicking;
@@ -148,41 +149,41 @@ export default class Goku extends Sprite {
     // kick() {
 
     // }
-    inBounds() {
-        if (this.pos[0] > 480 && this.dir === "right") {
-            return false;
-        } else if (this.pos[0] < 0 && this.dir === "left") {
-            return false;
-        }
-        return true;
-    }
+    // inBounds() {
+    //     if (this.pos[0] > 480 && this.dir === "right") {
+    //         return false;
+    //     } else if (this.pos[0] < 0 && this.dir === "left") {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    move(dir) {
-        switch (dir) {
-            case "right":
-                if (this.inBounds()) {
-                    this.pos[0] += 1;
-                }
-                break;
-            case "left":
-                if (this.inBounds()) {
-                    this.pos[0] -= 1;
-                }
-                break;
-            case "up":
-                if (this.inBounds()) {
-                    this.pos[1] -= 1;
-                }
-                break;
-            case "down":
-                if (this.inBounds()) {
-                    this.pos[1] += 1;
-                }
-                break;
-            default:
-                return;
-        }
-    }
+    // move(dir) {
+    //     switch (dir) {
+    //         case "right":
+    //             if (this.inBounds()) {
+    //                 this.pos[0] += 1;
+    //             }
+    //             break;
+    //         case "left":
+    //             if (this.inBounds()) {
+    //                 this.pos[0] -= 1;
+    //             }
+    //             break;
+    //         case "up":
+    //             if (this.inBounds()) {
+    //                 this.pos[1] -= 1;
+    //             }
+    //             break;
+    //         case "down":
+    //             if (this.inBounds()) {
+    //                 this.pos[1] += 1;
+    //             }
+    //             break;
+    //         default:
+    //             return;
+    //     }
+    // }
 
     // animate() {
     //     let i = 0;

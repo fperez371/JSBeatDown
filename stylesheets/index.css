@@ -2,8 +2,8 @@
     padding-top: 0;
     max-width: 512px !important;
     max-height: 512px !important;
-    background: url("../images/arena.png") no-repeat -8px -29px,
-        url("../images/arena.png") no-repeat -532px -29px;
+    background: url("../images/arena.png") no-repeat -8px -29px;
+    /* url("../images/arena.png") no-repeat -532px -29px; */
     display: block;
     margin: 5px;
     /* top: 50%; */

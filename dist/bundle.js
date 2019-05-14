@@ -206,6 +206,7 @@ function (_Sprite) {
         this.totalFrames = this.TOTALFRAMES.punching;
       } else if (this.dir === "kicking") {
         this.img.src = "images/goku.jpg";
+        this.pos[1] = 444;
         this.shift = this.GOKUDIRS.kicking.slice();
         this.height = this.HEIGHTS.kicking;
         this.width = this.WIDTHS.kicking;
@@ -254,54 +255,41 @@ function (_Sprite) {
     // }
     // kick() {
     // }
-
-  }, {
-    key: "inBounds",
-    value: function inBounds() {
-      if (this.pos[0] > 480 && this.dir === "right") {
-        return false;
-      } else if (this.pos[0] < 0 && this.dir === "left") {
-        return false;
-      }
-
-      return true;
-    }
-  }, {
-    key: "move",
-    value: function move(dir) {
-      switch (dir) {
-        case "right":
-          if (this.inBounds()) {
-            this.pos[0] += 1;
-          }
-
-          break;
-
-        case "left":
-          if (this.inBounds()) {
-            this.pos[0] -= 1;
-          }
-
-          break;
-
-        case "up":
-          if (this.inBounds()) {
-            this.pos[1] -= 1;
-          }
-
-          break;
-
-        case "down":
-          if (this.inBounds()) {
-            this.pos[1] += 1;
-          }
-
-          break;
-
-        default:
-          return;
-      }
-    } // animate() {
+    // inBounds() {
+    //     if (this.pos[0] > 480 && this.dir === "right") {
+    //         return false;
+    //     } else if (this.pos[0] < 0 && this.dir === "left") {
+    //         return false;
+    //     }
+    //     return true;
+    // }
+    // move(dir) {
+    //     switch (dir) {
+    //         case "right":
+    //             if (this.inBounds()) {
+    //                 this.pos[0] += 1;
+    //             }
+    //             break;
+    //         case "left":
+    //             if (this.inBounds()) {
+    //                 this.pos[0] -= 1;
+    //             }
+    //             break;
+    //         case "up":
+    //             if (this.inBounds()) {
+    //                 this.pos[1] -= 1;
+    //             }
+    //             break;
+    //         case "down":
+    //             if (this.inBounds()) {
+    //                 this.pos[1] += 1;
+    //             }
+    //             break;
+    //         default:
+    //             return;
+    //     }
+    // }
+    // animate() {
     //     let i = 0;
     //     if (this.check < 7) {
     //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
@@ -396,8 +384,58 @@ document.addEventListener("DOMContentLoaded", function () {
     player: false
   });
 
+  function inBounds(char) {
+    if (char.pos[0] > 480 && char.dir === "right") {
+      return false;
+    } else if (char.pos[0] < 0 && char.dir === "left") {
+      return false;
+    }
+
+    if (char.pos[0] < otherKu.pos[0] + 33 && char.dir === "left") {
+      return false;
+    }
+
+    return true;
+  }
+
+  function move(dir, char) {
+    switch (dir) {
+      case "right":
+        if (inBounds(char)) {
+          char.pos[0] += 1;
+        }
+
+        break;
+
+      case "left":
+        if (inBounds(char)) {
+          char.pos[0] -= 1;
+        }
+
+        break;
+
+      case "up":
+        if (inBounds(char)) {
+          char.pos[1] -= 1;
+        }
+
+        break;
+
+      case "down":
+        if (inBounds(char)) {
+          char.pos[1] += 1;
+        }
+
+        break;
+
+      default:
+        return;
+    }
+  }
+
   function animate() {
     var j = 0;
+    var i = 0;
 
     if (otherKu.check < 7) {
       ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
@@ -428,10 +466,6 @@ document.addEventListener("DOMContentLoaded", function () {
       otherKu.check = 0;
     }
 
-    otherKu.move(otherKu.dir);
-    otherKu.check++;
-    var i = 0;
-
     if (goku.check < 7) {
       ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
       ctx.drawImage(goku.img, goku.shift[0], goku.shift[1], goku.width, goku.height, goku.pos[0], goku.pos[1], goku.width, goku.height);
@@ -461,8 +495,10 @@ document.addEventListener("DOMContentLoaded", function () {
       goku.check = 0;
     }
 
-    goku.move(goku.dir);
+    move(goku.dir, goku);
     goku.check++;
+    move(otherKu.dir, otherKu);
+    otherKu.check++;
     requestAnimationFrame(animate);
   }
 
