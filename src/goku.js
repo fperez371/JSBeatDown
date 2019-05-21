@@ -54,7 +54,7 @@ export default class Goku extends Sprite {
             this.dir === "right" &&
             (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)
         ) {
-            this.img.src = "images/goku.jpg";
+            this.img.src = "images/goku.png";
             this.pos[1] = 444;
             this.shift = this.GOKUDIRS.right.slice();
             this.height = this.HEIGHTS.running;
@@ -65,7 +65,7 @@ export default class Goku extends Sprite {
             this.dir === "left" &&
             (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)
         ) {
-            this.img.src = "images/goku_left.jpg";
+            this.img.src = "images/goku_left.png";
             this.pos[1] = 444;
             this.shift = this.GOKUDIRS.left.slice();
             this.height = this.HEIGHTS.running;
@@ -76,7 +76,7 @@ export default class Goku extends Sprite {
             this.dir === "idle" &&
             this.shift[1] !== this.GOKUDIRS.idle[1]
         ) {
-            this.img.src = "images/goku.jpg";
+            this.img.src = "images/goku.png";
             this.pos[1] = 450;
             this.shift = this.GOKUDIRS.idle.slice();
             this.height = this.HEIGHTS.idle;
@@ -84,14 +84,14 @@ export default class Goku extends Sprite {
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.idle;
         } else if (this.dir === "punching") {
-            this.img.src = "images/goku.jpg";
+            this.img.src = "images/goku.png";
             this.shift = this.GOKUDIRS.punching.slice();
             this.width = this.WIDTHS.punching;
             this.height = this.HEIGHTS.punching;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.punching;
         } else if (this.dir === "kicking") {
-            this.img.src = "images/goku.jpg";
+            this.img.src = "images/goku.png";
             this.pos[1] = 444;
             this.shift = this.GOKUDIRS.kicking.slice();
             this.height = this.HEIGHTS.kicking;

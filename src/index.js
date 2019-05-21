@@ -22,14 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
     var goku = new Goku({
         width: 33,
         height: 40,
-        imgUrl: "images/goku.jpg",
+        imgUrl: "images/goku.png",
         startPos: [200, 450],
         player: true,
     });
     var otherKu = new Goku({
         width: 33,
         height: 40,
-        imgUrl: "images/goku.jpg",
+        imgUrl: "images/goku.png",
         startPos: [300, 450],
         player: false,
     });
