@@ -75,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function animate() {
-        let j = 0;
-        let i = 0;
+        let otherKuIdx = 0;
+        let kickIdx = 0;
         if (goku.check < 7) {
             ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             ctx.drawImage(
@@ -104,8 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (goku.dir === "punching") {
                 goku.shift[0] += goku.width;
             } else if (goku.dir === "kicking") {
-                goku.shift[0] += goku.kickWidths[i];
-                i++;
+                goku.shift[0] += goku.kickWidths[kickIdx];
+                kickIdx++;
             } else {
                 goku.shift[0] += goku.width;
             }
@@ -156,8 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (otherKu.dir === "punching") {
                 otherKu.shift[0] += otherKu.width;
             } else if (otherKu.dir === "kicking") {
-                otherKu.shift[0] += otherKu.kickWidths[j];
-                j++;
+                otherKu.shift[0] += otherKu.kickWidths[otherKuIdx];
+                otherKuIdx++;
             } else {
                 otherKu.shift[0] += otherKu.width;
             }
