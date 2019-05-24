@@ -25,13 +25,17 @@ export default class Goku extends Sprite {
             left: [1151, 83],
             punching: [-1, 476],
             kicking: [1, 959],
+            dmg: [11, 1162],
         };
         this.kickWidths = [58, 115, 172, 229, 286, 343, 400, 449, 498, 547];
+        this.dmgWidths = [48, 50, 42, 51, 51, 51];
+        this.dmgHeights = [32, 34, 35, 35, 33, 36, 37];
         this.WIDTHS = {
             idle: 33,
             running: 33,
             punching: 40.5,
             kicking: 56,
+            dmg: 28,
         };
 
         this.HEIGHTS = {
@@ -39,6 +43,7 @@ export default class Goku extends Sprite {
             running: 48,
             punching: 40,
             kicking: 48,
+            dmg: 32,
         };
 
         this.TOTALFRAMES = {
@@ -46,6 +51,7 @@ export default class Goku extends Sprite {
             running: 8,
             punching: 8,
             kicking: 11,
+            dmg: 7,
         };
     }
 
@@ -98,6 +104,14 @@ export default class Goku extends Sprite {
             this.width = this.WIDTHS.kicking;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.kicking;
+        } else if (this.dir === "dmg") {
+            this.img.src = "images/goku.png";
+            this.pos[1] = 455;
+            this.shift = this.GOKUDIRS.dmg.slice();
+            this.height = this.HEIGHTS.dmg;
+            this.width = this.WIDTHS.dmg;
+            this.currentFrame = 1;
+            this.totalFrames = this.TOTALFRAMES.dmg;
         }
     }
     // handlekeydown(e) {

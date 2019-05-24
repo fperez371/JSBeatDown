@@ -75,8 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function animate() {
-        let otherKuIdx = 0;
+        let otherKuKickIdx = 0;
         let kickIdx = 0;
+        let dmgHeightIdx = 0;
+        let dmgWidthIdx = 0;
+        let otherDmgHeightIdx = 0;
+        let otherDmgWidthIdx = 0;
         if (goku.check < 7) {
             ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             ctx.drawImage(
@@ -106,6 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (goku.dir === "kicking") {
                 goku.shift[0] += goku.kickWidths[kickIdx];
                 kickIdx++;
+            } else if (goku.dir === "dmg") {
+                goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
+                dmgWidthIdx++;
+                goku.height = goku.dmgHeights[dmgHeightIdx];
+                dmgHeightIdx++;
             } else {
                 goku.shift[0] += goku.width;
             }
@@ -156,8 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (otherKu.dir === "punching") {
                 otherKu.shift[0] += otherKu.width;
             } else if (otherKu.dir === "kicking") {
-                otherKu.shift[0] += otherKu.kickWidths[otherKuIdx];
-                otherKuIdx++;
+                otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
+                otherKuKickIdx++;
             } else {
                 otherKu.shift[0] += otherKu.width;
             }

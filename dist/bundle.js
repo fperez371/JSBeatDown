@@ -148,26 +148,32 @@ function (_Sprite) {
       right: [-1, 83],
       left: [1151, 83],
       punching: [-1, 476],
-      kicking: [1, 959]
+      kicking: [1, 959],
+      dmg: [11, 1162]
     };
     _this.kickWidths = [58, 115, 172, 229, 286, 343, 400, 449, 498, 547];
+    _this.dmgWidths = [48, 50, 42, 51, 51, 51];
+    _this.dmgHeights = [32, 34, 35, 35, 33, 36, 37];
     _this.WIDTHS = {
       idle: 33,
       running: 33,
       punching: 40.5,
-      kicking: 56
+      kicking: 56,
+      dmg: 28
     };
     _this.HEIGHTS = {
       idle: 40,
       running: 48,
       punching: 40,
-      kicking: 48
+      kicking: 48,
+      dmg: 32
     };
     _this.TOTALFRAMES = {
       idle: 8,
       running: 8,
       punching: 8,
-      kicking: 11
+      kicking: 11,
+      dmg: 7
     };
     return _this;
   }
@@ -214,6 +220,14 @@ function (_Sprite) {
         this.width = this.WIDTHS.kicking;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.kicking;
+      } else if (this.dir === "dmg") {
+        this.img.src = "images/goku.png";
+        this.pos[1] = 455;
+        this.shift = this.GOKUDIRS.dmg.slice();
+        this.height = this.HEIGHTS.dmg;
+        this.width = this.WIDTHS.dmg;
+        this.currentFrame = 1;
+        this.totalFrames = this.TOTALFRAMES.dmg;
       }
     } // handlekeydown(e) {
     //     e.preventDefault();
@@ -444,8 +458,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function animate() {
-    var otherKuIdx = 0;
+    var otherKuKickIdx = 0;
     var kickIdx = 0;
+    var dmgHeightIdx = 0;
+    var dmgWidthIdx = 0;
+    var otherDmgHeightIdx = 0;
+    var otherDmgWidthIdx = 0;
 
     if (goku.check < 7) {
       ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
@@ -467,6 +485,11 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (goku.dir === "kicking") {
         goku.shift[0] += goku.kickWidths[kickIdx];
         kickIdx++;
+      } else if (goku.dir === "dmg") {
+        goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
+        dmgWidthIdx++;
+        goku.height = goku.dmgHeights[dmgHeightIdx];
+        dmgHeightIdx++;
       } else {
         goku.shift[0] += goku.width;
       }
@@ -500,8 +523,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (otherKu.dir === "punching") {
         otherKu.shift[0] += otherKu.width;
       } else if (otherKu.dir === "kicking") {
-        otherKu.shift[0] += otherKu.kickWidths[otherKuIdx];
-        otherKuIdx++;
+        otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
+        otherKuKickIdx++;
       } else {
         otherKu.shift[0] += otherKu.width;
       }
