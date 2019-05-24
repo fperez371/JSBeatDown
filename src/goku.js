@@ -18,7 +18,7 @@ export default class Goku extends Sprite {
         this.check = 0;
         this.dir = "idle";
         this.idleDir = "right";
-        this.health = 100;
+        this.health = 1000;
         this.GOKUDIRS = {
             idle: [1, 1],
             right: [-1, 83],
