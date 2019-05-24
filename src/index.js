@@ -1,5 +1,4 @@
 import Goku from "./goku";
-import { debug } from "util";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("webpack is running...");
@@ -42,7 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 char.pos[0] + 33 <= otherKu.pos[0] + 33
             ) {
                 otherKu.dir = "dmg";
-                otherKu.health -= 1;
+                otherKu.health -= 50;
+                otherKu.handleDir();
+            }
+        } else if (char.dir === "punching") {
+            if (
+                char.pos[0] + 33 >= otherKu.pos[0] &&
+                char.pos[0] + 33 <= otherKu.pos[0] + 33
+            ) {
+                otherKu.dir = "dmg";
+                otherKu.health -= 50;
                 otherKu.handleDir();
             }
         }
@@ -73,14 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     char.pos[0] -= 1;
                 }
                 break;
-            case "up":
-                if (inBounds(char)) {
-                    char.pos[1] -= 1;
-                }
-                break;
-            case "down":
-                if (inBounds(char)) {
-                    char.pos[1] += 1;
+            case "dmg":
+                if (char.pos[0] < 458.5) {
+                    char.pos[0] += 0.5;
                 }
                 break;
             default:
@@ -127,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 goku.shift[0] += goku.width;
             } else if (goku.dir === "punching") {
                 goku.shift[0] += goku.width;
+                hitCollision(goku);
             } else if (goku.dir === "kicking") {
                 goku.shift[0] += goku.kickWidths[kickIdx];
                 hitCollision(goku);
