@@ -14,6 +14,23 @@ document.addEventListener("DOMContentLoaded", () => {
             start();
         }
     });
+
+    var audio = document.getElementById("audio");
+    audio.volume = 0.4;
+    audio.addEventListener(
+        "ended",
+        function() {
+            this.currentTime = 0;
+            this.play();
+        },
+        false
+    );
+
+    document.addEventListener("keydown", function(e) {
+        if (e.code === "KeyM") {
+            audio.muted = !audio.muted;
+        }
+    });
     // var background = new Image();
     // background.src = "../images/arena.png";
     // background.addEventListener("load", loadImage, false);
@@ -29,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var otherKu = new Goku({
         width: 33,
         height: 40,
-        imgUrl: "images/goku.png",
+        imgUrl: "images/goku_left.png",
         startPos: [300, 450],
         player: false,
     });
@@ -179,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (otherKu.currentFrame === otherKu.totalFrames) {
                 if (otherKu.dir === "dmg") {
-                    otherKu.dir = "idle";
+                    otherKu.dir = "idleLeft";
                     otherKu.handleDir();
                 } else {
                     otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
@@ -189,6 +206,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
             if (otherKu.dir === "left") {
+                otherKu.shift[0] -= otherKu.width;
+            } else if (otherKu.dir === "idleLeft") {
                 otherKu.shift[0] -= otherKu.width;
             } else if (otherKu.dir === "right") {
                 otherKu.shift[0] += otherKu.width;
@@ -257,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("keyup", () => handlekeyup());
 
         animate();
+        audio.play();
     }
     // start();
     // goku.img.onload = () => goku.animate();

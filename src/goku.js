@@ -16,11 +16,11 @@ export default class Goku extends Sprite {
         this.player = props.player;
         this.pos = props.startPos;
         this.check = 0;
-        this.dir = "idle";
-        this.idleDir = "right";
+        this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
         this.health = 1000;
         this.GOKUDIRS = {
             idle: [1, 1],
+            idleLeft: [1151, 3],
             right: [-1, 83],
             left: [1151, 83],
             punching: [-1, 476],
@@ -80,11 +80,24 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.running;
         } else if (
             this.dir === "idle" &&
-            this.shift[1] !== this.GOKUDIRS.idle[1]
+            this.shift[1] !== this.GOKUDIRS.idle[1] &&
+            this.player
         ) {
             this.img.src = "images/goku.png";
             this.pos[1] = 450;
             this.shift = this.GOKUDIRS.idle.slice();
+            this.height = this.HEIGHTS.idle;
+            this.width = this.WIDTHS.idle;
+            this.currentFrame = 1;
+            this.totalFrames = this.TOTALFRAMES.idle;
+        } else if (
+            this.dir === "idleLeft" &&
+            this.shift[1] !== this.GOKUDIRS.idleLeft[1] &&
+            !this.player
+        ) {
+            this.img.src = "images/goku_left.png";
+            this.pos[1] = 450;
+            this.shift = this.GOKUDIRS.idleLeft.slice();
             this.height = this.HEIGHTS.idle;
             this.width = this.WIDTHS.idle;
             this.currentFrame = 1;

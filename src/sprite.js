@@ -11,10 +11,6 @@ export default class Sprite {
         this.dir = "idle";
     }
 
-    getPos() {
-        return this.pos;
-    }
-
     inBounds() {
         if (this.pos[0] > 480 && this.dir === "right") {
             return false;

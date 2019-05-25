@@ -140,11 +140,11 @@ function (_Sprite) {
     _this.player = props.player;
     _this.pos = props.startPos;
     _this.check = 0;
-    _this.dir = "idle";
-    _this.idleDir = "right";
+    _this.player ? _this.dir = "idle" : _this.dir = "idleLeft";
     _this.health = 1000;
     _this.GOKUDIRS = {
       idle: [1, 1],
+      idleLeft: [1151, 3],
       right: [-1, 83],
       left: [1151, 83],
       punching: [-1, 476],
@@ -197,10 +197,18 @@ function (_Sprite) {
         this.width = this.WIDTHS.running;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.running;
-      } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1]) {
+      } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1] && this.player) {
         this.img.src = "images/goku.png";
         this.pos[1] = 450;
         this.shift = this.GOKUDIRS.idle.slice();
+        this.height = this.HEIGHTS.idle;
+        this.width = this.WIDTHS.idle;
+        this.currentFrame = 1;
+        this.totalFrames = this.TOTALFRAMES.idle;
+      } else if (this.dir === "idleLeft" && this.shift[1] !== this.GOKUDIRS.idleLeft[1] && !this.player) {
+        this.img.src = "images/goku_left.png";
+        this.pos[1] = 450;
+        this.shift = this.GOKUDIRS.idleLeft.slice();
         this.height = this.HEIGHTS.idle;
         this.width = this.WIDTHS.idle;
         this.currentFrame = 1;
@@ -388,6 +396,17 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.clearRect(0, 0, 512, 512);
       start();
     }
+  });
+  var audio = document.getElementById("audio");
+  audio.volume = 0.4;
+  audio.addEventListener("ended", function () {
+    this.currentTime = 0;
+    this.play();
+  }, false);
+  document.addEventListener("keydown", function (e) {
+    if (e.code === "KeyM") {
+      audio.muted = !audio.muted;
+    }
   }); // var background = new Image();
   // background.src = "../images/arena.png";
   // background.addEventListener("load", loadImage, false);
@@ -403,7 +422,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
     width: 33,
     height: 40,
-    imgUrl: "images/goku.png",
+    imgUrl: "images/goku_left.png",
     startPos: [300, 450],
     player: false
   });
@@ -528,7 +547,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (otherKu.currentFrame === otherKu.totalFrames) {
         if (otherKu.dir === "dmg") {
-          otherKu.dir = "idle";
+          otherKu.dir = "idleLeft";
           otherKu.handleDir();
         } else {
           otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
@@ -539,6 +558,8 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
 
       if (otherKu.dir === "left") {
+        otherKu.shift[0] -= otherKu.width;
+      } else if (otherKu.dir === "idleLeft") {
         otherKu.shift[0] -= otherKu.width;
       } else if (otherKu.dir === "right") {
         otherKu.shift[0] += otherKu.width;
@@ -603,6 +624,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return handlekeyup();
     });
     animate();
+    audio.play();
   } // start();
   // goku.img.onload = () => goku.animate();
 
@@ -644,11 +666,6 @@ function () {
   }
 
   _createClass(Sprite, [{
-    key: "getPos",
-    value: function getPos() {
-      return this.pos;
-    }
-  }, {
     key: "inBounds",
     value: function inBounds() {
       if (this.pos[0] > 480 && this.dir === "right") {
