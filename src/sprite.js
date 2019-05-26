@@ -1,22 +1,13 @@
 export default class Sprite {
-    constructor(width, height, imgUrl, startPos) {
-        this.width = width;
-        this.height = height;
+    constructor(props) {
+        this.width = props.width;
+        this.height = props.height;
         this.img = new Image();
-        this.img.src = imgUrl;
+        this.img.src = props.imgUrl;
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.pos = startPos;
+        this.pos = props.startPos;
         this.check = 0;
         this.dir = "idle";
-    }
-
-    inBounds() {
-        if (this.pos[0] > 480 && this.dir === "right") {
-            return false;
-        } else if (this.pos[0] < 0 && this.dir === "left") {
-            return false;
-        }
-        return true;
     }
 }

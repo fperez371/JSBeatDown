@@ -22,7 +22,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
-        this.health = 1000;
+        this.health = 550;
         this.GOKUDIRS = {
             idle: [1, 1],
             idleLeft: [1151, 3],
@@ -31,6 +31,7 @@ export default class Goku extends Sprite {
             punching: [-1, 476],
             kicking: [1, 959],
             dmg: [11, 1162],
+            dead: [-204, -1266],
         };
         this.kickWidths = [58, 115, 172, 229, 286, 343, 400, 449, 498, 547];
         this.dmgWidths = [48, 50, 42, 51, 51, 51];
@@ -41,6 +42,7 @@ export default class Goku extends Sprite {
             punching: 40.5,
             kicking: 56,
             dmg: 28,
+            dead: 38,
         };
 
         this.HEIGHTS = {
@@ -49,6 +51,7 @@ export default class Goku extends Sprite {
             punching: 40,
             kicking: 48,
             dmg: 32,
+            dead: 19,
         };
 
         this.TOTALFRAMES = {
@@ -57,6 +60,7 @@ export default class Goku extends Sprite {
             punching: 8,
             kicking: 11,
             dmg: 7,
+            dead: 1,
         };
     }
 
@@ -130,6 +134,14 @@ export default class Goku extends Sprite {
             this.width = this.WIDTHS.dmg;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.dmg;
+        } else if (this.dir === "dead") {
+            this.img.src = "images/goku.png";
+            this.pos[1] = 465;
+            this.shift = this.GOKUDIRS.dead.slice();
+            this.height = this.HEIGHTS.dead;
+            this.width = this.WIDTHS.dead;
+            this.currentFrame = 1;
+            this.totalFrames = this.TOTALFRAMES.dead;
         }
     }
     // handlekeydown(e) {

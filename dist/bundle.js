@@ -146,7 +146,7 @@ function (_Sprite) {
     _this.pos = props.startPos;
     _this.check = 0;
     _this.player ? _this.dir = "idle" : _this.dir = "idleLeft";
-    _this.health = 1000;
+    _this.health = 550;
     _this.GOKUDIRS = {
       idle: [1, 1],
       idleLeft: [1151, 3],
@@ -154,7 +154,8 @@ function (_Sprite) {
       left: [1151, 83],
       punching: [-1, 476],
       kicking: [1, 959],
-      dmg: [11, 1162]
+      dmg: [11, 1162],
+      dead: [-204, -1266]
     };
     _this.kickWidths = [58, 115, 172, 229, 286, 343, 400, 449, 498, 547];
     _this.dmgWidths = [48, 50, 42, 51, 51, 51];
@@ -164,21 +165,24 @@ function (_Sprite) {
       running: 33,
       punching: 40.5,
       kicking: 56,
-      dmg: 28
+      dmg: 28,
+      dead: 38
     };
     _this.HEIGHTS = {
       idle: 40,
       running: 48,
       punching: 40,
       kicking: 48,
-      dmg: 32
+      dmg: 32,
+      dead: 19
     };
     _this.TOTALFRAMES = {
       idle: 8,
       running: 8,
       punching: 8,
       kicking: 11,
-      dmg: 7
+      dmg: 7,
+      dead: 1
     };
     return _this;
   }
@@ -241,6 +245,14 @@ function (_Sprite) {
         this.width = this.WIDTHS.dmg;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.dmg;
+      } else if (this.dir === "dead") {
+        this.img.src = "images/goku.png";
+        this.pos[1] = 465;
+        this.shift = this.GOKUDIRS.dead.slice();
+        this.height = this.HEIGHTS.dead;
+        this.width = this.WIDTHS.dead;
+        this.currentFrame = 1;
+        this.totalFrames = this.TOTALFRAMES.dead;
       }
     } // handlekeydown(e) {
     //     e.preventDefault();
@@ -391,7 +403,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("webpack is running...");
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   ctx.font = "30px Arial";
@@ -408,9 +419,8 @@ document.addEventListener("DOMContentLoaded", function () {
     this.currentTime = 0;
     this.play();
   }, false);
-  document.addEventListener("keydown", function (e) {
-    if (e.code === "KeyM") {
-      debugger;
+  document.addEventListener("keydown", function (key) {
+    if (key.code === "KeyM") {
       audio.muted = !audio.muted;
     }
   }); // var background = new Image();
@@ -432,6 +442,14 @@ document.addEventListener("DOMContentLoaded", function () {
     startPos: [300, 450],
     player: false
   });
+  var computer = otherKu;
+
+  function endFight() {
+    otherKu.deadSound.play();
+    goku.winSound.play();
+    audio.src = "sounds/bleach.mp3";
+    audio.play();
+  }
 
   function hitCollision(char) {
     if (char.dir === "kicking") {
@@ -439,17 +457,25 @@ document.addEventListener("DOMContentLoaded", function () {
         otherKu.dir = "dmg";
         otherKu.dmgSound.play();
         otherKu.health -= 50;
+
+        if (otherKu.health <= 0) {
+          otherKu.dir = "dead";
+          endFight();
+        }
+
         otherKu.handleDir();
       }
     } else if (char.dir === "punching") {
       if (char.pos[0] + 33 >= otherKu.pos[0] && char.pos[0] + 33 <= otherKu.pos[0] + 33) {
         otherKu.dir = "dmg";
+        otherKu.dmgSound.play();
+        otherKu.health -= 50;
 
-        if (!audio.muted) {
-          otherKu.dmgSound.play();
+        if (otherKu.health <= 0) {
+          otherKu.dir = "dead";
+          endFight();
         }
 
-        otherKu.health -= 50;
         otherKu.handleDir();
       }
     }
@@ -487,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case "dmg":
         if (char.pos[0] < 458.5) {
-          char.pos[0] += 0.5;
+          char.pos[0] += 0.3;
         }
 
         break;
@@ -522,7 +548,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
 
-      if (goku.dir === "left") {
+      if (goku.dir === "dead") {
+        goku.shift = [204, 1266];
+      } else if (goku.dir === "left") {
         goku.shift[0] -= goku.width;
       } else if (goku.dir === "right") {
         goku.shift[0] += goku.width;
@@ -569,7 +597,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
 
-      if (otherKu.dir === "left") {
+      if (otherKu.dir === "dead") {
+        otherKu.shift = [204, 1266];
+      } else if (otherKu.dir === "left") {
         otherKu.shift[0] -= otherKu.width;
       } else if (otherKu.dir === "idleLeft") {
         otherKu.shift[0] -= otherKu.width;
@@ -598,26 +628,26 @@ document.addEventListener("DOMContentLoaded", function () {
   function handlekeydown(e) {
     e.preventDefault();
 
-    if (e.key === "a") {
+    if (e.code === "KeyA") {
       goku.dir = "left";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
       goku.handleDir();
     }
 
-    if (e.key === "d") {
+    if (e.code === "KeyD") {
       goku.dir = "right";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
       goku.handleDir();
     }
 
-    if (e.key === "j") {
+    if (e.code === "KeyJ") {
       goku.dir = "punching";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
       goku.punchSound.play();
       goku.handleDir();
     }
 
-    if (e.key === "k") {
+    if (e.code === "KeyK") {
       goku.dir = "kicking";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
       goku.kickSound.play();
@@ -658,42 +688,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sprite; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var Sprite = function Sprite(props) {
+  _classCallCheck(this, Sprite);
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Sprite =
-/*#__PURE__*/
-function () {
-  function Sprite(width, height, imgUrl, startPos) {
-    _classCallCheck(this, Sprite);
-
-    this.width = width;
-    this.height = height;
-    this.img = new Image();
-    this.img.src = imgUrl;
-    this.canvas = document.getElementById("canvas");
-    this.ctx = this.canvas.getContext("2d");
-    this.pos = startPos;
-    this.check = 0;
-    this.dir = "idle";
-  }
-
-  _createClass(Sprite, [{
-    key: "inBounds",
-    value: function inBounds() {
-      if (this.pos[0] > 480 && this.dir === "right") {
-        return false;
-      } else if (this.pos[0] < 0 && this.dir === "left") {
-        return false;
-      }
-
-      return true;
-    }
-  }]);
-
-  return Sprite;
-}();
+  this.width = props.width;
+  this.height = props.height;
+  this.img = new Image();
+  this.img.src = props.imgUrl;
+  this.canvas = document.getElementById("canvas");
+  this.ctx = this.canvas.getContext("2d");
+  this.pos = props.startPos;
+  this.check = 0;
+  this.dir = "idle";
+};
 
 
 

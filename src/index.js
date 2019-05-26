@@ -1,8 +1,6 @@
 import Goku from "./goku";
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("webpack is running...");
-
     var canvas = document.getElementById("canvas");
 
     var ctx = canvas.getContext("2d");
@@ -26,9 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
         false
     );
 
-    document.addEventListener("keydown", function(e) {
-        if (e.code === "KeyM") {
-            debugger;
+    document.addEventListener("keydown", function(key) {
+        if (key.code === "KeyM") {
             audio.muted = !audio.muted;
         }
     });
@@ -52,6 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
         player: false,
     });
 
+    let computer = otherKu;
+
+    function endFight() {
+        otherKu.deadSound.play();
+        goku.winSound.play();
+        audio.src = "sounds/bleach.mp3";
+        audio.play();
+    }
+
     function hitCollision(char) {
         if (char.dir === "kicking") {
             if (
@@ -61,6 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 otherKu.dir = "dmg";
                 otherKu.dmgSound.play();
                 otherKu.health -= 50;
+                if (otherKu.health <= 0) {
+                    otherKu.dir = "dead";
+                    endFight();
+                }
                 otherKu.handleDir();
             }
         } else if (char.dir === "punching") {
@@ -69,10 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 char.pos[0] + 33 <= otherKu.pos[0] + 33
             ) {
                 otherKu.dir = "dmg";
-                if (!audio.muted) {
-                    otherKu.dmgSound.play();
-                }
+                otherKu.dmgSound.play();
                 otherKu.health -= 50;
+                if (otherKu.health <= 0) {
+                    otherKu.dir = "dead";
+                    endFight();
+                }
                 otherKu.handleDir();
             }
         }
@@ -105,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "dmg":
                 if (char.pos[0] < 458.5) {
-                    char.pos[0] += 0.5;
+                    char.pos[0] += 0.3;
                 }
                 break;
             default:
@@ -146,7 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-            if (goku.dir === "left") {
+            if (goku.dir === "dead") {
+                goku.shift = [204, 1266];
+            } else if (goku.dir === "left") {
                 goku.shift[0] -= goku.width;
             } else if (goku.dir === "right") {
                 goku.shift[0] += goku.width;
@@ -210,7 +224,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-            if (otherKu.dir === "left") {
+            if (otherKu.dir === "dead") {
+                otherKu.shift = [204, 1266];
+            } else if (otherKu.dir === "left") {
                 otherKu.shift[0] -= otherKu.width;
             } else if (otherKu.dir === "idleLeft") {
                 otherKu.shift[0] -= otherKu.width;
@@ -249,23 +265,23 @@ document.addEventListener("DOMContentLoaded", () => {
     function handlekeydown(e) {
         e.preventDefault();
 
-        if (e.key === "a") {
+        if (e.code === "KeyA") {
             goku.dir = "left";
             goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             goku.handleDir();
         }
-        if (e.key === "d") {
+        if (e.code === "KeyD") {
             goku.dir = "right";
             goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             goku.handleDir();
         }
-        if (e.key === "j") {
+        if (e.code === "KeyJ") {
             goku.dir = "punching";
             goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             goku.punchSound.play();
             goku.handleDir();
         }
-        if (e.key === "k") {
+        if (e.code === "KeyK") {
             goku.dir = "kicking";
             goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
             goku.kickSound.play();
@@ -281,7 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function start() {
         document.addEventListener("keydown", key => handlekeydown(key));
         document.addEventListener("keyup", () => handlekeyup());
-
         animate();
         audio.play();
     }
