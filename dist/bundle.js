@@ -490,6 +490,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     } else if (char.pos[0] > otherKu.pos[0] + 33 && char.dir === "left") {
       return false;
+    } else if (otherKu.pos[0] < goku.pos[0] + 33 && otherKu.dir === "left") {
+      return false;
     }
 
     return true;
@@ -577,6 +579,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     move(goku.dir, goku);
     goku.check++;
+
+    if (goku.pos[0] < otherKu.pos[0] + 33 && otherKu.health > 0) {
+      otherKu.dir = "left";
+      otherKu.handleDir();
+    } else if (otherKu.health > 0) {
+      debugger;
+      otherKu.dir = "punching";
+      otherKu.handleDir();
+    } else {
+      otherKu.dir = "dead";
+      otherKu.handleDir();
+    }
+
     move(otherKu.dir, otherKu);
     otherKu.check++;
     requestAnimationFrame(animate);
