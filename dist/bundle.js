@@ -128,16 +128,16 @@ function (_Sprite) {
     _classCallCheck(this, Goku);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Goku).call(this, props));
+    _this.player = props.player;
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
     _this.img.src = props.imgUrl; // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
-    _this.shift = [0, -1];
+    _this.player ? _this.shift = [0, -1] : _this.shift = [1151, 3];
     _this.totalFrames = 8;
     _this.currentFrame = 1;
-    _this.player = props.player;
     _this.pos = props.startPos;
     _this.check = 0;
     _this.player ? _this.dir = "idle" : _this.dir = "idleLeft";

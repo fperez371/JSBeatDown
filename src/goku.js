@@ -3,6 +3,7 @@ import Sprite from "./sprite";
 export default class Goku extends Sprite {
     constructor(props) {
         super(props);
+        this.player = props.player;
         this.width = props.width;
         this.height = props.height;
         this.img = new Image();
@@ -10,10 +11,9 @@ export default class Goku extends Sprite {
 
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
-        this.shift = [0, -1];
+        this.player ? (this.shift = [0, -1]) : (this.shift = [1151, 3]);
         this.totalFrames = 8;
         this.currentFrame = 1;
-        this.player = props.player;
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
