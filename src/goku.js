@@ -8,6 +8,11 @@ export default class Goku extends Sprite {
         this.height = props.height;
         this.img = new Image();
         this.img.src = props.imgUrl;
+        this.punchSound = new Audio("sounds/attack0.wav");
+        this.kickSound = new Audio("sounds/attack1.wav");
+        this.dmgSound = new Audio("sounds/hit1.wav");
+        this.deadSound = new Audio("sounds/defeated.wav");
+        this.winSound = new Audio("sounds/victory.wav");
 
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");

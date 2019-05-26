@@ -132,7 +132,12 @@ function (_Sprite) {
     _this.width = props.width;
     _this.height = props.height;
     _this.img = new Image();
-    _this.img.src = props.imgUrl; // this.canvas = document.getElementById("canvas");
+    _this.img.src = props.imgUrl;
+    _this.punchSound = new Audio("sounds/attack0.wav");
+    _this.kickSound = new Audio("sounds/attack1.wav");
+    _this.dmgSound = new Audio("sounds/hit1.wav");
+    _this.deadSound = new Audio("sounds/defeated.wav");
+    _this.winSound = new Audio("sounds/victory.wav"); // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.player ? _this.shift = [0, -1] : _this.shift = [1151, 3];
@@ -405,6 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }, false);
   document.addEventListener("keydown", function (e) {
     if (e.code === "KeyM") {
+      debugger;
       audio.muted = !audio.muted;
     }
   }); // var background = new Image();
@@ -429,14 +435,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function hitCollision(char) {
     if (char.dir === "kicking") {
-      if (char.pos[0] + 33 >= otherKu.pos[0] && char.pos[0] + 33 <= otherKu.pos[0] + 33) {
+      if (char.pos[0] + 40 >= otherKu.pos[0] && char.pos[0] + 40 <= otherKu.pos[0] + 33) {
         otherKu.dir = "dmg";
+        otherKu.dmgSound.play();
         otherKu.health -= 50;
         otherKu.handleDir();
       }
     } else if (char.dir === "punching") {
       if (char.pos[0] + 33 >= otherKu.pos[0] && char.pos[0] + 33 <= otherKu.pos[0] + 33) {
         otherKu.dir = "dmg";
+
+        if (!audio.muted) {
+          otherKu.dmgSound.play();
+        }
+
         otherKu.health -= 50;
         otherKu.handleDir();
       }
@@ -601,12 +613,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.key === "j") {
       goku.dir = "punching";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.punchSound.play();
       goku.handleDir();
     }
 
     if (e.key === "k") {
       goku.dir = "kicking";
       goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+      goku.kickSound.play();
       goku.handleDir();
     }
   }
