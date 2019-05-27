@@ -408,6 +408,8 @@ function (_Sprite) {
 
       if (this.check < 7) {
         if (this.player && this.health > 0) {
+          ctx.clearRect(75, 100, 512, 512);
+          ctx.clearRect(75, 75, 50, 50);
           ctx.fillStyle = "#000000";
           ctx.fillText("Goku", 75, 75);
           ctx.fillStyle = "#FF0000";
@@ -445,7 +447,9 @@ function (_Sprite) {
           ctx.fillText("Goku", 75, 75);
           ctx.fillStyle = "#FF0000";
           ctx.fillRect(75, 100, this.health / 100 * 140, 25);
-        } else if (!this.player && this.health > 0) {
+        }
+
+        if (!this.player && this.health > 0) {
           ctx.fillStyle = "#000000";
           ctx.fillText("Enemy", 300, 75);
           ctx.fillStyle = "#FF0000";
@@ -591,6 +595,9 @@ function () {
         this.audio.play();
         this.ctx.clearRect(0, 0, 512, 512);
         this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
+        this.goku.dir = "idle";
+        this.goku.handleDir();
+        this.goku.dontMove = true;
         setTimeout(function () {
           return _this.ctx.clearRect(0, 0, 512, 512);
         }, 2000);

@@ -67,6 +67,9 @@ export default class Game {
             this.audio.play();
             this.ctx.clearRect(0, 0, 512, 512);
             this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
+            this.goku.dir = "idle";
+            this.goku.handleDir();
+            this.goku.dontMove = true;
             setTimeout(() => this.ctx.clearRect(0, 0, 512, 512), 2000);
         }
     }
