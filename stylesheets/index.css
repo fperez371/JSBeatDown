@@ -7,7 +7,9 @@
     display: block;
     margin: 5px;
     /* top: 50%; */
+    position: relative;
 }
+
 @font-face {
     font-family: dbz;
     src: url(../font/Saiyan-Sans.ttf);
@@ -31,6 +33,75 @@
     padding-left: 7rem;
     padding-right: 7rem;
     margin-bottom: 5rem;
+}
+#gameover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 512px;
+    width: 512px;
+    transition: opacity 3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    font-family: "dbz";
+    color: #bb0200;
+    font-size: 50px;
+    flex-direction: column;
+    text-shadow: 1px 1px #000000;
+    user-select: none;
+}
+
+#gameover button {
+    color: gold;
+    font-size: 30px;
+    font-family: "dbz";
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 10px;
+    background: transparent;
+    border: none;
+}
+
+/* #startGame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 512px;
+    width: 512px;
+    transition: opacity 3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    font-family: "dbz";
+    color: gold;
+    font-size: 50px;
+    flex-direction: column;
+    text-shadow: 1px 1px #000000;
+    user-select: none;
+} */
+
+#pause {
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 512px;
+    width: 512px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    font-family: "dbz";
+    color: #fff;
+    text-shadow: 1px 1px #000000;
+    font-size: 50px;
+    user-select: none;
 }
 a {
     margin: 5px;

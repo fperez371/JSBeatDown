@@ -107,13 +107,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -131,13 +131,16 @@ function (_Sprite) {
     _this.player = props.player;
     _this.width = props.width;
     _this.height = props.height;
+    _this.game = props.game;
+    props.goku ? _this.goku = props.goku : _this.goku = null;
     _this.img = new Image();
     _this.img.src = props.imgUrl;
     _this.punchSound = new Audio("sounds/attack0.wav");
     _this.kickSound = new Audio("sounds/attack1.wav");
     _this.dmgSound = new Audio("sounds/hit1.wav");
     _this.deadSound = new Audio("sounds/defeated.wav");
-    _this.winSound = new Audio("sounds/victory.wav"); // this.canvas = document.getElementById("canvas");
+    _this.winSound = new Audio("sounds/victory.wav");
+    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.player ? _this.shift = [0, -1] : _this.shift = [1151, 3];
@@ -153,6 +156,7 @@ function (_Sprite) {
       right: [-1, 83],
       left: [1151, 83],
       punching: [-1, 476],
+      leftPunch: [1153, 479],
       kicking: [1, 959],
       dmg: [11, 1162],
       dead: [-204, -1266]
@@ -188,6 +192,28 @@ function (_Sprite) {
   }
 
   _createClass(Goku, [{
+    key: "aiBehavior",
+    value: function aiBehavior() {
+      if (!this.player && this.health > 0 && this.dir !== "dmg" && this.goku.health > 0) {
+        if (this.goku.pos[0] + 33 < this.pos[0]) {
+          this.dir = "left";
+          this.handleDir();
+        } else {
+          this.dir = "idleLeft";
+          this.handleDir();
+          this.dir = "leftPunch";
+          this.handleDir();
+        }
+      }
+
+      if (!this.player && this.goku.health <= 0 && this.health > 0) {
+        this.dir = "idleLeft";
+        this.handleDir();
+      }
+
+      return;
+    }
+  }, {
     key: "handleDir",
     value: function handleDir() {
       if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
@@ -214,7 +240,7 @@ function (_Sprite) {
         this.width = this.WIDTHS.idle;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.idle;
-      } else if (this.dir === "idleLeft" && this.shift[1] !== this.GOKUDIRS.idleLeft[1] && !this.player) {
+      } else if (this.dir === "idleLeft" && !this.player) {
         this.img.src = "images/goku_left.png";
         this.pos[1] = 450;
         this.shift = this.GOKUDIRS.idleLeft.slice();
@@ -225,6 +251,13 @@ function (_Sprite) {
       } else if (this.dir === "punching") {
         this.img.src = "images/goku.png";
         this.shift = this.GOKUDIRS.punching.slice();
+        this.width = this.WIDTHS.punching;
+        this.height = this.HEIGHTS.punching;
+        this.currentFrame = 1;
+        this.totalFrames = this.TOTALFRAMES.punching;
+      } else if (this.dir === "leftPunch") {
+        this.img.src = "images/goku_left.png";
+        this.shift = this.GOKUDIRS.leftPunch.slice();
         this.width = this.WIDTHS.punching;
         this.height = this.HEIGHTS.punching;
         this.currentFrame = 1;
@@ -246,6 +279,7 @@ function (_Sprite) {
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.dmg;
       } else if (this.dir === "dead") {
+        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         this.img.src = "images/goku.png";
         this.pos[1] = 465;
         this.shift = this.GOKUDIRS.dead.slice();
@@ -304,25 +338,57 @@ function (_Sprite) {
     //     }
     //     return true;
     // }
-    // move(dir) {
+
+  }, {
+    key: "move",
+    value: function move(dir, char) {
+      switch (dir) {
+        case "right":
+          if (this.game.inBounds(char)) {
+            char.pos[0] += 1;
+          }
+
+          break;
+
+        case "left":
+          if (this.game.inBounds(char)) {
+            char.pos[0] -= 1;
+          }
+
+          break;
+
+        case "dmg":
+          if (char.pos[0] < 458.5 && !char.player) {
+            char.pos[0] += 0.5;
+          } else if (char.pos[0] > 38) {
+            char.pos[0] -= 0.5;
+          }
+
+          break;
+
+        default:
+          return;
+      }
+    } // move(dir) {
+    //     debugger;
     //     switch (dir) {
     //         case "right":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[0] += 1;
     //             }
     //             break;
     //         case "left":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[0] -= 1;
     //             }
     //             break;
     //         case "up":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[1] -= 1;
     //             }
     //             break;
     //         case "down":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[1] += 1;
     //             }
     //             break;
@@ -330,58 +396,74 @@ function (_Sprite) {
     //             return;
     //     }
     // }
-    // animate() {
-    //     let i = 0;
-    //     if (this.check < 7) {
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.ctx.drawImage(
-    //             this.img,
-    //             this.shift[0],
-    //             this.shift[1],
-    //             this.width,
-    //             this.height,
-    //             this.pos[0],
-    //             this.pos[1],
-    //             this.width,
-    //             this.height
-    //         );
-    //         if (this.currentFrame === this.totalFrames) {
-    //             this.shift = this.GOKUDIRS[this.dir].slice();
-    //             this.currentFrame = 1;
-    //         }
-    //     } else {
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         if (this.dir === "left") {
-    //             this.shift[0] -= this.width;
-    //         } else if (this.dir === "right") {
-    //             this.shift[0] += this.width;
-    //         } else if (this.dir === "punching") {
-    //             this.shift[0] += this.width;
-    //         } else if (this.dir === "kicking") {
-    //             this.shift[0] += this.kickWidths[i];
-    //             i++;
-    //         } else {
-    //             this.shift[0] += this.width;
-    //         }
-    //         this.ctx.drawImage(
-    //             this.img,
-    //             this.shift[0],
-    //             this.shift[1],
-    //             this.width,
-    //             this.height,
-    //             this.pos[0],
-    //             this.pos[1],
-    //             this.width,
-    //             this.height
-    //         );
-    //         this.currentFrame++;
-    //         this.check = 0;
-    //     }
-    //     this.move(this.dir);
-    //     this.check++;
-    //     requestAnimationFrame(this.animate);
-    // }
 
+  }, {
+    key: "animate",
+    value: function animate(ctx) {
+      var kickIdx = 0;
+      var dmgHeightIdx = 0;
+      var dmgWidthIdx = 0;
+
+      if (this.check < 7) {
+        ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+
+        if (this.currentFrame === this.totalFrames) {
+          if (this.dir === "dmg" && this.player) {
+            this.dir = "idle";
+            this.shift = this.GOKUDIRS.idle.slice();
+            this.handleDir();
+          } else if (this.dir === "dmg" && !this.player) {
+            this.dir = "idleLeft";
+            this.shift = this.GOKUDIRS.idleLeft.slice();
+            this.handleDir();
+          } else {
+            this.shift = this.GOKUDIRS[this.dir].slice();
+            this.currentFrame = 1;
+          }
+        }
+
+        this.aiBehavior();
+        this.move(this.dir, this);
+      } else {
+        ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+
+        if (this.dir === "dead") {
+          this.shift = [204, 1266];
+        } else if (this.dir === "left") {
+          this.shift[0] -= this.width;
+        } else if (this.dir === "right") {
+          this.shift[0] += this.width;
+        } else if (this.dir === "punching") {
+          this.shift[0] += this.width;
+          this.game.hitCollision(this);
+        } else if (this.dir === "kicking") {
+          this.shift[0] += this.kickWidths[kickIdx];
+          this.game.hitCollision(this);
+          kickIdx++;
+        } else if (this.dir === "dmg") {
+          this.shift[0] += this.dmgWidths[dmgWidthIdx];
+          this.height = this.dmgHeights[dmgHeightIdx];
+          dmgWidthIdx++;
+          dmgHeightIdx++;
+        } else if (this.dir === "leftPunch") {
+          this.shift[0] -= this.width;
+          this.game.hitCollision(this);
+        } else if (this.dir === "idle") {
+          this.shift[0] += this.width;
+        } else if (this.dir === "idleLeft") {
+          this.shift[0] -= this.width;
+        }
+
+        ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
+        this.currentFrame++;
+        this.move(this.dir, this);
+        this.check = 0;
+      }
+
+      this.check++;
+      requestAnimationFrame(this.animate.bind(this, ctx));
+    }
   }]);
 
   return Goku;
@@ -395,299 +477,419 @@ function (_Sprite) {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+function handler(key) {
+  if (key.keyCode === 32) {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, 512, 512);
+    ctx.fillText("ROUND 1: Face yourself!", 115, 200);
+    setTimeout(function () {
+      return ctx.clearRect(0, 0, 512, 512);
+    }, 2000);
+    new Game(ctx).start();
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
-  ctx.font = "30px Arial";
+  ctx.font = "30px dbz";
   ctx.fillText("Press space to start", 125, 200);
-  document.addEventListener("keydown", function (key) {
-    if (key.keyCode === 32) {
-      ctx.clearRect(0, 0, 512, 512);
-      start();
-    }
-  });
-  var audio = document.getElementById("audio");
-  audio.volume = 0.4;
-  audio.addEventListener("ended", function () {
-    this.currentTime = 0;
-    this.play();
-  }, false);
-  document.addEventListener("keydown", function (key) {
-    if (key.code === "KeyM") {
-      audio.muted = !audio.muted;
-    }
-  }); // var background = new Image();
-  // background.src = "../images/arena.png";
-  // background.addEventListener("load", loadImage, false);
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  var goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    width: 33,
-    height: 40,
-    imgUrl: "images/goku.png",
-    startPos: [200, 450],
-    player: true
-  });
-  var otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    width: 33,
-    height: 40,
-    imgUrl: "images/goku_left.png",
-    startPos: [300, 450],
-    player: false
-  });
-  var computer = otherKu;
-
-  function endFight() {
-    otherKu.deadSound.play();
-    goku.winSound.play();
-    audio.src = "sounds/bleach.mp3";
-    audio.play();
-  }
-
-  function hitCollision(char) {
-    if (char.dir === "kicking") {
-      if (char.pos[0] + 40 >= otherKu.pos[0] && char.pos[0] + 40 <= otherKu.pos[0] + 33) {
-        otherKu.dir = "dmg";
-        otherKu.dmgSound.play();
-        otherKu.health -= 50;
-
-        if (otherKu.health <= 0) {
-          otherKu.dir = "dead";
-          endFight();
-        }
-
-        otherKu.handleDir();
-      }
-    } else if (char.dir === "punching") {
-      if (char.pos[0] + 33 >= otherKu.pos[0] && char.pos[0] + 33 <= otherKu.pos[0] + 33) {
-        otherKu.dir = "dmg";
-        otherKu.dmgSound.play();
-        otherKu.health -= 50;
-
-        if (otherKu.health <= 0) {
-          otherKu.dir = "dead";
-          endFight();
-        }
-
-        otherKu.handleDir();
-      }
-    }
-  }
-
-  function inBounds(char) {
-    if (char.pos[0] > 480 && char.dir === "right") {
-      return false;
-    } else if (char.pos[0] < 0 && char.dir === "left") {
-      return false;
-    } else if (char.pos[0] > otherKu.pos[0] - 33 && char.dir === "right") {
-      return false;
-    } else if (char.pos[0] > otherKu.pos[0] + 33 && char.dir === "left") {
-      return false;
-    } else if (otherKu.pos[0] < goku.pos[0] + 33 && otherKu.dir === "left") {
-      return false;
-    }
-
-    return true;
-  }
-
-  function move(dir, char) {
-    switch (dir) {
-      case "right":
-        if (inBounds(char)) {
-          char.pos[0] += 1;
-        }
-
-        break;
-
-      case "left":
-        if (inBounds(char)) {
-          char.pos[0] -= 1;
-        }
-
-        break;
-
-      case "dmg":
-        if (char.pos[0] < 458.5) {
-          char.pos[0] += 0.3;
-        }
-
-        break;
-
-      default:
-        return;
-    }
-  }
-
-  function animate() {
-    var otherKuKickIdx = 0;
-    var kickIdx = 0;
-    var dmgHeightIdx = 0;
-    var dmgWidthIdx = 0;
-    var otherDmgHeightIdx = 0;
-    var otherDmgWidthIdx = 0;
-
-    if (goku.check < 7) {
-      ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-      ctx.drawImage(goku.img, goku.shift[0], goku.shift[1], goku.width, goku.height, goku.pos[0], goku.pos[1], goku.width, goku.height);
-
-      if (goku.currentFrame === goku.totalFrames) {
-        if (goku.dir === "dmg") {
-          goku.dir = "idle";
-          goku.shift = goku.GOKUDIRS.idle;
-          goku.handleDir();
-        } else {
-          goku.shift = goku.GOKUDIRS[goku.dir].slice();
-          goku.currentFrame = 1;
-        }
-      }
-    } else {
-      ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-
-      if (goku.dir === "dead") {
-        goku.shift = [204, 1266];
-      } else if (goku.dir === "left") {
-        goku.shift[0] -= goku.width;
-      } else if (goku.dir === "right") {
-        goku.shift[0] += goku.width;
-      } else if (goku.dir === "punching") {
-        goku.shift[0] += goku.width;
-        hitCollision(goku);
-      } else if (goku.dir === "kicking") {
-        goku.shift[0] += goku.kickWidths[kickIdx];
-        hitCollision(goku);
-        kickIdx++;
-      } else if (goku.dir === "dmg") {
-        goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
-        goku.height = goku.dmgHeights[dmgHeightIdx];
-        dmgWidthIdx++;
-        dmgHeightIdx++;
-      } else {
-        goku.shift[0] += goku.width;
-      }
-
-      ctx.drawImage(goku.img, goku.shift[0], goku.shift[1], goku.width, goku.height, goku.pos[0], goku.pos[1], goku.width, goku.height);
-      goku.currentFrame++;
-      goku.check = 0;
-    }
-
-    move(goku.dir, goku);
-    goku.check++;
-
-    if (goku.pos[0] < otherKu.pos[0] + 33 && otherKu.health > 0) {
-      otherKu.dir = "left";
-      otherKu.handleDir();
-    } else if (otherKu.health > 0) {
-      debugger;
-      otherKu.dir = "punching";
-      otherKu.handleDir();
-    } else {
-      otherKu.dir = "dead";
-      otherKu.handleDir();
-    }
-
-    move(otherKu.dir, otherKu);
-    otherKu.check++;
-    requestAnimationFrame(animate);
-
-    if (otherKu.check < 7) {
-      ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-      ctx.drawImage(otherKu.img, otherKu.shift[0], otherKu.shift[1], otherKu.width, otherKu.height, otherKu.pos[0], otherKu.pos[1], otherKu.width, otherKu.height);
-
-      if (otherKu.currentFrame === otherKu.totalFrames) {
-        if (otherKu.dir === "dmg") {
-          otherKu.dir = "idleLeft";
-          otherKu.handleDir();
-        } else {
-          otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
-          otherKu.currentFrame = 1;
-        }
-      }
-    } else {
-      ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-
-      if (otherKu.dir === "dead") {
-        otherKu.shift = [204, 1266];
-      } else if (otherKu.dir === "left") {
-        otherKu.shift[0] -= otherKu.width;
-      } else if (otherKu.dir === "idleLeft") {
-        otherKu.shift[0] -= otherKu.width;
-      } else if (otherKu.dir === "right") {
-        otherKu.shift[0] += otherKu.width;
-      } else if (otherKu.dir === "punching") {
-        otherKu.shift[0] += otherKu.width;
-      } else if (otherKu.dir === "kicking") {
-        otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
-        otherKuKickIdx++;
-      } else if (otherKu.dir === "dmg") {
-        otherKu.shift[0] += otherKu.dmgWidths[otherDmgWidthIdx];
-        otherKu.height = otherKu.dmgHeights[otherDmgHeightIdx];
-        otherDmgWidthIdx++;
-        otherDmgHeightIdx++;
-      } else {
-        otherKu.shift[0] += otherKu.width;
-      }
-
-      ctx.drawImage(otherKu.img, otherKu.shift[0], otherKu.shift[1], otherKu.width, otherKu.height, otherKu.pos[0], otherKu.pos[1], otherKu.width, otherKu.height);
-      otherKu.currentFrame++;
-      otherKu.check = 0;
-    }
-  }
-
-  function handlekeydown(e) {
-    e.preventDefault();
-
-    if (e.code === "KeyA") {
-      goku.dir = "left";
-      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-      goku.handleDir();
-    }
-
-    if (e.code === "KeyD") {
-      goku.dir = "right";
-      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-      goku.handleDir();
-    }
-
-    if (e.code === "KeyJ") {
-      goku.dir = "punching";
-      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-      goku.punchSound.play();
-      goku.handleDir();
-    }
-
-    if (e.code === "KeyK") {
-      goku.dir = "kicking";
-      goku.ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-      goku.kickSound.play();
-      goku.handleDir();
-    }
-  }
-
-  function handlekeyup() {
-    goku.dir = "idle";
-    goku.handleDir();
-  }
-
-  function start() {
-    document.addEventListener("keydown", function (key) {
-      return handlekeydown(key);
-    });
-    document.addEventListener("keyup", function () {
-      return handlekeyup();
-    });
-    animate();
-    audio.play();
-  } // start();
-  // goku.img.onload = () => goku.animate();
-
+  document.addEventListener("keydown", handler, false);
 });
+
+var Game =
+/*#__PURE__*/
+function () {
+  function Game(ctx) {
+    _classCallCheck(this, Game);
+
+    this.audio = document.getElementById("audio");
+    this.audio.volume = 0.4;
+    this.audio.addEventListener("ended", function () {
+      this.currentTime = 0;
+      this.play();
+    }, false);
+    this.ctx = ctx; // var background = new Image();
+    // background.src = "../images/arena.png";
+    // background.addEventListener("load", loadImage, false);
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    this.goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
+      width: 33,
+      height: 40,
+      imgUrl: "images/goku.png",
+      startPos: [200, 450],
+      player: true,
+      game: this
+    });
+    this.otherKu = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
+      width: 33,
+      height: 40,
+      imgUrl: "images/goku_left.png",
+      startPos: [300, 450],
+      player: false,
+      game: this,
+      goku: this.goku
+    });
+    this.gameOver = false;
+    this.computer = this.otherKu;
+    this.newGame = this.newGame.bind(this);
+  }
+
+  _createClass(Game, [{
+    key: "endFight",
+    value: function endFight() {
+      var _this = this;
+
+      if (this.computer === this.otherKu) {
+        this.otherKu.deadSound.play();
+        this.goku.winSound.play();
+        setTimeout(function () {
+          return _this.otherKu.pos = [700, 700];
+        }, 1000);
+        this.audio.src = "sounds/bleach.mp3";
+        this.audio.play();
+        this.ctx.clearRect(0, 0, 512, 512);
+        this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
+        setTimeout(function () {
+          return _this.ctx.clearRect(0, 0, 512, 512);
+        }, 2000);
+      }
+    }
+  }, {
+    key: "hitCollision",
+    value: function hitCollision(char) {
+      if (char.dir === "kicking") {
+        if (char.pos[0] + 40 >= this.computer.pos[0] && char.pos[0] + 40 <= this.computer.pos[0] + 33) {
+          this.computer.dir = "dmg";
+          this.computer.dmgSound.play();
+          this.computer.health -= 50;
+
+          if (this.computer.health <= 0) {
+            this.computer.dir = "dead";
+            this.endFight();
+          }
+
+          this.computer.handleDir();
+        }
+      } else if (char.dir === "punching") {
+        if (char.pos[0] + 33 >= this.computer.pos[0] && char.pos[0] + 33 <= this.computer.pos[0] + 33) {
+          this.computer.dir = "dmg";
+          this.computer.dmgSound.play();
+          this.computer.health -= 50;
+
+          if (this.computer.health <= 0) {
+            this.computer.dir = "dead";
+            this.endFight();
+          }
+
+          this.computer.handleDir();
+        }
+      } else if (char.dir === "leftPunch") {
+        if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
+          this.goku.dir = "dmg";
+          this.goku.dmgSound.play();
+          this.goku.health -= 50;
+
+          if (this.goku.health <= 0) {
+            this.goku.dir = "dead";
+            this.goku.deadSound.play();
+            this.goku.handleDir();
+            this.gameOver = true;
+            this.gameLoop();
+          }
+
+          this.goku.handleDir();
+        }
+      }
+    }
+  }, {
+    key: "inBounds",
+    value: function inBounds(char) {
+      if (char.pos[0] > 480 && char.dir === "right") {
+        return false;
+      } else if (char.pos[0] < 0 && char.dir === "left") {
+        return false;
+      } else if (char.pos[0] > this.computer.pos[0] - 33 && char.dir === "right") {
+        return false;
+      } else if (char.pos[0] > this.computer.pos[0] + 33 && char.dir === "left") {
+        return false;
+      } else if (this.computer.pos[0] < this.goku.pos[0] + 33 && this.computer.dir === "left") {
+        return false;
+      }
+
+      return true;
+    } // function move(dir, char) {
+    //     switch (dir) {
+    //         case "right":
+    //             if (inBounds(char)) {
+    //                 char.pos[0] += 1;
+    //             }
+    //             break;
+    //         case "left":
+    //             if (inBounds(char)) {
+    //                 char.pos[0] -= 1;
+    //             }
+    //             break;
+    //         case "dmg":
+    //             if (char.pos[0] < 458.5 && !char.player) {
+    //                 char.pos[0] += 0.3;
+    //             } else if (char.pos[0] > 38) {
+    //                 char.pos[0] -= 0.3;
+    //             }
+    //             break;
+    //         default:
+    //             return;
+    //     }
+    // }
+    //   function animate() {
+    //     let otherKuKickIdx = 0;
+    //     let kickIdx = 0;
+    //     let dmgHeightIdx = 0;
+    //     let dmgWidthIdx = 0;
+    //     let otherDmgHeightIdx = 0;
+    //     let otherDmgWidthIdx = 0;
+    //     if (goku.check < 7) {
+    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+    //         ctx.drawImage(
+    //             goku.img,
+    //             goku.shift[0],
+    //             goku.shift[1],
+    //             goku.width,
+    //             goku.height,
+    //             goku.pos[0],
+    //             goku.pos[1],
+    //             goku.width,
+    //             goku.height
+    //         );
+    //         if (goku.currentFrame === goku.totalFrames) {
+    //             if (goku.dir === "dmg") {
+    //                 goku.dir = "idle";
+    //                 goku.shift = goku.GOKUDIRS.idle;
+    //                 goku.handleDir();
+    //             } else {
+    //                 goku.shift = goku.GOKUDIRS[goku.dir].slice();
+    //                 goku.currentFrame = 1;
+    //             }
+    //         }
+    //     } else {
+    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
+    //         if (goku.dir === "dead") {
+    //             goku.shift = [204, 1266];
+    //         } else if (goku.dir === "left") {
+    //             goku.shift[0] -= goku.width;
+    //         } else if (goku.dir === "right") {
+    //             goku.shift[0] += goku.width;
+    //         } else if (goku.dir === "punching") {
+    //             goku.shift[0] += goku.width;
+    //             hitCollision(goku);
+    //         } else if (goku.dir === "kicking") {
+    //             goku.shift[0] += goku.kickWidths[kickIdx];
+    //             hitCollision(goku);
+    //             kickIdx++;
+    //         } else if (goku.dir === "dmg") {
+    //             goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
+    //             goku.height = goku.dmgHeights[dmgHeightIdx];
+    //             dmgWidthIdx++;
+    //             dmgHeightIdx++;
+    //         } else {
+    //             goku.shift[0] += goku.width;
+    //         }
+    //         ctx.drawImage(
+    //             goku.img,
+    //             goku.shift[0],
+    //             goku.shift[1],
+    //             goku.width,
+    //             goku.height,
+    //             goku.pos[0],
+    //             goku.pos[1],
+    //             goku.width,
+    //             goku.height
+    //         );
+    //         goku.currentFrame++;
+    //         goku.check = 0;
+    //     }
+    //     move(goku.dir, goku);
+    //     goku.check++;
+    //     move(otherKu.dir, otherKu);
+    //     otherKu.check++;
+    //     requestAnimationFrame(animate);
+    //     if (otherKu.check < 7) {
+    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+    //         ctx.drawImage(
+    //             otherKu.img,
+    //             otherKu.shift[0],
+    //             otherKu.shift[1],
+    //             otherKu.width,
+    //             otherKu.height,
+    //             otherKu.pos[0],
+    //             otherKu.pos[1],
+    //             otherKu.width,
+    //             otherKu.height
+    //         );
+    //         if (otherKu.currentFrame === otherKu.totalFrames) {
+    //             if (otherKu.dir === "dmg") {
+    //                 otherKu.dir = "idleLeft";
+    //                 otherKu.handleDir();
+    //             } else {
+    //                 otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
+    //                 otherKu.currentFrame = 1;
+    //             }
+    //         }
+    //     } else {
+    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
+    //         if (otherKu.dir === "dead") {
+    //             otherKu.shift = [204, 1266];
+    //         } else if (otherKu.dir === "left") {
+    //             otherKu.shift[0] -= otherKu.width;
+    //         } else if (otherKu.dir === "idleLeft") {
+    //             otherKu.shift[0] -= otherKu.width;
+    //         } else if (otherKu.dir === "right") {
+    //             otherKu.shift[0] += otherKu.width;
+    //         } else if (otherKu.dir === "leftPunch") {
+    //             otherKu.shift[0] -= otherKu.width;
+    //         } else if (otherKu.dir === "kicking") {
+    //             otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
+    //             otherKuKickIdx++;
+    //         } else if (otherKu.dir === "dmg") {
+    //             otherKu.shift[0] += otherKu.dmgWidths[otherDmgWidthIdx];
+    //             otherKu.height = otherKu.dmgHeights[otherDmgHeightIdx];
+    //             otherDmgWidthIdx++;
+    //             otherDmgHeightIdx++;
+    //         } else {
+    //             otherKu.shift[0] += otherKu.width;
+    //         }
+    //         ctx.drawImage(
+    //             otherKu.img,
+    //             otherKu.shift[0],
+    //             otherKu.shift[1],
+    //             otherKu.width,
+    //             otherKu.height,
+    //             otherKu.pos[0],
+    //             otherKu.pos[1],
+    //             otherKu.width,
+    //             otherKu.height
+    //         );
+    //         otherKu.currentFrame++;
+    //         otherKu.check = 0;
+    //     }
+    // }
+
+  }, {
+    key: "gameLoop",
+    value: function gameLoop() {
+      if (!this.gameOver) {
+        this.goku.animate(this.ctx);
+        this.goku.move(this.goku.dir, this.goku);
+        this.computer.animate(this.ctx);
+        this.computer.move(this.computer.dir, this.computer);
+      } else {
+        document.removeEventListener("keydown", this.handlekeydown, false);
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.btn = document.createElement("BUTTON");
+        var text = document.createTextNode("restart");
+        this.restart = document.getElementById("gameover");
+        this.btn.appendChild(text);
+        this.btn.onclick = this.newGame;
+        this.restart.appendChild(this.btn);
+        this.restart.style.visibility = "visible";
+        this.restart.style.opacity = 1;
+      }
+    }
+  }, {
+    key: "newGame",
+    value: function newGame() {
+      this.restart.removeChild(this.btn);
+      this.restart.style.visibility = "hidden";
+      this.restart.style.opacity = 0;
+      this.goku = null;
+      this.computer = null;
+      var game = new Game(this.ctx);
+      game.start();
+    }
+  }, {
+    key: "handlekeydown",
+    value: function handlekeydown(e) {
+      e.preventDefault();
+
+      if (e.code === "KeyA") {
+        this.goku.dir = "left";
+        this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
+        this.goku.handleDir();
+      }
+
+      if (e.code === "KeyD") {
+        this.goku.dir = "right";
+        this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
+        this.goku.handleDir();
+      }
+
+      if (e.code === "KeyJ") {
+        this.goku.dir = "punching";
+        this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
+        this.goku.punchSound.play();
+        this.goku.handleDir();
+      }
+
+      if (e.code === "KeyK") {
+        this.goku.dir = "kicking";
+        this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
+        this.goku.kickSound.play();
+        this.goku.handleDir();
+      }
+    }
+  }, {
+    key: "handlekeyup",
+    value: function handlekeyup() {
+      this.goku.dir = "idle";
+      this.goku.handleDir();
+    }
+  }, {
+    key: "start",
+    value: function start() {
+      var _this2 = this;
+
+      document.removeEventListener("keydown", handler, false);
+      document.addEventListener("keydown", function (key) {
+        return _this2.handlekeydown(key);
+      }, false);
+      document.addEventListener("keyup", function () {
+        return _this2.handlekeyup();
+      });
+      var that = this;
+      document.addEventListener("keydown", function (key) {
+        if (key.code === "KeyM") {
+          that.audio.muted = !that.audio.muted;
+        }
+      });
+      this.gameLoop();
+      this.audio.play();
+    } // start();
+    // goku.img.onload = () => goku.animate();
+
+  }]);
+
+  return Game;
+}();
+
+
 
 /***/ }),
 

@@ -6,6 +6,8 @@ export default class Goku extends Sprite {
         this.player = props.player;
         this.width = props.width;
         this.height = props.height;
+        this.game = props.game;
+        props.goku ? (this.goku = props.goku) : (this.goku = null);
         this.img = new Image();
         this.img.src = props.imgUrl;
         this.punchSound = new Audio("sounds/attack0.wav");
@@ -13,7 +15,7 @@ export default class Goku extends Sprite {
         this.dmgSound = new Audio("sounds/hit1.wav");
         this.deadSound = new Audio("sounds/defeated.wav");
         this.winSound = new Audio("sounds/victory.wav");
-
+        this.animate = this.animate.bind(this);
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
         this.player ? (this.shift = [0, -1]) : (this.shift = [1151, 3]);
@@ -29,6 +31,7 @@ export default class Goku extends Sprite {
             right: [-1, 83],
             left: [1151, 83],
             punching: [-1, 476],
+            leftPunch: [1153, 479],
             kicking: [1, 959],
             dmg: [11, 1162],
             dead: [-204, -1266],
@@ -62,6 +65,30 @@ export default class Goku extends Sprite {
             dmg: 7,
             dead: 1,
         };
+    }
+
+    aiBehavior() {
+        if (
+            !this.player &&
+            this.health > 0 &&
+            this.dir !== "dmg" &&
+            this.goku.health > 0
+        ) {
+            if (this.goku.pos[0] + 33 < this.pos[0]) {
+                this.dir = "left";
+                this.handleDir();
+            } else {
+                this.dir = "idleLeft";
+                this.handleDir();
+                this.dir = "leftPunch";
+                this.handleDir();
+            }
+        }
+        if (!this.player && this.goku.health <= 0 && this.health > 0) {
+            this.dir = "idleLeft";
+            this.handleDir();
+        }
+        return;
     }
 
     handleDir() {
@@ -99,11 +126,7 @@ export default class Goku extends Sprite {
             this.width = this.WIDTHS.idle;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.idle;
-        } else if (
-            this.dir === "idleLeft" &&
-            this.shift[1] !== this.GOKUDIRS.idleLeft[1] &&
-            !this.player
-        ) {
+        } else if (this.dir === "idleLeft" && !this.player) {
             this.img.src = "images/goku_left.png";
             this.pos[1] = 450;
             this.shift = this.GOKUDIRS.idleLeft.slice();
@@ -114,6 +137,13 @@ export default class Goku extends Sprite {
         } else if (this.dir === "punching") {
             this.img.src = "images/goku.png";
             this.shift = this.GOKUDIRS.punching.slice();
+            this.width = this.WIDTHS.punching;
+            this.height = this.HEIGHTS.punching;
+            this.currentFrame = 1;
+            this.totalFrames = this.TOTALFRAMES.punching;
+        } else if (this.dir === "leftPunch") {
+            this.img.src = "images/goku_left.png";
+            this.shift = this.GOKUDIRS.leftPunch.slice();
             this.width = this.WIDTHS.punching;
             this.height = this.HEIGHTS.punching;
             this.currentFrame = 1;
@@ -135,6 +165,7 @@ export default class Goku extends Sprite {
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.dmg;
         } else if (this.dir === "dead") {
+            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             this.img.src = "images/goku.png";
             this.pos[1] = 465;
             this.shift = this.GOKUDIRS.dead.slice();
@@ -144,6 +175,7 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.dead;
         }
     }
+
     // handlekeydown(e) {
     //     e.preventDefault();
 
@@ -202,25 +234,50 @@ export default class Goku extends Sprite {
     //     return true;
     // }
 
+    move(dir, char) {
+        switch (dir) {
+            case "right":
+                if (this.game.inBounds(char)) {
+                    char.pos[0] += 1;
+                }
+                break;
+            case "left":
+                if (this.game.inBounds(char)) {
+                    char.pos[0] -= 1;
+                }
+                break;
+            case "dmg":
+                if (char.pos[0] < 458.5 && !char.player) {
+                    char.pos[0] += 0.5;
+                } else if (char.pos[0] > 38) {
+                    char.pos[0] -= 0.5;
+                }
+                break;
+            default:
+                return;
+        }
+    }
+
     // move(dir) {
+    //     debugger;
     //     switch (dir) {
     //         case "right":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[0] += 1;
     //             }
     //             break;
     //         case "left":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[0] -= 1;
     //             }
     //             break;
     //         case "up":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[1] -= 1;
     //             }
     //             break;
     //         case "down":
-    //             if (this.inBounds()) {
+    //             if (this.game.inBounds()) {
     //                 this.pos[1] += 1;
     //             }
     //             break;
@@ -229,57 +286,85 @@ export default class Goku extends Sprite {
     //     }
     // }
 
-    // animate() {
-    //     let i = 0;
-    //     if (this.check < 7) {
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.ctx.drawImage(
-    //             this.img,
-    //             this.shift[0],
-    //             this.shift[1],
-    //             this.width,
-    //             this.height,
-    //             this.pos[0],
-    //             this.pos[1],
-    //             this.width,
-    //             this.height
-    //         );
+    animate(ctx) {
+        let kickIdx = 0;
+        let dmgHeightIdx = 0;
+        let dmgWidthIdx = 0;
+        if (this.check < 7) {
+            ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+            ctx.drawImage(
+                this.img,
+                this.shift[0],
+                this.shift[1],
+                this.width,
+                this.height,
+                this.pos[0],
+                this.pos[1],
+                this.width,
+                this.height
+            );
 
-    //         if (this.currentFrame === this.totalFrames) {
-    //             this.shift = this.GOKUDIRS[this.dir].slice();
-    //             this.currentFrame = 1;
-    //         }
-    //     } else {
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         if (this.dir === "left") {
-    //             this.shift[0] -= this.width;
-    //         } else if (this.dir === "right") {
-    //             this.shift[0] += this.width;
-    //         } else if (this.dir === "punching") {
-    //             this.shift[0] += this.width;
-    //         } else if (this.dir === "kicking") {
-    //             this.shift[0] += this.kickWidths[i];
-    //             i++;
-    //         } else {
-    //             this.shift[0] += this.width;
-    //         }
-    //         this.ctx.drawImage(
-    //             this.img,
-    //             this.shift[0],
-    //             this.shift[1],
-    //             this.width,
-    //             this.height,
-    //             this.pos[0],
-    //             this.pos[1],
-    //             this.width,
-    //             this.height
-    //         );
+            if (this.currentFrame === this.totalFrames) {
+                if (this.dir === "dmg" && this.player) {
+                    this.dir = "idle";
+                    this.shift = this.GOKUDIRS.idle.slice();
+                    this.handleDir();
+                } else if (this.dir === "dmg" && !this.player) {
+                    this.dir = "idleLeft";
+                    this.shift = this.GOKUDIRS.idleLeft.slice();
+                    this.handleDir();
+                } else {
+                    this.shift = this.GOKUDIRS[this.dir].slice();
+                    this.currentFrame = 1;
+                }
+            }
+            this.aiBehavior();
+            this.move(this.dir, this);
+        } else {
+            ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+            if (this.dir === "dead") {
+                this.shift = [204, 1266];
+            } else if (this.dir === "left") {
+                this.shift[0] -= this.width;
+            } else if (this.dir === "right") {
+                this.shift[0] += this.width;
+            } else if (this.dir === "punching") {
+                this.shift[0] += this.width;
+                this.game.hitCollision(this);
+            } else if (this.dir === "kicking") {
+                this.shift[0] += this.kickWidths[kickIdx];
+                this.game.hitCollision(this);
+                kickIdx++;
+            } else if (this.dir === "dmg") {
+                this.shift[0] += this.dmgWidths[dmgWidthIdx];
+                this.height = this.dmgHeights[dmgHeightIdx];
+                dmgWidthIdx++;
+                dmgHeightIdx++;
+            } else if (this.dir === "leftPunch") {
+                this.shift[0] -= this.width;
+                this.game.hitCollision(this);
+            } else if (this.dir === "idle") {
+                this.shift[0] += this.width;
+            } else if (this.dir === "idleLeft") {
+                this.shift[0] -= this.width;
+            }
+            ctx.drawImage(
+                this.img,
+                this.shift[0],
+                this.shift[1],
+                this.width,
+                this.height,
+                this.pos[0],
+                this.pos[1],
+                this.width,
+                this.height
+            );
 
-    //         this.currentFrame++;
-    //         this.check = 0;
-    //     }
-    //     this.move(this.dir);
-    //     this.check++;
-    //     requestAnimationFrame(this.animate);
-    // }
+            this.currentFrame++;
+            this.move(this.dir, this);
+            this.check = 0;
+        }
+        this.check++;
+        requestAnimationFrame(this.animate.bind(this, ctx));
+    }
 }
