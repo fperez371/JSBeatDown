@@ -281,7 +281,6 @@ function (_Sprite) {
         this.totalFrames = this.TOTALFRAMES.dmg;
       } else if (this.dir === "dead") {
         this.dontMove = true;
-        this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         this.img.src = "images/goku.png";
         this.pos[1] = 465;
         this.shift = this.GOKUDIRS.dead.slice();
@@ -416,7 +415,7 @@ function (_Sprite) {
           ctx.fillRect(75, 100, this.health / 100 * 140, 25);
         } else if (!this.player && this.health > 0) {
           ctx.fillStyle = "#000000";
-          ctx.fillText("Goku", 75, 75);
+          ctx.fillText("Enemy", 75, 75);
           ctx.fillStyle = "#FF0000";
           ctx.fillRect(300, 100, this.health / 100 * 140, 25);
         }
@@ -504,6 +503,113 @@ function (_Sprite) {
 
 /***/ }),
 
+/***/ "./src/ichigo.js":
+/*!***********************!*\
+  !*** ./src/ichigo.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ichigo; });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Ichigo =
+/*#__PURE__*/
+function () {
+  function Ichigo(props) {
+    _classCallCheck(this, Ichigo);
+
+    this.game = props.game;
+    this.goku = props.goku;
+    this.img = new Image();
+    this.img.src = props.imgUrl;
+    this.bankaiSound = new Audio("sounds/bankai.wav");
+    this.powerUpSound = new Audio("sounds/powerup.mp3");
+    this.atk1Sound = new Audio("sounds/ichigoAtk1.wav");
+    this.atk1Sound = new Audio("sounds/ichigoAtk2.wav");
+    this.dmgSound = new Audio("sounds/ichigoDmg.wav");
+    this.deadSound = new Audio("sounds/ichigoDefeat.wav");
+    this.winSound = new Audio("sounds/ichigoVictory.wav");
+    this.animate = this.animate.bind(this);
+    this.dontMove = false;
+    this.pos = props.startPos;
+    this.check = 0;
+    this.currentFrame = 0;
+    this.totalFrames = 10;
+    this.dir = "powerup"; // this.canvas = document.getElementById("canvas");
+    // this.ctx = this.canvas.getContext("2d");
+
+    this.health = 200;
+    this.powerUp = [[427, 29, 54, 37], [375, 26, 47, 40], [345, 16, 24, 50], [310, 16, 24, 50], [274, 17, 24, 48], [354, 73, 125, 181], [210, 115, 110, 140], [64, 87, 120, 168], [418, 260, 68, 48], [369, 261, 38, 45]];
+    this.idle = [[369, 261, 38, 45]];
+    this.dmg = [[447, 1061, 38, 37], [399, 1071, 45, 30], [332, 1081, 57, 14], [271, 1079, 57, 16], [206, 1078, 57, 16], [163, 1063, 36, 33], [124, 1064, 38, 34], [87, 1063, 31, 35], [43, 1049, 35, 49], [2, 1048, 36, 49]];
+    this.shlice = [[448, 459, 36, 40], [403, 462, 39, 40], [319, 464, 71, 38], [275, 470, 42, 34], [231, 468, 31, 37], [160, 469, 66, 33], [98, 466, 56, 37]]; // have him move forward on frames 4, 5, and 6
+    // last frame is taken from a diff attack might want to change it
+
+    this.flashy = [[449, 1127, 36, 49], [411, 1127, 36, 49], [371, 1127, 37, 49], [287, 1131, 39, 45], [245, 1131, 38, 45], [189, 1132, 45, 45], [385, 867, 66, 36]];
+    this.dead = [332, 1081, 57, 14];
+  }
+
+  _createClass(Ichigo, [{
+    key: "handleDir",
+    value: function handleDir() {
+      if (this.dir === "powerup") {
+        this.currentFrame = 0;
+        this.totalFrames = 10; // this.bankaiSound.play();
+        // this.powerUpSound.play();
+      }
+    } //placeholder for testing
+
+  }, {
+    key: "move",
+    value: function move() {
+      return;
+    }
+  }, {
+    key: "animate",
+    value: function animate(ctx) {
+      debugger;
+
+      if (this.check < 7) {
+        if (this.health > 0) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText("Enemy", 75, 75);
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(300, 100, this.health / 100 * 140, 25);
+        }
+
+        ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        ctx.drawImage(this.img, this.powerUp[this.currentFrame][0], this.powerUp[this.currentFrame][1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3], this.pos[0], this.pos[1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3]);
+
+        if (this.currentFrame === this.totalFrames - 1) {
+          this.currentFrame = 0;
+          this.dir = "powerup";
+        }
+      } else {
+        ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        ctx.drawImage(this.img, this.powerUp[this.currentFrame][0], this.powerUp[this.currentFrame][1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3], this.pos[0], this.pos[1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3]);
+        this.currentFrame++;
+        this.check = 0;
+      }
+
+      this.check++;
+      requestAnimationFrame(this.animate.bind(this, ctx));
+    }
+  }]);
+
+  return Ichigo;
+}();
+
+
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -515,11 +621,13 @@ function (_Sprite) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _goku__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./goku */ "./src/goku.js");
+/* harmony import */ var _ichigo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ichigo */ "./src/ichigo.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -574,6 +682,12 @@ function () {
       game: this,
       goku: this.goku
     });
+    this.ichigo = new _ichigo__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      imgUrl: "images/ichigo_left.png",
+      startPos: [300, 450],
+      game: this,
+      goku: this.goku
+    });
     this.gameOver = false;
     this.computer = this.otherKu;
     this.newGame = this.newGame.bind(this);
@@ -598,9 +712,11 @@ function () {
         this.goku.dir = "idle";
         this.goku.handleDir();
         this.goku.dontMove = true;
+        this.computer = this.ichigo;
         setTimeout(function () {
           return _this.ctx.clearRect(0, 0, 512, 512);
         }, 2000);
+        this.gameLoop();
       }
     }
   }, {
@@ -707,7 +823,6 @@ function () {
       e.preventDefault();
 
       if (this.goku.dontMove) {
-        debugger;
         return;
       }
 
@@ -794,8 +909,6 @@ var Sprite = function Sprite(props) {
   this.height = props.height;
   this.img = new Image();
   this.img.src = props.imgUrl;
-  this.canvas = document.getElementById("canvas");
-  this.ctx = this.canvas.getContext("2d");
   this.pos = props.startPos;
   this.check = 0;
   this.dir = "idle";

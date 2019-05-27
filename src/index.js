@@ -1,4 +1,5 @@
 import Goku from "./goku";
+import Ichigo from "./ichigo";
 
 function handler(key) {
     if (key.keyCode === 32) {
@@ -51,6 +52,13 @@ export default class Game {
             goku: this.goku,
         });
 
+        this.ichigo = new Ichigo({
+            imgUrl: "images/ichigo_left.png",
+            startPos: [300, 450],
+            game: this,
+            goku: this.goku,
+        });
+
         this.gameOver = false;
 
         this.computer = this.otherKu;
@@ -70,7 +78,9 @@ export default class Game {
             this.goku.dir = "idle";
             this.goku.handleDir();
             this.goku.dontMove = true;
+            this.computer = this.ichigo;
             setTimeout(() => this.ctx.clearRect(0, 0, 512, 512), 2000);
+            this.gameLoop();
         }
     }
 
@@ -179,7 +189,6 @@ export default class Game {
     handlekeydown(e) {
         e.preventDefault();
         if (this.goku.dontMove) {
-            debugger;
             return;
         }
         if (e.code === "KeyA") {

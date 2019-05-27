@@ -170,7 +170,6 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.dmg;
         } else if (this.dir === "dead") {
             this.dontMove = true;
-            this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             this.img.src = "images/goku.png";
             this.pos[1] = 465;
             this.shift = this.GOKUDIRS.dead.slice();
@@ -305,7 +304,7 @@ export default class Goku extends Sprite {
                 ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
             } else if (!this.player && this.health > 0) {
                 ctx.fillStyle = "#000000";
-                ctx.fillText("Goku", 75, 75);
+                ctx.fillText("Enemy", 75, 75);
                 ctx.fillStyle = "#FF0000";
                 ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
             }
