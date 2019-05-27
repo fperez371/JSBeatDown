@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     ctx.font = "30px dbz";
-    ctx.fillText("Press space to start", 125, 200);
+    ctx.fillText("Press space to start", 150, 200);
     document.addEventListener("keydown", handler, false);
 });
 
@@ -30,12 +30,8 @@ export default class Game {
             },
             false
         );
-        this.ctx = ctx;
 
-        // var background = new Image();
-        // background.src = "../images/arena.png";
-        // background.addEventListener("load", loadImage, false);
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.ctx = ctx;
 
         this.goku = new Goku({
             width: 33,
@@ -65,6 +61,7 @@ export default class Game {
         if (this.computer === this.otherKu) {
             this.otherKu.deadSound.play();
             this.goku.winSound.play();
+            this.goku.health = 100;
             setTimeout(() => (this.otherKu.pos = [700, 700]), 1000);
             this.audio.src = "sounds/bleach.mp3";
             this.audio.play();
@@ -82,7 +79,7 @@ export default class Game {
             ) {
                 this.computer.dir = "dmg";
                 this.computer.dmgSound.play();
-                this.computer.health -= 50;
+                this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
                     this.endFight();
@@ -96,7 +93,7 @@ export default class Game {
             ) {
                 this.computer.dir = "dmg";
                 this.computer.dmgSound.play();
-                this.computer.health -= 50;
+                this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
                     this.endFight();
@@ -107,7 +104,7 @@ export default class Game {
             if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
                 this.goku.dmgSound.play();
-                this.goku.health -= 50;
+                this.goku.health -= 10;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
                     this.goku.deadSound.play();
@@ -144,168 +141,6 @@ export default class Game {
         return true;
     }
 
-    // function move(dir, char) {
-    //     switch (dir) {
-    //         case "right":
-    //             if (inBounds(char)) {
-    //                 char.pos[0] += 1;
-    //             }
-    //             break;
-    //         case "left":
-    //             if (inBounds(char)) {
-    //                 char.pos[0] -= 1;
-    //             }
-    //             break;
-    //         case "dmg":
-    //             if (char.pos[0] < 458.5 && !char.player) {
-    //                 char.pos[0] += 0.3;
-    //             } else if (char.pos[0] > 38) {
-    //                 char.pos[0] -= 0.3;
-    //             }
-    //             break;
-    //         default:
-    //             return;
-    //     }
-    // }
-
-    //   function animate() {
-    //     let otherKuKickIdx = 0;
-    //     let kickIdx = 0;
-    //     let dmgHeightIdx = 0;
-    //     let dmgWidthIdx = 0;
-    //     let otherDmgHeightIdx = 0;
-    //     let otherDmgWidthIdx = 0;
-    //     if (goku.check < 7) {
-    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-    //         ctx.drawImage(
-    //             goku.img,
-    //             goku.shift[0],
-    //             goku.shift[1],
-    //             goku.width,
-    //             goku.height,
-    //             goku.pos[0],
-    //             goku.pos[1],
-    //             goku.width,
-    //             goku.height
-    //         );
-
-    //         if (goku.currentFrame === goku.totalFrames) {
-    //             if (goku.dir === "dmg") {
-    //                 goku.dir = "idle";
-    //                 goku.shift = goku.GOKUDIRS.idle;
-    //                 goku.handleDir();
-    //             } else {
-    //                 goku.shift = goku.GOKUDIRS[goku.dir].slice();
-    //                 goku.currentFrame = 1;
-    //             }
-    //         }
-    //     } else {
-    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-    //         if (goku.dir === "dead") {
-    //             goku.shift = [204, 1266];
-    //         } else if (goku.dir === "left") {
-    //             goku.shift[0] -= goku.width;
-    //         } else if (goku.dir === "right") {
-    //             goku.shift[0] += goku.width;
-    //         } else if (goku.dir === "punching") {
-    //             goku.shift[0] += goku.width;
-    //             hitCollision(goku);
-    //         } else if (goku.dir === "kicking") {
-    //             goku.shift[0] += goku.kickWidths[kickIdx];
-    //             hitCollision(goku);
-    //             kickIdx++;
-    //         } else if (goku.dir === "dmg") {
-    //             goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
-    //             goku.height = goku.dmgHeights[dmgHeightIdx];
-    //             dmgWidthIdx++;
-    //             dmgHeightIdx++;
-    //         } else {
-    //             goku.shift[0] += goku.width;
-    //         }
-    //         ctx.drawImage(
-    //             goku.img,
-    //             goku.shift[0],
-    //             goku.shift[1],
-    //             goku.width,
-    //             goku.height,
-    //             goku.pos[0],
-    //             goku.pos[1],
-    //             goku.width,
-    //             goku.height
-    //         );
-
-    //         goku.currentFrame++;
-    //         goku.check = 0;
-    //     }
-    //     move(goku.dir, goku);
-    //     goku.check++;
-    //     move(otherKu.dir, otherKu);
-    //     otherKu.check++;
-    //     requestAnimationFrame(animate);
-
-    //     if (otherKu.check < 7) {
-    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-    //         ctx.drawImage(
-    //             otherKu.img,
-    //             otherKu.shift[0],
-    //             otherKu.shift[1],
-    //             otherKu.width,
-    //             otherKu.height,
-    //             otherKu.pos[0],
-    //             otherKu.pos[1],
-    //             otherKu.width,
-    //             otherKu.height
-    //         );
-
-    //         if (otherKu.currentFrame === otherKu.totalFrames) {
-    //             if (otherKu.dir === "dmg") {
-    //                 otherKu.dir = "idleLeft";
-    //                 otherKu.handleDir();
-    //             } else {
-    //                 otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
-    //                 otherKu.currentFrame = 1;
-    //             }
-    //         }
-    //     } else {
-    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-    //         if (otherKu.dir === "dead") {
-    //             otherKu.shift = [204, 1266];
-    //         } else if (otherKu.dir === "left") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "idleLeft") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "right") {
-    //             otherKu.shift[0] += otherKu.width;
-    //         } else if (otherKu.dir === "leftPunch") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "kicking") {
-    //             otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
-    //             otherKuKickIdx++;
-    //         } else if (otherKu.dir === "dmg") {
-    //             otherKu.shift[0] += otherKu.dmgWidths[otherDmgWidthIdx];
-    //             otherKu.height = otherKu.dmgHeights[otherDmgHeightIdx];
-    //             otherDmgWidthIdx++;
-    //             otherDmgHeightIdx++;
-    //         } else {
-    //             otherKu.shift[0] += otherKu.width;
-    //         }
-    //         ctx.drawImage(
-    //             otherKu.img,
-    //             otherKu.shift[0],
-    //             otherKu.shift[1],
-    //             otherKu.width,
-    //             otherKu.height,
-    //             otherKu.pos[0],
-    //             otherKu.pos[1],
-    //             otherKu.width,
-    //             otherKu.height
-    //         );
-
-    //         otherKu.currentFrame++;
-    //         otherKu.check = 0;
-    //     }
-    // }
-
     gameLoop() {
         if (!this.gameOver) {
             this.goku.animate(this.ctx);
@@ -331,15 +166,19 @@ export default class Game {
         this.restart.removeChild(this.btn);
         this.restart.style.visibility = "hidden";
         this.restart.style.opacity = 0;
-        this.goku = null;
-        this.computer = null;
+        this.goku.pos = [1000, 1000];
+        this.computer.pos = [1220, 1220];
+        this.computer.dontMove = true;
         const game = new Game(this.ctx);
         game.start();
     }
 
     handlekeydown(e) {
         e.preventDefault();
-
+        if (this.goku.dontMove) {
+            debugger;
+            return;
+        }
         if (e.code === "KeyA") {
             this.goku.dir = "left";
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
@@ -365,8 +204,10 @@ export default class Game {
     }
 
     handlekeyup() {
-        this.goku.dir = "idle";
-        this.goku.handleDir();
+        if (!this.goku.dontMove) {
+            this.goku.dir = "idle";
+            this.goku.handleDir();
+        }
     }
 
     start() {
@@ -388,6 +229,4 @@ export default class Game {
         this.gameLoop();
         this.audio.play();
     }
-    // start();
-    // goku.img.onload = () => goku.animate();
 }

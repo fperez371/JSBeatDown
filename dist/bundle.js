@@ -140,7 +140,8 @@ function (_Sprite) {
     _this.dmgSound = new Audio("sounds/hit1.wav");
     _this.deadSound = new Audio("sounds/defeated.wav");
     _this.winSound = new Audio("sounds/victory.wav");
-    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this))); // this.canvas = document.getElementById("canvas");
+    _this.animate = _this.animate.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.dontMove = false; // this.canvas = document.getElementById("canvas");
     // this.ctx = this.canvas.getContext("2d");
 
     _this.player ? _this.shift = [0, -1] : _this.shift = [1151, 3];
@@ -149,7 +150,7 @@ function (_Sprite) {
     _this.pos = props.startPos;
     _this.check = 0;
     _this.player ? _this.dir = "idle" : _this.dir = "idleLeft";
-    _this.health = 550;
+    _this.health = 100;
     _this.GOKUDIRS = {
       idle: [1, 1],
       idleLeft: [1151, 3],
@@ -216,7 +217,7 @@ function (_Sprite) {
   }, {
     key: "handleDir",
     value: function handleDir() {
-      if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)) {
+      if (this.dir === "right" && (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230) && !this.dontMove) {
         this.img.src = "images/goku.png";
         this.pos[1] = 444;
         this.shift = this.GOKUDIRS.right.slice();
@@ -224,7 +225,7 @@ function (_Sprite) {
         this.width = this.WIDTHS.running;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.running;
-      } else if (this.dir === "left" && (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)) {
+      } else if (this.dir === "left" && (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500) && !this.dontMove) {
         this.img.src = "images/goku_left.png";
         this.pos[1] = 444;
         this.shift = this.GOKUDIRS.left.slice();
@@ -232,7 +233,7 @@ function (_Sprite) {
         this.width = this.WIDTHS.running;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.running;
-      } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1] && this.player) {
+      } else if (this.dir === "idle" && this.shift[1] !== this.GOKUDIRS.idle[1] && this.health > 0 && !this.dontMove) {
         this.img.src = "images/goku.png";
         this.pos[1] = 450;
         this.shift = this.GOKUDIRS.idle.slice();
@@ -248,21 +249,21 @@ function (_Sprite) {
         this.width = this.WIDTHS.idle;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.idle;
-      } else if (this.dir === "punching") {
+      } else if (this.dir === "punching" && !this.dontMove) {
         this.img.src = "images/goku.png";
         this.shift = this.GOKUDIRS.punching.slice();
         this.width = this.WIDTHS.punching;
         this.height = this.HEIGHTS.punching;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.punching;
-      } else if (this.dir === "leftPunch") {
+      } else if (this.dir === "leftPunch" && !this.dontMove) {
         this.img.src = "images/goku_left.png";
         this.shift = this.GOKUDIRS.leftPunch.slice();
         this.width = this.WIDTHS.punching;
         this.height = this.HEIGHTS.punching;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.punching;
-      } else if (this.dir === "kicking") {
+      } else if (this.dir === "kicking" && !this.dontMove) {
         this.img.src = "images/goku.png";
         this.pos[1] = 444;
         this.shift = this.GOKUDIRS.kicking.slice();
@@ -270,7 +271,7 @@ function (_Sprite) {
         this.width = this.WIDTHS.kicking;
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.kicking;
-      } else if (this.dir === "dmg") {
+      } else if (this.dir === "dmg" && !this.dontMove) {
         this.img.src = "images/goku.png";
         this.pos[1] = 455;
         this.shift = this.GOKUDIRS.dmg.slice();
@@ -279,6 +280,7 @@ function (_Sprite) {
         this.currentFrame = 1;
         this.totalFrames = this.TOTALFRAMES.dmg;
       } else if (this.dir === "dead") {
+        this.dontMove = true;
         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         this.img.src = "images/goku.png";
         this.pos[1] = 465;
@@ -344,23 +346,23 @@ function (_Sprite) {
     value: function move(dir, char) {
       switch (dir) {
         case "right":
-          if (this.game.inBounds(char)) {
+          if (this.game.inBounds(char) && !char.dontMove) {
             char.pos[0] += 1;
           }
 
           break;
 
         case "left":
-          if (this.game.inBounds(char)) {
+          if (this.game.inBounds(char) && !char.dontMove) {
             char.pos[0] -= 1;
           }
 
           break;
 
         case "dmg":
-          if (char.pos[0] < 458.5 && !char.player) {
+          if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
             char.pos[0] += 0.5;
-          } else if (char.pos[0] > 38) {
+          } else if (char.pos[0] > 38 && !char.dontMove) {
             char.pos[0] -= 0.5;
           }
 
@@ -405,11 +407,23 @@ function (_Sprite) {
       var dmgWidthIdx = 0;
 
       if (this.check < 7) {
+        if (this.player && this.health > 0) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText("Goku", 75, 75);
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(75, 100, this.health / 100 * 140, 25);
+        } else if (!this.player && this.health > 0) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText("Goku", 75, 75);
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(300, 100, this.health / 100 * 140, 25);
+        }
+
         ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
         ctx.drawImage(this.img, this.shift[0], this.shift[1], this.width, this.height, this.pos[0], this.pos[1], this.width, this.height);
 
         if (this.currentFrame === this.totalFrames) {
-          if (this.dir === "dmg" && this.player) {
+          if (this.dir === "dmg" && this.player && !this.dontMove) {
             this.dir = "idle";
             this.shift = this.GOKUDIRS.idle.slice();
             this.handleDir();
@@ -426,10 +440,23 @@ function (_Sprite) {
         this.aiBehavior();
         this.move(this.dir, this);
       } else {
+        if (this.player && this.health > 0) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText("Goku", 75, 75);
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(75, 100, this.health / 100 * 140, 25);
+        } else if (!this.player && this.health > 0) {
+          ctx.fillStyle = "#000000";
+          ctx.fillText("Enemy", 300, 75);
+          ctx.fillStyle = "#FF0000";
+          ctx.fillRect(300, 100, this.health / 100 * 140, 25);
+        }
+
         ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
 
         if (this.dir === "dead") {
           this.shift = [204, 1266];
+          this.dontMove = true;
         } else if (this.dir === "left") {
           this.shift[0] -= this.width;
         } else if (this.dir === "right") {
@@ -509,7 +536,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   ctx.font = "30px dbz";
-  ctx.fillText("Press space to start", 125, 200);
+  ctx.fillText("Press space to start", 150, 200);
   document.addEventListener("keydown", handler, false);
 });
 
@@ -525,11 +552,7 @@ function () {
       this.currentTime = 0;
       this.play();
     }, false);
-    this.ctx = ctx; // var background = new Image();
-    // background.src = "../images/arena.png";
-    // background.addEventListener("load", loadImage, false);
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    this.ctx = ctx;
     this.goku = new _goku__WEBPACK_IMPORTED_MODULE_0__["default"]({
       width: 33,
       height: 40,
@@ -560,6 +583,7 @@ function () {
       if (this.computer === this.otherKu) {
         this.otherKu.deadSound.play();
         this.goku.winSound.play();
+        this.goku.health = 100;
         setTimeout(function () {
           return _this.otherKu.pos = [700, 700];
         }, 1000);
@@ -579,7 +603,7 @@ function () {
         if (char.pos[0] + 40 >= this.computer.pos[0] && char.pos[0] + 40 <= this.computer.pos[0] + 33) {
           this.computer.dir = "dmg";
           this.computer.dmgSound.play();
-          this.computer.health -= 50;
+          this.computer.health -= 10;
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
@@ -592,7 +616,7 @@ function () {
         if (char.pos[0] + 33 >= this.computer.pos[0] && char.pos[0] + 33 <= this.computer.pos[0] + 33) {
           this.computer.dir = "dmg";
           this.computer.dmgSound.play();
-          this.computer.health -= 50;
+          this.computer.health -= 10;
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
@@ -605,7 +629,7 @@ function () {
         if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
           this.goku.dir = "dmg";
           this.goku.dmgSound.play();
-          this.goku.health -= 50;
+          this.goku.health -= 10;
 
           if (this.goku.health <= 0) {
             this.goku.dir = "dead";
@@ -635,162 +659,7 @@ function () {
       }
 
       return true;
-    } // function move(dir, char) {
-    //     switch (dir) {
-    //         case "right":
-    //             if (inBounds(char)) {
-    //                 char.pos[0] += 1;
-    //             }
-    //             break;
-    //         case "left":
-    //             if (inBounds(char)) {
-    //                 char.pos[0] -= 1;
-    //             }
-    //             break;
-    //         case "dmg":
-    //             if (char.pos[0] < 458.5 && !char.player) {
-    //                 char.pos[0] += 0.3;
-    //             } else if (char.pos[0] > 38) {
-    //                 char.pos[0] -= 0.3;
-    //             }
-    //             break;
-    //         default:
-    //             return;
-    //     }
-    // }
-    //   function animate() {
-    //     let otherKuKickIdx = 0;
-    //     let kickIdx = 0;
-    //     let dmgHeightIdx = 0;
-    //     let dmgWidthIdx = 0;
-    //     let otherDmgHeightIdx = 0;
-    //     let otherDmgWidthIdx = 0;
-    //     if (goku.check < 7) {
-    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-    //         ctx.drawImage(
-    //             goku.img,
-    //             goku.shift[0],
-    //             goku.shift[1],
-    //             goku.width,
-    //             goku.height,
-    //             goku.pos[0],
-    //             goku.pos[1],
-    //             goku.width,
-    //             goku.height
-    //         );
-    //         if (goku.currentFrame === goku.totalFrames) {
-    //             if (goku.dir === "dmg") {
-    //                 goku.dir = "idle";
-    //                 goku.shift = goku.GOKUDIRS.idle;
-    //                 goku.handleDir();
-    //             } else {
-    //                 goku.shift = goku.GOKUDIRS[goku.dir].slice();
-    //                 goku.currentFrame = 1;
-    //             }
-    //         }
-    //     } else {
-    //         ctx.clearRect(goku.pos[0], goku.pos[1], 512, 512);
-    //         if (goku.dir === "dead") {
-    //             goku.shift = [204, 1266];
-    //         } else if (goku.dir === "left") {
-    //             goku.shift[0] -= goku.width;
-    //         } else if (goku.dir === "right") {
-    //             goku.shift[0] += goku.width;
-    //         } else if (goku.dir === "punching") {
-    //             goku.shift[0] += goku.width;
-    //             hitCollision(goku);
-    //         } else if (goku.dir === "kicking") {
-    //             goku.shift[0] += goku.kickWidths[kickIdx];
-    //             hitCollision(goku);
-    //             kickIdx++;
-    //         } else if (goku.dir === "dmg") {
-    //             goku.shift[0] += goku.dmgWidths[dmgWidthIdx];
-    //             goku.height = goku.dmgHeights[dmgHeightIdx];
-    //             dmgWidthIdx++;
-    //             dmgHeightIdx++;
-    //         } else {
-    //             goku.shift[0] += goku.width;
-    //         }
-    //         ctx.drawImage(
-    //             goku.img,
-    //             goku.shift[0],
-    //             goku.shift[1],
-    //             goku.width,
-    //             goku.height,
-    //             goku.pos[0],
-    //             goku.pos[1],
-    //             goku.width,
-    //             goku.height
-    //         );
-    //         goku.currentFrame++;
-    //         goku.check = 0;
-    //     }
-    //     move(goku.dir, goku);
-    //     goku.check++;
-    //     move(otherKu.dir, otherKu);
-    //     otherKu.check++;
-    //     requestAnimationFrame(animate);
-    //     if (otherKu.check < 7) {
-    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-    //         ctx.drawImage(
-    //             otherKu.img,
-    //             otherKu.shift[0],
-    //             otherKu.shift[1],
-    //             otherKu.width,
-    //             otherKu.height,
-    //             otherKu.pos[0],
-    //             otherKu.pos[1],
-    //             otherKu.width,
-    //             otherKu.height
-    //         );
-    //         if (otherKu.currentFrame === otherKu.totalFrames) {
-    //             if (otherKu.dir === "dmg") {
-    //                 otherKu.dir = "idleLeft";
-    //                 otherKu.handleDir();
-    //             } else {
-    //                 otherKu.shift = otherKu.GOKUDIRS[otherKu.dir].slice();
-    //                 otherKu.currentFrame = 1;
-    //             }
-    //         }
-    //     } else {
-    //         ctx.clearRect(otherKu.pos[0], otherKu.pos[1], 512, 512);
-    //         if (otherKu.dir === "dead") {
-    //             otherKu.shift = [204, 1266];
-    //         } else if (otherKu.dir === "left") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "idleLeft") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "right") {
-    //             otherKu.shift[0] += otherKu.width;
-    //         } else if (otherKu.dir === "leftPunch") {
-    //             otherKu.shift[0] -= otherKu.width;
-    //         } else if (otherKu.dir === "kicking") {
-    //             otherKu.shift[0] += otherKu.kickWidths[otherKuKickIdx];
-    //             otherKuKickIdx++;
-    //         } else if (otherKu.dir === "dmg") {
-    //             otherKu.shift[0] += otherKu.dmgWidths[otherDmgWidthIdx];
-    //             otherKu.height = otherKu.dmgHeights[otherDmgHeightIdx];
-    //             otherDmgWidthIdx++;
-    //             otherDmgHeightIdx++;
-    //         } else {
-    //             otherKu.shift[0] += otherKu.width;
-    //         }
-    //         ctx.drawImage(
-    //             otherKu.img,
-    //             otherKu.shift[0],
-    //             otherKu.shift[1],
-    //             otherKu.width,
-    //             otherKu.height,
-    //             otherKu.pos[0],
-    //             otherKu.pos[1],
-    //             otherKu.width,
-    //             otherKu.height
-    //         );
-    //         otherKu.currentFrame++;
-    //         otherKu.check = 0;
-    //     }
-    // }
-
+    }
   }, {
     key: "gameLoop",
     value: function gameLoop() {
@@ -819,8 +688,9 @@ function () {
       this.restart.removeChild(this.btn);
       this.restart.style.visibility = "hidden";
       this.restart.style.opacity = 0;
-      this.goku = null;
-      this.computer = null;
+      this.goku.pos = [1000, 1000];
+      this.computer.pos = [1220, 1220];
+      this.computer.dontMove = true;
       var game = new Game(this.ctx);
       game.start();
     }
@@ -828,6 +698,11 @@ function () {
     key: "handlekeydown",
     value: function handlekeydown(e) {
       e.preventDefault();
+
+      if (this.goku.dontMove) {
+        debugger;
+        return;
+      }
 
       if (e.code === "KeyA") {
         this.goku.dir = "left";
@@ -858,8 +733,10 @@ function () {
   }, {
     key: "handlekeyup",
     value: function handlekeyup() {
-      this.goku.dir = "idle";
-      this.goku.handleDir();
+      if (!this.goku.dontMove) {
+        this.goku.dir = "idle";
+        this.goku.handleDir();
+      }
     }
   }, {
     key: "start",
@@ -881,9 +758,7 @@ function () {
       });
       this.gameLoop();
       this.audio.play();
-    } // start();
-    // goku.img.onload = () => goku.animate();
-
+    }
   }]);
 
   return Game;

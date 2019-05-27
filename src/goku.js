@@ -16,6 +16,7 @@ export default class Goku extends Sprite {
         this.deadSound = new Audio("sounds/defeated.wav");
         this.winSound = new Audio("sounds/victory.wav");
         this.animate = this.animate.bind(this);
+        this.dontMove = false;
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
         this.player ? (this.shift = [0, -1]) : (this.shift = [1151, 3]);
@@ -24,7 +25,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
-        this.health = 550;
+        this.health = 100;
         this.GOKUDIRS = {
             idle: [1, 1],
             idleLeft: [1151, 3],
@@ -94,7 +95,8 @@ export default class Goku extends Sprite {
     handleDir() {
         if (
             this.dir === "right" &&
-            (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230)
+            (this.shift[1] !== this.GOKUDIRS.right[1] || this.shift[0] > 230) &&
+            !this.dontMove
         ) {
             this.img.src = "images/goku.png";
             this.pos[1] = 444;
@@ -105,7 +107,8 @@ export default class Goku extends Sprite {
             this.totalFrames = this.TOTALFRAMES.running;
         } else if (
             this.dir === "left" &&
-            (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500)
+            (this.shift[1] !== this.GOKUDIRS.left[1] || this.shift[0] < 500) &&
+            !this.dontMove
         ) {
             this.img.src = "images/goku_left.png";
             this.pos[1] = 444;
@@ -117,7 +120,8 @@ export default class Goku extends Sprite {
         } else if (
             this.dir === "idle" &&
             this.shift[1] !== this.GOKUDIRS.idle[1] &&
-            this.player
+            this.health > 0 &&
+            !this.dontMove
         ) {
             this.img.src = "images/goku.png";
             this.pos[1] = 450;
@@ -134,21 +138,21 @@ export default class Goku extends Sprite {
             this.width = this.WIDTHS.idle;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.idle;
-        } else if (this.dir === "punching") {
+        } else if (this.dir === "punching" && !this.dontMove) {
             this.img.src = "images/goku.png";
             this.shift = this.GOKUDIRS.punching.slice();
             this.width = this.WIDTHS.punching;
             this.height = this.HEIGHTS.punching;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.punching;
-        } else if (this.dir === "leftPunch") {
+        } else if (this.dir === "leftPunch" && !this.dontMove) {
             this.img.src = "images/goku_left.png";
             this.shift = this.GOKUDIRS.leftPunch.slice();
             this.width = this.WIDTHS.punching;
             this.height = this.HEIGHTS.punching;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.punching;
-        } else if (this.dir === "kicking") {
+        } else if (this.dir === "kicking" && !this.dontMove) {
             this.img.src = "images/goku.png";
             this.pos[1] = 444;
             this.shift = this.GOKUDIRS.kicking.slice();
@@ -156,7 +160,7 @@ export default class Goku extends Sprite {
             this.width = this.WIDTHS.kicking;
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.kicking;
-        } else if (this.dir === "dmg") {
+        } else if (this.dir === "dmg" && !this.dontMove) {
             this.img.src = "images/goku.png";
             this.pos[1] = 455;
             this.shift = this.GOKUDIRS.dmg.slice();
@@ -165,6 +169,7 @@ export default class Goku extends Sprite {
             this.currentFrame = 1;
             this.totalFrames = this.TOTALFRAMES.dmg;
         } else if (this.dir === "dead") {
+            this.dontMove = true;
             this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             this.img.src = "images/goku.png";
             this.pos[1] = 465;
@@ -237,19 +242,19 @@ export default class Goku extends Sprite {
     move(dir, char) {
         switch (dir) {
             case "right":
-                if (this.game.inBounds(char)) {
+                if (this.game.inBounds(char) && !char.dontMove) {
                     char.pos[0] += 1;
                 }
                 break;
             case "left":
-                if (this.game.inBounds(char)) {
+                if (this.game.inBounds(char) && !char.dontMove) {
                     char.pos[0] -= 1;
                 }
                 break;
             case "dmg":
-                if (char.pos[0] < 458.5 && !char.player) {
+                if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
                     char.pos[0] += 0.5;
-                } else if (char.pos[0] > 38) {
+                } else if (char.pos[0] > 38 && !char.dontMove) {
                     char.pos[0] -= 0.5;
                 }
                 break;
@@ -291,6 +296,17 @@ export default class Goku extends Sprite {
         let dmgHeightIdx = 0;
         let dmgWidthIdx = 0;
         if (this.check < 7) {
+            if (this.player && this.health > 0) {
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Goku", 75, 75);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
+            } else if (!this.player && this.health > 0) {
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Goku", 75, 75);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
+            }
             ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             ctx.drawImage(
                 this.img,
@@ -305,7 +321,7 @@ export default class Goku extends Sprite {
             );
 
             if (this.currentFrame === this.totalFrames) {
-                if (this.dir === "dmg" && this.player) {
+                if (this.dir === "dmg" && this.player && !this.dontMove) {
                     this.dir = "idle";
                     this.shift = this.GOKUDIRS.idle.slice();
                     this.handleDir();
@@ -321,9 +337,21 @@ export default class Goku extends Sprite {
             this.aiBehavior();
             this.move(this.dir, this);
         } else {
+            if (this.player && this.health > 0) {
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Goku", 75, 75);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
+            } else if (!this.player && this.health > 0) {
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Enemy", 300, 75);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
+            }
             ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             if (this.dir === "dead") {
                 this.shift = [204, 1266];
+                this.dontMove = true;
             } else if (this.dir === "left") {
                 this.shift[0] -= this.width;
             } else if (this.dir === "right") {
