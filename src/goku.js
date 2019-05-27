@@ -304,7 +304,7 @@ export default class Goku extends Sprite {
                 ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
             } else if (!this.player && this.health > 0) {
                 ctx.fillStyle = "#000000";
-                ctx.fillText("Enemy", 75, 75);
+                ctx.fillText("Enemy", 300, 75);
                 ctx.fillStyle = "#FF0000";
                 ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
             }

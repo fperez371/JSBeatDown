@@ -54,7 +54,7 @@ export default class Game {
 
         this.ichigo = new Ichigo({
             imgUrl: "images/ichigo_left.png",
-            startPos: [300, 450],
+            startPos: [350, 450],
             game: this,
             goku: this.goku,
         });
@@ -77,10 +77,9 @@ export default class Game {
             this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
             this.goku.dir = "idle";
             this.goku.handleDir();
-            this.goku.dontMove = true;
             this.computer = this.ichigo;
             setTimeout(() => this.ctx.clearRect(0, 0, 512, 512), 2000);
-            this.gameLoop();
+            this.computer.animate(this.ctx);
         }
     }
 
@@ -160,6 +159,9 @@ export default class Game {
             this.goku.move(this.goku.dir, this.goku);
             this.computer.animate(this.ctx);
             this.computer.move(this.computer.dir, this.computer);
+        } else if (!this.gameOver && this.computer === this.ichigo) {
+            this.computer.pos = [300, 450];
+            this.computer.animate(this.ctx);
         } else {
             document.removeEventListener("keydown", this.handlekeydown, false);
             this.audio.pause();

@@ -415,7 +415,7 @@ function (_Sprite) {
           ctx.fillRect(75, 100, this.health / 100 * 140, 25);
         } else if (!this.player && this.health > 0) {
           ctx.fillStyle = "#000000";
-          ctx.fillText("Enemy", 75, 75);
+          ctx.fillText("Enemy", 300, 75);
           ctx.fillStyle = "#FF0000";
           ctx.fillRect(300, 100, this.health / 100 * 140, 25);
         }
@@ -536,7 +536,6 @@ function () {
     this.dmgSound = new Audio("sounds/ichigoDmg.wav");
     this.deadSound = new Audio("sounds/ichigoDefeat.wav");
     this.winSound = new Audio("sounds/ichigoVictory.wav");
-    this.animate = this.animate.bind(this);
     this.dontMove = false;
     this.pos = props.startPos;
     this.check = 0;
@@ -546,7 +545,7 @@ function () {
     // this.ctx = this.canvas.getContext("2d");
 
     this.health = 200;
-    this.powerUp = [[427, 29, 54, 37], [375, 26, 47, 40], [345, 16, 24, 50], [310, 16, 24, 50], [274, 17, 24, 48], [354, 73, 125, 181], [210, 115, 110, 140], [64, 87, 120, 168], [418, 260, 68, 48], [369, 261, 38, 45]];
+    this.powerUp = [[-427, -29, 54, 37], [-375, -26, 47, 40], [-345, -16, 24, 50], [-310, -16, 24, 50], [-274, -17, 24, 48], [-354, -73, 125, 181], [-210, -115, 110, 140], [-64, -87, 120, 168], [-418, -260, 68, 48], [-369, -261, 38, 45]];
     this.idle = [[369, 261, 38, 45]];
     this.dmg = [[447, 1061, 38, 37], [399, 1071, 45, 30], [332, 1081, 57, 14], [271, 1079, 57, 16], [206, 1078, 57, 16], [163, 1063, 36, 33], [124, 1064, 38, 34], [87, 1063, 31, 35], [43, 1049, 35, 49], [2, 1048, 36, 49]];
     this.shlice = [[448, 459, 36, 40], [403, 462, 39, 40], [319, 464, 71, 38], [275, 470, 42, 34], [231, 468, 31, 37], [160, 469, 66, 33], [98, 466, 56, 37]]; // have him move forward on frames 4, 5, and 6
@@ -559,11 +558,7 @@ function () {
   _createClass(Ichigo, [{
     key: "handleDir",
     value: function handleDir() {
-      if (this.dir === "powerup") {
-        this.currentFrame = 0;
-        this.totalFrames = 10; // this.bankaiSound.play();
-        // this.powerUpSound.play();
-      }
+      return;
     } //placeholder for testing
 
   }, {
@@ -574,17 +569,16 @@ function () {
   }, {
     key: "animate",
     value: function animate(ctx) {
-      debugger;
-
-      if (this.check < 7) {
+      if (this.check < 3) {
         if (this.health > 0) {
           ctx.fillStyle = "#000000";
-          ctx.fillText("Enemy", 75, 75);
+          ctx.fillText("Enemy", 300, 75);
           ctx.fillStyle = "#FF0000";
-          ctx.fillRect(300, 100, this.health / 100 * 140, 25);
+          ctx.fillRect(300, 100, this.health / 200 * 140, 25);
         }
 
         ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+        debugger;
         ctx.drawImage(this.img, this.powerUp[this.currentFrame][0], this.powerUp[this.currentFrame][1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3], this.pos[0], this.pos[1], this.powerUp[this.currentFrame][2], this.powerUp[this.currentFrame][3]);
 
         if (this.currentFrame === this.totalFrames - 1) {
@@ -684,7 +678,7 @@ function () {
     });
     this.ichigo = new _ichigo__WEBPACK_IMPORTED_MODULE_1__["default"]({
       imgUrl: "images/ichigo_left.png",
-      startPos: [300, 450],
+      startPos: [350, 450],
       game: this,
       goku: this.goku
     });
@@ -711,12 +705,11 @@ function () {
         this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
         this.goku.dir = "idle";
         this.goku.handleDir();
-        this.goku.dontMove = true;
         this.computer = this.ichigo;
         setTimeout(function () {
           return _this.ctx.clearRect(0, 0, 512, 512);
         }, 2000);
-        this.gameLoop();
+        this.computer.animate(this.ctx);
       }
     }
   }, {
@@ -791,6 +784,9 @@ function () {
         this.goku.move(this.goku.dir, this.goku);
         this.computer.animate(this.ctx);
         this.computer.move(this.computer.dir, this.computer);
+      } else if (!this.gameOver && this.computer === this.ichigo) {
+        this.computer.pos = [300, 450];
+        this.computer.animate(this.ctx);
       } else {
         document.removeEventListener("keydown", this.handlekeydown, false);
         this.audio.pause();

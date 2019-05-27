@@ -11,7 +11,6 @@ export default class Ichigo {
         this.dmgSound = new Audio("sounds/ichigoDmg.wav");
         this.deadSound = new Audio("sounds/ichigoDefeat.wav");
         this.winSound = new Audio("sounds/ichigoVictory.wav");
-        this.animate = this.animate.bind(this);
         this.dontMove = false;
         this.pos = props.startPos;
         this.check = 0;
@@ -23,16 +22,16 @@ export default class Ichigo {
 
         this.health = 200;
         this.powerUp = [
-            [427, 29, 54, 37],
-            [375, 26, 47, 40],
-            [345, 16, 24, 50],
-            [310, 16, 24, 50],
-            [274, 17, 24, 48],
-            [354, 73, 125, 181],
-            [210, 115, 110, 140],
-            [64, 87, 120, 168],
-            [418, 260, 68, 48],
-            [369, 261, 38, 45],
+            [-427, -29, 54, 37],
+            [-375, -26, 47, 40],
+            [-345, -16, 24, 50],
+            [-310, -16, 24, 50],
+            [-274, -17, 24, 48],
+            [-354, -73, 125, 181],
+            [-210, -115, 110, 140],
+            [-64, -87, 120, 168],
+            [-418, -260, 68, 48],
+            [-369, -261, 38, 45],
         ];
         this.idle = [[369, 261, 38, 45]];
         this.dmg = [
@@ -71,12 +70,7 @@ export default class Ichigo {
     }
 
     handleDir() {
-        if (this.dir === "powerup") {
-            this.currentFrame = 0;
-            this.totalFrames = 10;
-            // this.bankaiSound.play();
-            // this.powerUpSound.play();
-        }
+        return;
     }
     //placeholder for testing
     move() {
@@ -84,15 +78,15 @@ export default class Ichigo {
     }
 
     animate(ctx) {
-        debugger;
-        if (this.check < 7) {
+        if (this.check < 3) {
             if (this.health > 0) {
                 ctx.fillStyle = "#000000";
-                ctx.fillText("Enemy", 75, 75);
+                ctx.fillText("Enemy", 300, 75);
                 ctx.fillStyle = "#FF0000";
-                ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
+                ctx.fillRect(300, 100, (this.health / 200) * 140, 25);
             }
             ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+            debugger;
             ctx.drawImage(
                 this.img,
                 this.powerUp[this.currentFrame][0],
