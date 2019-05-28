@@ -912,13 +912,21 @@ function () {
       if (char.dir === "kicking") {
         if (char.pos[0] + 40 >= this.computer.pos[0] && char.pos[0] + 40 <= this.computer.pos[0] + 33) {
           this.computer.dir = "dmg";
-          this.computer.dmgSound.play();
+
+          if (!this.once) {
+            this.computer.dmgSound.play();
+          }
+
           this.computer.health -= 10;
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
             this.computer.currentFrame = 0;
-            this.computer.deadSound.play();
+
+            if (!this.once) {
+              this.computer.deadSound.play();
+            }
+
             this.endFight();
           }
 
@@ -927,13 +935,21 @@ function () {
       } else if (char.dir === "punching") {
         if (char.pos[0] + 33 >= this.computer.pos[0] && char.pos[0] + 33 <= this.computer.pos[0] + 33) {
           this.computer.dir = "dmg";
-          this.computer.dmgSound.play();
+
+          if (!this.once) {
+            this.computer.dmgSound.play();
+          }
+
           this.computer.health -= 10;
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
             this.computer.currentFrame = 0;
-            this.computer.deadSound.play();
+
+            if (!this.once) {
+              this.computer.deadSound.play();
+            }
+
             this.endFight();
           }
 
@@ -1019,7 +1035,8 @@ function () {
         this.restart.appendChild(this.btn);
         this.restart.style.visibility = "visible";
         this.restart.style.opacity = 1;
-      } else {
+        this.once = true;
+      } else if (!this.once) {
         document.removeEventListener("keydown", this.handlekeydown, false);
         this.audio.pause();
         this.audio.currentTime = 0;
