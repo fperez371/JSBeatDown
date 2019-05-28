@@ -25,7 +25,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
-        this.health = 100;
+        this.player ? (this.health = 100) : (this.health = 100);
         this.GOKUDIRS = {
             idle: [1, 1],
             idleLeft: [1151, 3],
@@ -252,9 +252,9 @@ export default class Goku extends Sprite {
                 break;
             case "dmg":
                 if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
-                    char.pos[0] += 0.5;
+                    char.pos[0] += 0.7;
                 } else if (char.pos[0] > 38 && !char.dontMove) {
-                    char.pos[0] -= 0.5;
+                    char.pos[0] -= 0.7;
                 }
                 break;
             default:
@@ -291,6 +291,7 @@ export default class Goku extends Sprite {
     // }
 
     animate(ctx) {
+        debugger;
         let kickIdx = 0;
         let dmgHeightIdx = 0;
         let dmgWidthIdx = 0;
@@ -352,6 +353,7 @@ export default class Goku extends Sprite {
             }
             ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             if (this.dir === "dead") {
+                ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
                 this.shift = [204, 1266];
                 this.dontMove = true;
             } else if (this.dir === "left") {
@@ -363,8 +365,8 @@ export default class Goku extends Sprite {
                 this.game.hitCollision(this);
             } else if (this.dir === "kicking") {
                 this.shift[0] += this.kickWidths[kickIdx];
-                this.game.hitCollision(this);
                 kickIdx++;
+                this.game.hitCollision(this);
             } else if (this.dir === "dmg") {
                 this.shift[0] += this.dmgWidths[dmgWidthIdx];
                 this.height = this.dmgHeights[dmgHeightIdx];

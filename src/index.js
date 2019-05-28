@@ -7,7 +7,7 @@ function handler(key) {
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, 512, 512);
         ctx.fillText("ROUND 1: Face yourself!", 115, 200);
-        setTimeout(() => ctx.clearRect(0, 0, 512, 512), 2000);
+        setTimeout(() => ctx.clearRect(0, 0, 512, 512), 5000);
         new Game(ctx).start();
     }
 }
@@ -54,7 +54,7 @@ export default class Game {
 
         this.ichigo = new Ichigo({
             imgUrl: "images/ichigo_left.png",
-            startPos: [350, 450],
+            startPos: [7000, 450],
             game: this,
             goku: this.goku,
         });
@@ -62,6 +62,7 @@ export default class Game {
         this.gameOver = false;
 
         this.computer = this.otherKu;
+        this.once = false;
         this.newGame = this.newGame.bind(this);
     }
 
@@ -74,12 +75,16 @@ export default class Game {
             this.audio.src = "sounds/bleach.mp3";
             this.audio.play();
             this.ctx.clearRect(0, 0, 512, 512);
-            this.ctx.fillText("ROUND 2: Face the first rival!", 75, 200);
-            this.goku.dir = "idle";
-            this.goku.handleDir();
+            this.goku.pos = [200, 450];
             this.computer = this.ichigo;
-            setTimeout(() => this.ctx.clearRect(0, 0, 512, 512), 2000);
-            this.computer.animate(this.ctx);
+            this.ichigo.dir = "powerUp";
+            this.ichigo.dontMove = true;
+            this.ichigo.pos = [350, 450];
+            this.ichigo.handleDir();
+            this.gameLoop();
+        } else {
+            this.gameOver = true;
+            this.gameLoop();
         }
     }
 
@@ -94,6 +99,8 @@ export default class Game {
                 this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
+                    this.computer.currentFrame = 0;
+                    this.computer.deadSound.play();
                     this.endFight();
                 }
                 this.computer.handleDir();
@@ -108,6 +115,8 @@ export default class Game {
                 this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
+                    this.computer.currentFrame = 0;
+                    this.computer.deadSound.play();
                     this.endFight();
                 }
                 this.computer.handleDir();
@@ -119,6 +128,22 @@ export default class Game {
                 this.goku.health -= 10;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
+                    this.goku.deadSound.play();
+                    this.goku.handleDir();
+                    this.gameOver = true;
+                    this.gameLoop();
+                }
+                this.goku.handleDir();
+            }
+        } else if (char.dir === "shlice") {
+            if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
+                this.goku.dir = "dmg";
+                this.goku.dmgSound.play();
+                this.goku.health -= 10;
+                if (this.goku.health <= 0) {
+                    this.goku.dir = "dead";
+                    this.goku.currentFrame = 0;
+                    this.goku.dontMove = true;
                     this.goku.deadSound.play();
                     this.goku.handleDir();
                     this.gameOver = true;
@@ -154,14 +179,35 @@ export default class Game {
     }
 
     gameLoop() {
-        if (!this.gameOver) {
+        if (!this.gameOver && this.computer === this.otherKu) {
             this.goku.animate(this.ctx);
             this.goku.move(this.goku.dir, this.goku);
             this.computer.animate(this.ctx);
             this.computer.move(this.computer.dir, this.computer);
+            this.ichigo.animate(this.ctx);
+            this.ichigo.handleDir();
+            this.ichigo.move(this.ichigo.dir, this.ichigo);
         } else if (!this.gameOver && this.computer === this.ichigo) {
-            this.computer.pos = [300, 450];
-            this.computer.animate(this.ctx);
+            this.goku.move(this.goku.dir, this.goku);
+            // this.ichigo.animate(this.ctx);
+            // this.ichigo.animate(this.ctx);
+        } else if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
+            this.goku.winSound.play();
+            document.removeEventListener(
+                "keydown",
+                this.handlekeydown.bind(this),
+                false
+            );
+            this.audio.pause();
+            this.audio.currentTime = 0;
+            this.btn = document.createElement("BUTTON");
+            const text = document.createTextNode("You Won! Try again?");
+            this.restart = document.getElementById("gameover");
+            this.btn.appendChild(text);
+            this.btn.onclick = this.newGame;
+            this.restart.appendChild(this.btn);
+            this.restart.style.visibility = "visible";
+            this.restart.style.opacity = 1;
         } else {
             document.removeEventListener("keydown", this.handlekeydown, false);
             this.audio.pause();

@@ -4,34 +4,34 @@ export default class Ichigo {
         this.goku = props.goku;
         this.img = new Image();
         this.img.src = props.imgUrl;
-        this.bankaiSound = new Audio("sounds/bankai.wav");
+        this.dontMove = false;
+        this.bankaiSound = new Audio("sounds/bankai.mp3");
         this.powerUpSound = new Audio("sounds/powerup.mp3");
         this.atk1Sound = new Audio("sounds/ichigoAtk1.wav");
         this.atk1Sound = new Audio("sounds/ichigoAtk2.wav");
         this.dmgSound = new Audio("sounds/ichigoDmg.wav");
         this.deadSound = new Audio("sounds/ichigoDefeat.wav");
         this.winSound = new Audio("sounds/ichigoVictory.wav");
-        this.dontMove = false;
         this.pos = props.startPos;
         this.check = 0;
         this.currentFrame = 0;
-        this.totalFrames = 10;
-        this.dir = "powerup";
+        this.dir = "idle";
+        this.player = false;
         // this.canvas = document.getElementById("canvas");
         // this.ctx = this.canvas.getContext("2d");
 
         this.health = 200;
         this.powerUp = [
-            [-427, -29, 54, 37],
-            [-375, -26, 47, 40],
-            [-345, -16, 24, 50],
-            [-310, -16, 24, 50],
-            [-274, -17, 24, 48],
-            [-354, -73, 125, 181],
-            [-210, -115, 110, 140],
-            [-64, -87, 120, 168],
-            [-418, -260, 68, 48],
-            [-369, -261, 38, 45],
+            [427, 29, 54, 37],
+            [375, 26, 47, 40],
+            [345, 16, 24, 50],
+            [310, 16, 24, 50],
+            [274, 17, 24, 48],
+            [354, 73, 125, 181],
+            [210, 115, 110, 140],
+            [64, 87, 120, 168],
+            [418, 260, 68, 48],
+            [369, 261, 38, 45],
         ];
         this.idle = [[369, 261, 38, 45]];
         this.dmg = [
@@ -66,19 +66,95 @@ export default class Ichigo {
             [189, 1132, 45, 45],
             [385, 867, 66, 36],
         ];
-        this.dead = [332, 1081, 57, 14];
+        this.dead = [[332, 1081, 57, 14]];
+        this.totalFrames = {
+            idle: 1,
+            powerUp: 10,
+            dmg: 10,
+            shlice: 7,
+            flashy: 7,
+        };
     }
 
+    // aiBehavior() {
+    //     if (
+    //         !this.player &&
+    //         this.health > 0 &&
+    //         this.dir !== "dmg" &&
+    //         this.goku.health > 0
+    //     ) {
+    //         if (this.goku.pos[0] + 33 < this.pos[0]) {
+    //             this.dir = "left";
+    //             this.handleDir();
+    //         } else {
+    //             this.dir = "idleLeft";
+    //             this.handleDir();
+    //             this.dir = "leftPunch";
+    //             this.handleDir();
+    //         }
+    //     }
+    //     if (!this.player && this.goku.health <= 0 && this.health > 0) {
+    //         this.dir = "idleLeft";
+    //         this.handleDir();
+    //     }
+    //     return;
+    // }
+
     handleDir() {
-        return;
+        switch (this.dir) {
+            case "idle":
+                this.currentFrame = 0;
+                this.pos[1] = 450;
+                break;
+            case "powerUp":
+                this.currentFrame = 0;
+                this.pos[1] = 450;
+                this.bankaiSound.play();
+                break;
+            case "dmg":
+                this.currentFrame = 0;
+                break;
+            case "shlice":
+                this.currentFrame = 0;
+                break;
+            case "dead":
+                this.dontMove = true;
+                this.currentFrame = 0;
+                this.pos[1] = 470;
+                break;
+            default:
+                break;
+        }
     }
     //placeholder for testing
-    move() {
-        return;
+    move(dir, char) {
+        switch (dir) {
+            case "right":
+                if (this.game.inBounds(char) && !char.dontMove) {
+                    char.pos[0] += 1;
+                }
+                break;
+            case "left":
+                if (this.game.inBounds(char) && !char.dontMove) {
+                    char.pos[0] -= 1;
+                }
+                break;
+            case "dmg":
+                if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
+                    char.pos[0] += 1;
+                } else if (char.pos[0] > 38 && !char.dontMove) {
+                    char.pos[0] -= 1;
+                }
+                break;
+            default:
+                return;
+        }
     }
 
     animate(ctx) {
-        if (this.check < 3) {
+        let adjY = 0;
+        let adjX = 0;
+        if (this.check < 7) {
             if (this.health > 0) {
                 ctx.fillStyle = "#000000";
                 ctx.fillText("Enemy", 300, 75);
@@ -86,38 +162,210 @@ export default class Ichigo {
                 ctx.fillRect(300, 100, (this.health / 200) * 140, 25);
             }
             ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            debugger;
-            ctx.drawImage(
-                this.img,
-                this.powerUp[this.currentFrame][0],
-                this.powerUp[this.currentFrame][1],
-                this.powerUp[this.currentFrame][2],
-                this.powerUp[this.currentFrame][3],
-                this.pos[0],
-                this.pos[1],
-                this.powerUp[this.currentFrame][2],
-                this.powerUp[this.currentFrame][3]
-            );
-
-            if (this.currentFrame === this.totalFrames - 1) {
+            if (
+                this.currentFrame === this.totalFrames[this.dir] &&
+                this.dir !== "powerUp" &&
+                this.dir !== "dmg"
+            ) {
                 this.currentFrame = 0;
-                this.dir = "powerup";
+            }
+            if (
+                this.dir === "powerUp" &&
+                this.currentFrame === this.totalFrames[this.dir]
+            ) {
+                this.currentFrame = 0;
+                this.dontMove = false;
+                this.dir = "idle";
+                this.handleDir();
+            }
+            if (
+                this.dir === "dmg" &&
+                this.currentFrame === this.totalFrames[this.dir]
+            ) {
+                this.currentFrame = 0;
+                this.dir = "idle";
+                this.handleDir();
+            }
+            switch (this.dir) {
+                case "idle":
+                    ctx.drawImage(
+                        this.img,
+                        369,
+                        261,
+                        38,
+                        45,
+                        this.pos[0],
+                        this.pos[1],
+                        38,
+                        45
+                    );
+                    break;
+                case "shlice":
+                    ctx.drawImage(
+                        this.img,
+                        this.shlice[this.currentFrame][0],
+                        this.shlice[this.currentFrame][1],
+                        this.shlice[this.currentFrame][2],
+                        this.shlice[this.currentFrame][3],
+                        this.pos[0],
+                        this.pos[1],
+                        this.shlice[this.currentFrame][2],
+                        this.shlice[this.currentFrame][3]
+                    );
+                    this.game.hitCollision(this);
+                    break;
+                case "powerUp":
+                    if (this.currentFrame === 5) {
+                        adjY = 120;
+                        adjX = 30;
+                    } else if (this.currentFrame === 6) {
+                        adjY = 110;
+                        adjX = 25;
+                    } else if (this.currentFrame === 7) {
+                        adjY = 120;
+                        adjX = 35;
+                    } else {
+                        adjY = 0;
+                        adjX = 0;
+                    }
+                    ctx.drawImage(
+                        this.img,
+                        this.powerUp[this.currentFrame][0],
+                        this.powerUp[this.currentFrame][1],
+                        this.powerUp[this.currentFrame][2],
+                        this.powerUp[this.currentFrame][3],
+                        this.pos[0] - adjX,
+                        this.pos[1] - adjY,
+                        this.powerUp[this.currentFrame][2],
+                        this.powerUp[this.currentFrame][3]
+                    );
+                    break;
+                case "dmg":
+                    if (this.currentFrame >= 1 && this.currentFrame < 6) {
+                        adjY = 20;
+                    } else {
+                        adjY = 0;
+                    }
+                    ctx.drawImage(
+                        this.img,
+                        this.dmg[this.currentFrame][0],
+                        this.dmg[this.currentFrame][1],
+                        this.dmg[this.currentFrame][2],
+                        this.dmg[this.currentFrame][3],
+                        this.pos[0],
+                        this.pos[1] + adjY,
+                        this.dmg[this.currentFrame][2],
+                        this.dmg[this.currentFrame][3]
+                    );
+                    break;
+                case "dead":
+                    ctx.drawImage(
+                        this.img,
+                        332,
+                        1081,
+                        57,
+                        14,
+                        this.pos[0],
+                        this.pos[1],
+                        57,
+                        14
+                    );
+                    break;
+                default:
+                    break;
             }
         } else {
-            ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-            ctx.drawImage(
-                this.img,
-                this.powerUp[this.currentFrame][0],
-                this.powerUp[this.currentFrame][1],
-                this.powerUp[this.currentFrame][2],
-                this.powerUp[this.currentFrame][3],
-                this.pos[0],
-                this.pos[1],
-                this.powerUp[this.currentFrame][2],
-                this.powerUp[this.currentFrame][3]
-            );
+            if (this.health > 0) {
+                ctx.fillStyle = "#000000";
+                ctx.fillText("Enemy", 300, 75);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(300, 100, (this.health / 200) * 140, 25);
+            }
+            switch (this.dir) {
+                case "idle":
+                    ctx.drawImage(
+                        this.img,
+                        369,
+                        261,
+                        38,
+                        45,
+                        this.pos[0],
+                        this.pos[1],
+                        38,
+                        45
+                    );
+                    break;
+                case "shlice":
+                    ctx.drawImage(
+                        this.img,
+                        this.shlice[this.currentFrame][0],
+                        this.shlice[this.currentFrame][1],
+                        this.shlice[this.currentFrame][2],
+                        this.shlice[this.currentFrame][3],
+                        this.pos[0],
+                        this.pos[1],
+                        this.shlice[this.currentFrame][2],
+                        this.shlice[this.currentFrame][3]
+                    );
+                    this.game.hitCollision(this);
+                    break;
+                case "powerUp":
+                    if (this.currentFrame >= 5 && this.currentFrame < 8) {
+                        adjY = 100;
+                        adjX = 30;
+                    } else {
+                        adjY = 0;
+                        adjX = 0;
+                    }
+                    ctx.drawImage(
+                        this.img,
+                        this.powerUp[this.currentFrame][0],
+                        this.powerUp[this.currentFrame][1],
+                        this.powerUp[this.currentFrame][2],
+                        this.powerUp[this.currentFrame][3],
+                        this.pos[0] - adjX,
+                        this.pos[1] - adjY,
+                        this.powerUp[this.currentFrame][2],
+                        this.powerUp[this.currentFrame][3]
+                    );
+                    break;
+                case "dmg":
+                    if (this.currentFrame >= 1 && this.currentFrame < 6) {
+                        adjY = 20;
+                    } else {
+                        adjY = 0;
+                    }
+                    ctx.drawImage(
+                        this.img,
+                        this.dmg[this.currentFrame][0],
+                        this.dmg[this.currentFrame][1],
+                        this.dmg[this.currentFrame][2],
+                        this.dmg[this.currentFrame][3],
+                        this.pos[0],
+                        this.pos[1] - adjY,
+                        this.dmg[this.currentFrame][2],
+                        this.dmg[this.currentFrame][3]
+                    );
+                    break;
+                case "dead":
+                    ctx.drawImage(
+                        this.img,
+                        332,
+                        1081,
+                        57,
+                        14,
+                        this.pos[0],
+                        this.pos[1],
+                        57,
+                        14
+                    );
+                    break;
+                default:
+                    break;
+            }
 
             this.currentFrame++;
+            this.move(this.dir, this);
             this.check = 0;
         }
         this.check++;
