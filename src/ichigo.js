@@ -189,6 +189,12 @@ export default class Ichigo {
                 }
                 if (
                     this.dir === "powerUp" &&
+                    this.currentFrame !== this.totalFrames[this.dir]
+                ) {
+                    ctx.fillText("ROUND 2: Face a rival!", 115, 200);
+                }
+                if (
+                    this.dir === "powerUp" &&
                     this.currentFrame === this.totalFrames[this.dir]
                 ) {
                     this.currentFrame = 0;

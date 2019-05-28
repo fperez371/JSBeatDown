@@ -78,7 +78,6 @@ export default class Game {
             this.otherKu.deadSound.play();
             this.goku.winSound.play();
             this.goku.health = 100;
-            this.ctx.fillText("ROUND 2: Face a rival!", 115, 200);
             setTimeout(() => (this.otherKu.pos = [700, 700]), 1000);
             this.audio.src = "sounds/bleach.mp3";
             this.audio.play();

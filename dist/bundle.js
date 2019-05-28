@@ -693,6 +693,10 @@ function () {
             this.currentFrame = 0;
           }
 
+          if (this.dir === "powerUp" && this.currentFrame !== this.totalFrames[this.dir]) {
+            ctx.fillText("ROUND 2: Face a rival!", 115, 200);
+          }
+
           if (this.dir === "powerUp" && this.currentFrame === this.totalFrames[this.dir]) {
             this.currentFrame = 0;
             this.dontMove = false;
@@ -952,7 +956,6 @@ function () {
         this.otherKu.deadSound.play();
         this.goku.winSound.play();
         this.goku.health = 100;
-        this.ctx.fillText("ROUND 2: Face a rival!", 115, 200);
         setTimeout(function () {
           return _this.otherKu.pos = [700, 700];
         }, 1000);
