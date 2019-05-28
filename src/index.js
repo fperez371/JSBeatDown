@@ -81,6 +81,9 @@ export default class Game {
             setTimeout(() => (this.otherKu.pos = [700, 700]), 1000);
             this.audio.src = "sounds/bleach.mp3";
             this.audio.play();
+            if (this.goku.pos[0] > 100) {
+                this.goku.pos = [100, 450];
+            }
             setTimeout(() => {
                 this.computer = this.ichigo;
                 this.ichigo.dir = "powerUp";
@@ -164,7 +167,7 @@ export default class Game {
                     );
                     this.goku.deadSound.play();
                     this.goku.handleDir();
-                    this.goku.dontMove = true;
+                    // this.goku.dontMove = true;
                     this.gameOver = true;
                     this.gameLoop();
                 }
@@ -173,6 +176,7 @@ export default class Game {
         } else if (char.dir === "shlice") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
+                this.goku.move("dmg", this.goku);
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
                 if (this.goku.health <= 0) {
@@ -183,7 +187,7 @@ export default class Game {
                         512,
                         512
                     );
-                    this.goku.dontMove = true;
+                    // this.goku.dontMove = true;
                     this.goku.deadSound.play();
                     this.ctx.clearRect(
                         this.goku.pos[0],
@@ -192,7 +196,6 @@ export default class Game {
                         512
                     );
                     this.ichigo.winSound.play();
-                    this.goku.handleDir();
                     this.gameOver = true;
                     this.gameLoop();
                 }
@@ -201,12 +204,14 @@ export default class Game {
         } else if (char.dir === "flashy") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
+                this.goku.move("dmg", this.goku);
+
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
                     this.goku.currentFrame = 0;
-                    this.goku.dontMove = true;
+                    // this.goku.dontMove = true;
                     this.goku.deadSound.play();
                     this.ichigo.winSound.play();
                     this.goku.handleDir();
