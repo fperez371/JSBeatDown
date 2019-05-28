@@ -7,8 +7,11 @@ function handler(key) {
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, 512, 512);
         ctx.fillText("ROUND 1: Face yourself!", 115, 200);
-        setTimeout(() => ctx.clearRect(0, 0, 512, 512), 5000);
-        new Game(ctx).start();
+        setTimeout(() => {
+            ctx.clearRect(0, 0, 512, 512);
+            new Game(ctx).start();
+            document.removeEventListener("keydown", handler, false);
+        }, 2000);
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
@@ -59,11 +62,15 @@ export default class Game {
             goku: this.goku,
         });
 
+        this.allChars = [this.goku, this.otherKu, this.ichigo];
+
         this.gameOver = false;
 
         this.computer = this.otherKu;
         this.once = false;
         this.newGame = this.newGame.bind(this);
+        this.started = false;
+        this.paused = false;
     }
 
     endFight() {
@@ -71,28 +78,42 @@ export default class Game {
             this.otherKu.deadSound.play();
             this.goku.winSound.play();
             this.goku.health = 100;
+            this.ctx.fillText("ROUND 2: Face a rival!", 115, 200);
             setTimeout(() => (this.otherKu.pos = [700, 700]), 1000);
             this.audio.src = "sounds/bleach.mp3";
             this.audio.play();
-            this.ctx.clearRect(0, 0, 512, 512);
-            this.goku.pos = [200, 450];
-            this.computer = this.ichigo;
-            this.ichigo.dir = "powerUp";
-            this.ichigo.dontMove = true;
-            this.ichigo.pos = [350, 450];
-            this.ichigo.handleDir();
-            this.gameLoop();
+            setTimeout(() => {
+                this.computer = this.ichigo;
+                this.ichigo.dir = "powerUp";
+                this.ichigo.dontMove = true;
+                this.ichigo.pos = [350, 450];
+                this.ichigo.handleDir();
+                this.gameLoop();
+            }, 4000);
         } else {
             this.gameOver = true;
             this.gameLoop();
         }
     }
 
+    pause() {
+        const pauseEl = document.getElementById("pause");
+        this.paused = !this.paused;
+        if (this.paused) {
+            pauseEl.style.visibility = "visible";
+        } else {
+            pauseEl.style.visibility = "hidden";
+            this.allChars.forEach(char => char.animate(this.ctx));
+        }
+    }
+
     hitCollision(char) {
+        let range;
+        this.computer === this.ichigo ? (range = 48) : (range = 40);
         if (char.dir === "kicking") {
             if (
-                char.pos[0] + 40 >= this.computer.pos[0] &&
-                char.pos[0] + 40 <= this.computer.pos[0] + 33
+                char.pos[0] + range >= this.computer.pos[0] &&
+                char.pos[0] + range <= this.computer.pos[0] + 33
             ) {
                 this.computer.dir = "dmg";
                 if (!this.once) {
@@ -136,23 +157,59 @@ export default class Game {
                 this.goku.health -= 10;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
+                    this.ctx.clearRect(
+                        this.goku.pos[0],
+                        this.goku.pos[1],
+                        512,
+                        512
+                    );
                     this.goku.deadSound.play();
                     this.goku.handleDir();
+                    this.goku.dontMove = true;
                     this.gameOver = true;
                     this.gameLoop();
                 }
                 this.goku.handleDir();
             }
         } else if (char.dir === "shlice") {
-            if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
+            if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
                 this.goku.dmgSound.play();
-                this.goku.health -= 10;
+                this.goku.health -= 5;
+                if (this.goku.health <= 0) {
+                    this.goku.dir = "dead";
+                    this.ctx.clearRect(
+                        this.goku.pos[0],
+                        this.goku.pos[1],
+                        512,
+                        512
+                    );
+                    this.goku.dontMove = true;
+                    this.goku.deadSound.play();
+                    this.ctx.clearRect(
+                        this.goku.pos[0],
+                        this.goku.pos[1],
+                        512,
+                        512
+                    );
+                    this.ichigo.winSound.play();
+                    this.goku.handleDir();
+                    this.gameOver = true;
+                    this.gameLoop();
+                }
+                this.goku.handleDir();
+            }
+        } else if (char.dir === "flashy") {
+            if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
+                this.goku.dir = "dmg";
+                this.goku.dmgSound.play();
+                this.goku.health -= 5;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
                     this.goku.currentFrame = 0;
                     this.goku.dontMove = true;
                     this.goku.deadSound.play();
+                    this.ichigo.winSound.play();
                     this.goku.handleDir();
                     this.gameOver = true;
                     this.gameLoop();
@@ -201,15 +258,15 @@ export default class Game {
             // this.ichigo.animate(this.ctx);
         } else if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
             this.goku.winSound.play();
-            document.removeEventListener(
-                "keydown",
-                this.handlekeydown.bind(this),
-                false
-            );
+            // document.removeEventListener(
+            //     "keydown",
+            //     this.handlekeydown.bind(this),
+            //     false
+            // );
             this.audio.pause();
             this.audio.currentTime = 0;
             this.btn = document.createElement("BUTTON");
-            const text = document.createTextNode("You Won! Try again?");
+            const text = document.createTextNode("You Won! Play again?");
             this.restart = document.getElementById("gameover");
             this.btn.appendChild(text);
             this.btn.onclick = this.newGame;
@@ -218,7 +275,8 @@ export default class Game {
             this.restart.style.opacity = 1;
             this.once = true;
         } else if (!this.once) {
-            document.removeEventListener("keydown", this.handlekeydown, false);
+            // document.removeEventListener("keydown", this.handlekeydown, false);
+            this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
             this.audio.pause();
             this.audio.currentTime = 0;
             this.btn = document.createElement("BUTTON");
@@ -245,7 +303,7 @@ export default class Game {
 
     handlekeydown(e) {
         e.preventDefault();
-        if (this.goku.dontMove) {
+        if (this.paused || this.goku.dontMove) {
             return;
         }
         if (e.code === "KeyA") {
@@ -280,8 +338,6 @@ export default class Game {
     }
 
     start() {
-        document.removeEventListener("keydown", handler, false);
-
         document.addEventListener(
             "keydown",
             key => this.handlekeydown(key),
@@ -292,6 +348,9 @@ export default class Game {
         document.addEventListener("keydown", function(key) {
             if (key.code === "KeyM") {
                 that.audio.muted = !that.audio.muted;
+            }
+            if (key.code === "KeyP") {
+                that.pause();
             }
         });
 
