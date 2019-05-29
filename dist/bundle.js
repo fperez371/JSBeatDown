@@ -201,11 +201,8 @@ function (_Sprite) {
             this.dir = "left";
             this.handleDir();
           } else if (this.dir !== "leftPunch") {
-            var that = this;
-            setTimeout(function () {
-              that.dir = "leftPunch";
-              that.handleDir();
-            }, 2000);
+            this.dir = "leftPunch";
+            this.handleDir();
           }
         }
 
@@ -443,11 +440,7 @@ function (_Sprite) {
               this.shift = this.GOKUDIRS[this.dir].slice();
               this.currentFrame = 1;
             }
-          } // let that = this;
-          // setTimeout(() => {
-          //     that.aiBehavior();
-          // }, 2000);
-
+          }
 
           this.aiBehavior();
           this.move(this.dir, this);
@@ -888,8 +881,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 function handler(key) {
-  var _this = this;
-
   if (key.keyCode === 32) {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
@@ -898,7 +889,7 @@ function handler(key) {
     setTimeout(function () {
       ctx.clearRect(0, 0, 512, 512);
       new Game(ctx).start();
-      document.removeEventListener("keydown", handler.bind(_this), false);
+      document.removeEventListener("keydown", handler, false);
     }, 2000);
   }
 }
@@ -959,14 +950,14 @@ function () {
   _createClass(Game, [{
     key: "endFight",
     value: function endFight() {
-      var _this2 = this;
+      var _this = this;
 
       if (this.computer === this.otherKu) {
         this.otherKu.deadSound.play();
         this.goku.winSound.play();
         this.goku.health = 100;
         setTimeout(function () {
-          return _this2.otherKu.pos = [700, 700];
+          return _this.otherKu.pos = [700, 700];
         }, 1000);
         this.audio.src = "sounds/bleach.mp3";
         this.audio.play();
@@ -976,14 +967,14 @@ function () {
         }
 
         setTimeout(function () {
-          _this2.computer = _this2.ichigo;
-          _this2.ichigo.dir = "powerUp";
-          _this2.ichigo.dontMove = true;
-          _this2.ichigo.pos = [350, 450];
+          _this.computer = _this.ichigo;
+          _this.ichigo.dir = "powerUp";
+          _this.ichigo.dontMove = true;
+          _this.ichigo.pos = [350, 450];
 
-          _this2.ichigo.handleDir();
+          _this.ichigo.handleDir();
 
-          _this2.gameLoop();
+          _this.gameLoop();
         }, 4000);
       } else {
         this.gameOver = true;
@@ -993,7 +984,7 @@ function () {
   }, {
     key: "pause",
     value: function pause() {
-      var _this3 = this;
+      var _this2 = this;
 
       var pauseEl = document.getElementById("pause");
       this.paused = !this.paused;
@@ -1003,7 +994,7 @@ function () {
       } else {
         pauseEl.style.visibility = "hidden";
         this.allChars.forEach(function (char) {
-          return char.animate(_this3.ctx);
+          return char.animate(_this2.ctx);
         });
       }
     }
@@ -1243,13 +1234,13 @@ function () {
   }, {
     key: "start",
     value: function start() {
-      var _this4 = this;
+      var _this3 = this;
 
       document.addEventListener("keydown", function (key) {
-        return _this4.handlekeydown(key);
+        return _this3.handlekeydown(key);
       }, false);
       document.addEventListener("keyup", function () {
-        return _this4.handlekeyup();
+        return _this3.handlekeyup();
       });
       var that = this;
       document.addEventListener("keydown", function (key) {

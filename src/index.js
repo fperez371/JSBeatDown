@@ -10,7 +10,7 @@ function handler(key) {
         setTimeout(() => {
             ctx.clearRect(0, 0, 512, 512);
             new Game(ctx).start();
-            document.removeEventListener("keydown", handler.bind(this), false);
+            document.removeEventListener("keydown", handler, false);
         }, 2000);
     }
 }
