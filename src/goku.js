@@ -80,8 +80,11 @@ export default class Goku extends Sprite {
                     this.dir = "left";
                     this.handleDir();
                 } else if (this.dir !== "leftPunch") {
-                    this.dir = "leftPunch";
-                    this.handleDir();
+                    let that = this;
+                    setTimeout(() => {
+                        that.dir = "leftPunch";
+                        that.handleDir();
+                    }, 2000);
                 }
             }
             if (!this.player && this.goku.health <= 0 && this.health > 0) {
@@ -298,7 +301,7 @@ export default class Goku extends Sprite {
         let dmgHeightIdx = 0;
         let dmgWidthIdx = 0;
         if (!this.game.paused) {
-            if (this.check < 7) {
+            if (this.check < 9) {
                 if (this.player && this.health > 0) {
                     ctx.clearRect(75, 100, 512, 512);
                     ctx.clearRect(75, 75, 50, 50);
@@ -342,6 +345,10 @@ export default class Goku extends Sprite {
                         this.currentFrame = 1;
                     }
                 }
+                // let that = this;
+                // setTimeout(() => {
+                //     that.aiBehavior();
+                // }, 2000);
                 this.aiBehavior();
                 this.move(this.dir, this);
             } else {
