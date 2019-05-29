@@ -10,7 +10,7 @@ function handler(key) {
         setTimeout(() => {
             ctx.clearRect(0, 0, 512, 512);
             new Game(ctx).start();
-            document.removeEventListener("keydown", handler, false);
+            document.removeEventListener("keydown", handler.bind(this), false);
         }, 2000);
     }
 }
@@ -302,6 +302,7 @@ export default class Game {
         this.computer.pos = [1220, 1220];
         this.computer.dontMove = true;
         const game = new Game(this.ctx);
+        this.ctx.clearRect(512, 512, 512, 512);
         game.start();
     }
 

@@ -171,7 +171,7 @@ export default class Ichigo {
     animate(ctx) {
         let adjY = 0;
         let adjX = 0;
-        if (!this.game.paused) {
+        if (!this.game.paused && this.health > 0) {
             if (this.check < 8) {
                 if (this.health > 0 && this.poweredUp) {
                     ctx.fillStyle = "#000000";
@@ -303,7 +303,7 @@ export default class Ichigo {
                         );
                         break;
                     case "dmg":
-                        if (this.currentFrame >= 1 && this.currentFrame < 6) {
+                        if (this.currentFrame > 1 && this.currentFrame < 6) {
                             adjY = 20;
                         } else {
                             adjY = 0;
@@ -431,7 +431,7 @@ export default class Ichigo {
                         );
                         break;
                     case "dmg":
-                        if (this.currentFrame >= 1 && this.currentFrame < 6) {
+                        if (this.currentFrame > 1 && this.currentFrame < 6) {
                             adjY = 20;
                         } else {
                             adjY = 0;
@@ -443,7 +443,7 @@ export default class Ichigo {
                             this.dmg[this.currentFrame][2],
                             this.dmg[this.currentFrame][3],
                             this.pos[0],
-                            this.pos[1] - adjY,
+                            this.pos[1] + adjY,
                             this.dmg[this.currentFrame][2],
                             this.dmg[this.currentFrame][3]
                         );
