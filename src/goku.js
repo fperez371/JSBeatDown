@@ -80,8 +80,11 @@ export default class Goku extends Sprite {
                     this.dir = "left";
                     this.handleDir();
                 } else if (this.dir !== "leftPunch") {
-                    this.dir = "leftPunch";
-                    this.handleDir();
+                    let that = this;
+                    setTimeout(() => {
+                        that.dir = "leftPunch";
+                        that.handleDir();
+                    }, 2000);
                 }
             }
             if (!this.player && this.goku.health <= 0 && this.health > 0) {

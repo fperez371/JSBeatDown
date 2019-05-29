@@ -201,8 +201,11 @@ function (_Sprite) {
             this.dir = "left";
             this.handleDir();
           } else if (this.dir !== "leftPunch") {
-            this.dir = "leftPunch";
-            this.handleDir();
+            var that = this;
+            setTimeout(function () {
+              that.dir = "leftPunch";
+              that.handleDir();
+            }, 2000);
           }
         }
 
