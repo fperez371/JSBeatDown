@@ -157,21 +157,26 @@ export default class Game {
         } else if (char.dir === "leftPunch") {
             if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
+                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
                 this.goku.handleDir();
                 this.goku.dmgSound.play();
                 this.goku.health -= 10;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
-                    this.goku.handleDir();
                     this.ctx.clearRect(
                         this.goku.pos[0],
                         this.goku.pos[1],
                         512,
                         512
                     );
-                    this.goku.deadSound.play();
-                    this.goku.handleDir();
                     // this.goku.dontMove = true;
+                    this.goku.deadSound.play();
+                    this.ctx.clearRect(
+                        this.goku.pos[0],
+                        this.goku.pos[1],
+                        512,
+                        512
+                    );
                     this.gameOver = true;
                     this.gameLoop();
                 }
@@ -194,12 +199,6 @@ export default class Game {
                     );
                     // this.goku.dontMove = true;
                     this.goku.deadSound.play();
-                    this.ctx.clearRect(
-                        this.goku.pos[0],
-                        this.goku.pos[1],
-                        512,
-                        512
-                    );
                     this.ichigo.winSound.play();
                     this.gameOver = true;
                     this.gameLoop();

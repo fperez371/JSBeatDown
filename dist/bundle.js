@@ -168,7 +168,7 @@ function (_Sprite) {
     _this.WIDTHS = {
       idle: 33,
       running: 33,
-      punching: 40.5,
+      punching: 42.1,
       kicking: 56,
       dmg: 28,
       dead: 38
@@ -195,11 +195,16 @@ function (_Sprite) {
   _createClass(Goku, [{
     key: "aiBehavior",
     value: function aiBehavior() {
+      var _this2 = this;
+
       if (!this.game.paused) {
         if (!this.player && this.health > 0 && this.dir !== "dmg" && this.goku.health > 0) {
           if (this.goku.pos[0] + 33 < this.pos[0]) {
-            this.dir = "left";
-            this.handleDir();
+            setTimeout(function () {
+              _this2.dir = "left";
+
+              _this2.handleDir();
+            }, 200);
           } else if (this.dir !== "leftPunch") {
             this.dir = "leftPunch";
             this.handleDir();
@@ -360,9 +365,9 @@ function (_Sprite) {
 
         case "dmg":
           if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
-            char.pos[0] += 0.7;
+            char.pos[0] += 0.6;
           } else if (char.pos[0] > 38 && !char.dontMove) {
-            char.pos[0] -= 0.7;
+            char.pos[0] -= 0.6;
           }
 
           break;
@@ -407,6 +412,8 @@ function (_Sprite) {
 
       if (!this.game.paused) {
         if (this.check < 7) {
+          debugger;
+
           if (this.player && this.health > 0 && this.game.goku === this) {
             ctx.clearRect(75, 100, 512, 512);
             ctx.clearRect(75, 75, 50, 50);
@@ -442,6 +449,8 @@ function (_Sprite) {
           this.aiBehavior();
           this.move(this.dir, this);
         } else {
+          debugger;
+
           if (this.player && this.health > 0 && this.game.goku === this) {
             ctx.fillStyle = "#000000";
             ctx.fillText("Goku", 75, 75);
@@ -454,9 +463,8 @@ function (_Sprite) {
             ctx.fillText("Enemy", 300, 75);
             ctx.fillStyle = "#FF0000";
             ctx.fillRect(300, 100, this.health / 100 * 140, 25);
-          }
+          } // ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
 
-          ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
 
           if (this.dir === "dead") {
             this.shift = [204, 1266];
@@ -1065,17 +1073,17 @@ function () {
       } else if (char.dir === "leftPunch") {
         if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
           this.goku.dir = "dmg";
+          this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
           this.goku.handleDir();
           this.goku.dmgSound.play();
           this.goku.health -= 10;
 
           if (this.goku.health <= 0) {
             this.goku.dir = "dead";
-            this.goku.handleDir();
-            this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
-            this.goku.deadSound.play();
-            this.goku.handleDir(); // this.goku.dontMove = true;
+            this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512); // this.goku.dontMove = true;
 
+            this.goku.deadSound.play();
+            this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
             this.gameOver = true;
             this.gameLoop();
           }
@@ -1095,7 +1103,6 @@ function () {
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512); // this.goku.dontMove = true;
 
             this.goku.deadSound.play();
-            this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
             this.ichigo.winSound.play();
             this.gameOver = true;
             this.gameLoop();

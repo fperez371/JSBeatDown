@@ -43,7 +43,7 @@ export default class Goku extends Sprite {
         this.WIDTHS = {
             idle: 33,
             running: 33,
-            punching: 40.5,
+            punching: 42.1,
             kicking: 56,
             dmg: 28,
             dead: 38,
@@ -77,8 +77,10 @@ export default class Goku extends Sprite {
                 this.goku.health > 0
             ) {
                 if (this.goku.pos[0] + 33 < this.pos[0]) {
-                    this.dir = "left";
-                    this.handleDir();
+                    setTimeout(() => {
+                        this.dir = "left";
+                        this.handleDir();
+                    }, 200);
                 } else if (this.dir !== "leftPunch") {
                     this.dir = "leftPunch";
                     this.handleDir();
@@ -255,9 +257,9 @@ export default class Goku extends Sprite {
                 break;
             case "dmg":
                 if (char.pos[0] < 458.5 && !char.player && !char.dontMove) {
-                    char.pos[0] += 0.7;
+                    char.pos[0] += 0.6;
                 } else if (char.pos[0] > 38 && !char.dontMove) {
-                    char.pos[0] -= 0.7;
+                    char.pos[0] -= 0.6;
                 }
                 break;
             default:
@@ -299,6 +301,7 @@ export default class Goku extends Sprite {
         let dmgWidthIdx = 0;
         if (!this.game.paused) {
             if (this.check < 7) {
+                debugger;
                 if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.clearRect(75, 100, 512, 512);
                     ctx.clearRect(75, 75, 50, 50);
@@ -346,6 +349,7 @@ export default class Goku extends Sprite {
                 this.aiBehavior();
                 this.move(this.dir, this);
             } else {
+                debugger;
                 if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Goku", 75, 75);
@@ -362,7 +366,7 @@ export default class Goku extends Sprite {
                     ctx.fillStyle = "#FF0000";
                     ctx.fillRect(300, 100, (this.health / 100) * 140, 25);
                 }
-                ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
+                // ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
                 if (this.dir === "dead") {
                     this.shift = [204, 1266];
                     this.dontMove = true;
