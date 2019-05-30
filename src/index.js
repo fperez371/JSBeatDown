@@ -298,11 +298,11 @@ export default class Game {
         this.restart.removeChild(this.btn);
         this.restart.style.visibility = "hidden";
         this.restart.style.opacity = 0;
+        this.ctx.clearRect(0, 0, 512, 512);
         this.goku.pos = [1000, 1000];
         this.computer.pos = [1220, 1220];
         this.computer.dontMove = true;
         const game = new Game(this.ctx);
-        this.ctx.clearRect(512, 512, 512, 512);
         game.start();
     }
 
