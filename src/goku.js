@@ -25,7 +25,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
-        this.health = 100;
+        this.health = 1;
         this.GOKUDIRS = {
             idle: [1, 1],
             idleLeft: [1151, 3],
@@ -299,14 +299,18 @@ export default class Goku extends Sprite {
         let dmgWidthIdx = 0;
         if (!this.game.paused && this.health > 0) {
             if (this.check < 9) {
-                if (this.player && this.health > 0) {
+                if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.clearRect(75, 100, 512, 512);
                     ctx.clearRect(75, 75, 50, 50);
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Goku", 75, 75);
                     ctx.fillStyle = "#FF0000";
                     ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
-                } else if (!this.player && this.health > 0) {
+                } else if (
+                    !this.player &&
+                    this.health > 0 &&
+                    this.game.computer === this
+                ) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Enemy", 300, 75);
                     ctx.fillStyle = "#FF0000";
@@ -345,13 +349,17 @@ export default class Goku extends Sprite {
                 this.aiBehavior();
                 this.move(this.dir, this);
             } else {
-                if (this.player && this.health > 0) {
+                if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Goku", 75, 75);
                     ctx.fillStyle = "#FF0000";
                     ctx.fillRect(75, 100, (this.health / 100) * 140, 25);
                 }
-                if (!this.player && this.health > 0) {
+                if (
+                    !this.player &&
+                    this.health > 0 &&
+                    this.game.computer === this
+                ) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Enemy", 300, 75);
                     ctx.fillStyle = "#FF0000";

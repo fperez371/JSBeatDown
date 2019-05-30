@@ -171,9 +171,14 @@ export default class Ichigo {
     animate(ctx) {
         let adjY = 0;
         let adjX = 0;
+        debugger;
         if (!this.game.paused && this.health > 0) {
             if (this.check < 8) {
-                if (this.health > 0 && this.poweredUp) {
+                if (
+                    this.health > 0 &&
+                    this.poweredUp &&
+                    this.game.computer === this
+                ) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Enemy", 300, 75);
                     ctx.fillStyle = "#FF0000";
@@ -339,7 +344,11 @@ export default class Ichigo {
                 this.aiBehavior();
                 this.move(this.dir, this);
             } else {
-                if (this.health > 0 && this.poweredUp) {
+                if (
+                    this.health > 0 &&
+                    this.poweredUp &&
+                    this.game.computer === this
+                ) {
                     ctx.fillStyle = "#000000";
                     ctx.fillText("Enemy", 300, 75);
                     ctx.fillStyle = "#FF0000";
@@ -411,9 +420,15 @@ export default class Ichigo {
                         );
                         break;
                     case "powerUp":
-                        if (this.currentFrame >= 5 && this.currentFrame < 8) {
-                            adjY = 100;
+                        if (this.currentFrame === 5) {
+                            adjY = 120;
                             adjX = 30;
+                        } else if (this.currentFrame === 6) {
+                            adjY = 110;
+                            adjX = 25;
+                        } else if (this.currentFrame === 7) {
+                            adjY = 120;
+                            adjX = 35;
                         } else {
                             adjY = 0;
                             adjX = 0;

@@ -7,10 +7,10 @@ function handler(key) {
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, 512, 512);
         ctx.fillText("ROUND 1: Face yourself!", 115, 200);
+        document.removeEventListener("keydown", handler, false);
         setTimeout(() => {
             ctx.clearRect(0, 0, 512, 512);
             new Game(ctx).start();
-            document.removeEventListener("keydown", handler.bind(this), false);
         }, 2000);
     }
 }
@@ -91,7 +91,7 @@ export default class Game {
                 this.ichigo.pos = [350, 450];
                 this.ichigo.handleDir();
                 this.gameLoop();
-            }, 4000);
+            }, 3000);
         } else {
             this.gameOver = true;
             this.gameLoop();
@@ -176,7 +176,7 @@ export default class Game {
         } else if (char.dir === "shlice") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
-                this.goku.move("dmg", this.goku);
+
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
                 if (this.goku.health <= 0) {
@@ -257,9 +257,10 @@ export default class Game {
             this.ichigo.handleDir();
             this.ichigo.move(this.ichigo.dir, this.ichigo);
         } else if (!this.gameOver && this.computer === this.ichigo) {
-            this.goku.move(this.goku.dir, this.goku);
+            // this.goku.move(this.goku.dir, this.goku);
             // this.ichigo.animate(this.ctx);
             // this.ichigo.animate(this.ctx);
+            return;
         } else if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
             this.goku.winSound.play();
             // document.removeEventListener(
