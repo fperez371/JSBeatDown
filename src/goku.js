@@ -25,7 +25,7 @@ export default class Goku extends Sprite {
         this.pos = props.startPos;
         this.check = 0;
         this.player ? (this.dir = "idle") : (this.dir = "idleLeft");
-        this.health = 1;
+        this.health = 100;
         this.GOKUDIRS = {
             idle: [1, 1],
             idleLeft: [1151, 3],
@@ -298,7 +298,7 @@ export default class Goku extends Sprite {
         let dmgHeightIdx = 0;
         let dmgWidthIdx = 0;
         if (!this.game.paused && this.health > 0) {
-            if (this.check < 9) {
+            if (this.check < 7) {
                 if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.clearRect(75, 100, 512, 512);
                     ctx.clearRect(75, 75, 50, 50);
@@ -411,7 +411,10 @@ export default class Goku extends Sprite {
                 this.check = 0;
             }
             this.check++;
-            requestAnimationFrame(this.animate.bind(this, ctx));
+            this.id = requestAnimationFrame(this.animate.bind(this, ctx));
+        }
+        if (this.game.gameOver) {
+            cancelAnimationFrame(this.id);
         }
     }
 }

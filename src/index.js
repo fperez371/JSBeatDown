@@ -69,7 +69,7 @@ export default class Game {
         this.computer = this.otherKu;
         this.once = false;
         this.newGame = this.newGame.bind(this);
-        this.started = false;
+        this.started = true;
         this.paused = false;
     }
 
@@ -300,16 +300,45 @@ export default class Game {
         this.restart.style.visibility = "hidden";
         this.restart.style.opacity = 0;
         this.ctx.clearRect(0, 0, 512, 512);
-        this.goku.pos = [1000, 1000];
-        this.computer.pos = [1220, 1220];
-        this.computer.dontMove = true;
+        delete this.goku;
+        delete this.otherKu;
+        delete this.ichigo;
+
+        // this.goku = new Goku({
+        //     width: 33,
+        //     height: 40,
+        //     imgUrl: "images/goku.png",
+        //     startPos: [200, 450],
+        //     player: true,
+        //     game: this,
+        // });
+        // this.otherKu = new Goku({
+        //     width: 33,
+        //     height: 40,
+        //     imgUrl: "images/goku_left.png",
+        //     startPos: [300, 450],
+        //     player: false,
+        //     game: this,
+        //     goku: this.goku,
+        // });
+
+        // this.ichigo = new Ichigo({
+        //     imgUrl: "images/ichigo_left.png",
+        //     startPos: [7000, 450],
+        //     game: this,
+        //     goku: this.goku,
+        // });
+        // this.goku.pos = [1000, 1000];
+        // this.computer.pos = [1220, 1220];
+        // this.computer.dontMove = true;
+        this.started = false;
         const game = new Game(this.ctx);
         game.start();
     }
 
     handlekeydown(e) {
         e.preventDefault();
-        if (this.paused || this.goku.dontMove) {
+        if (this.paused || this.started === false) {
             return;
         }
         if (e.code === "KeyA") {
@@ -337,7 +366,7 @@ export default class Game {
     }
 
     handlekeyup() {
-        if (!this.goku.dontMove) {
+        if (this.started) {
             this.goku.dir = "idle";
             this.goku.handleDir();
         }

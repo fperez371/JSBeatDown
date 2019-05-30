@@ -171,7 +171,6 @@ export default class Ichigo {
     animate(ctx) {
         let adjY = 0;
         let adjX = 0;
-        debugger;
         if (!this.game.paused && this.health > 0) {
             if (this.check < 8) {
                 if (
@@ -485,7 +484,10 @@ export default class Ichigo {
                 this.check = 0;
             }
             this.check++;
-            requestAnimationFrame(this.animate.bind(this, ctx));
+            this.id = requestAnimationFrame(this.animate.bind(this, ctx));
+        }
+        if (this.game.gameOver) {
+            cancelAnimationFrame(this.id);
         }
     }
 }

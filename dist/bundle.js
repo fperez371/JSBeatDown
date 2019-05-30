@@ -150,7 +150,7 @@ function (_Sprite) {
     _this.pos = props.startPos;
     _this.check = 0;
     _this.player ? _this.dir = "idle" : _this.dir = "idleLeft";
-    _this.health = 1;
+    _this.health = 100;
     _this.GOKUDIRS = {
       idle: [1, 1],
       idleLeft: [1151, 3],
@@ -406,7 +406,7 @@ function (_Sprite) {
       var dmgWidthIdx = 0;
 
       if (!this.game.paused && this.health > 0) {
-        if (this.check < 9) {
+        if (this.check < 7) {
           if (this.player && this.health > 0 && this.game.goku === this) {
             ctx.clearRect(75, 100, 512, 512);
             ctx.clearRect(75, 75, 50, 50);
@@ -497,7 +497,11 @@ function (_Sprite) {
         }
 
         this.check++;
-        requestAnimationFrame(this.animate.bind(this, ctx));
+        this.id = requestAnimationFrame(this.animate.bind(this, ctx));
+      }
+
+      if (this.game.gameOver) {
+        cancelAnimationFrame(this.id);
       }
     }
   }]);
@@ -677,7 +681,6 @@ function () {
     value: function animate(ctx) {
       var adjY = 0;
       var adjX = 0;
-      debugger;
 
       if (!this.game.paused && this.health > 0) {
         if (this.check < 8) {
@@ -854,7 +857,11 @@ function () {
         }
 
         this.check++;
-        requestAnimationFrame(this.animate.bind(this, ctx));
+        this.id = requestAnimationFrame(this.animate.bind(this, ctx));
+      }
+
+      if (this.game.gameOver) {
+        cancelAnimationFrame(this.id);
       }
     }
   }]);
@@ -950,7 +957,7 @@ function () {
     this.computer = this.otherKu;
     this.once = false;
     this.newGame = this.newGame.bind(this);
-    this.started = false;
+    this.started = true;
     this.paused = false;
   }
 
@@ -1191,9 +1198,36 @@ function () {
       this.restart.style.visibility = "hidden";
       this.restart.style.opacity = 0;
       this.ctx.clearRect(0, 0, 512, 512);
-      this.goku.pos = [1000, 1000];
-      this.computer.pos = [1220, 1220];
-      this.computer.dontMove = true;
+      delete this.goku;
+      delete this.otherKu;
+      delete this.ichigo; // this.goku = new Goku({
+      //     width: 33,
+      //     height: 40,
+      //     imgUrl: "images/goku.png",
+      //     startPos: [200, 450],
+      //     player: true,
+      //     game: this,
+      // });
+      // this.otherKu = new Goku({
+      //     width: 33,
+      //     height: 40,
+      //     imgUrl: "images/goku_left.png",
+      //     startPos: [300, 450],
+      //     player: false,
+      //     game: this,
+      //     goku: this.goku,
+      // });
+      // this.ichigo = new Ichigo({
+      //     imgUrl: "images/ichigo_left.png",
+      //     startPos: [7000, 450],
+      //     game: this,
+      //     goku: this.goku,
+      // });
+      // this.goku.pos = [1000, 1000];
+      // this.computer.pos = [1220, 1220];
+      // this.computer.dontMove = true;
+
+      this.started = false;
       var game = new Game(this.ctx);
       game.start();
     }
@@ -1202,7 +1236,7 @@ function () {
     value: function handlekeydown(e) {
       e.preventDefault();
 
-      if (this.paused || this.goku.dontMove) {
+      if (this.paused || this.started === false) {
         return;
       }
 
@@ -1235,7 +1269,7 @@ function () {
   }, {
     key: "handlekeyup",
     value: function handlekeyup() {
-      if (!this.goku.dontMove) {
+      if (this.started) {
         this.goku.dir = "idle";
         this.goku.handleDir();
       }
