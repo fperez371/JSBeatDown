@@ -297,7 +297,7 @@ export default class Goku extends Sprite {
         let kickIdx = 0;
         let dmgHeightIdx = 0;
         let dmgWidthIdx = 0;
-        if (!this.game.paused && this.health > 0) {
+        if (!this.game.paused) {
             if (this.check < 7) {
                 if (this.player && this.health > 0 && this.game.goku === this) {
                     ctx.clearRect(75, 100, 512, 512);
@@ -332,14 +332,11 @@ export default class Goku extends Sprite {
                 if (this.currentFrame === this.totalFrames) {
                     if (this.dir === "dmg" && this.player && !this.dontMove) {
                         this.dir = "idle";
-                        this.shift = this.GOKUDIRS.idle.slice();
                         this.handleDir();
                     } else if (this.dir === "dmg" && !this.player) {
                         this.dir = "idleLeft";
-                        this.shift = this.GOKUDIRS.idleLeft.slice();
                         this.handleDir();
                     } else if (this.dir === "dead") {
-                        ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
                         this.handleDir();
                     } else {
                         this.shift = this.GOKUDIRS[this.dir].slice();
@@ -367,7 +364,6 @@ export default class Goku extends Sprite {
                 }
                 ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
                 if (this.dir === "dead") {
-                    ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
                     this.shift = [204, 1266];
                     this.dontMove = true;
                 } else if (this.dir === "left") {

@@ -405,7 +405,7 @@ function (_Sprite) {
       var dmgHeightIdx = 0;
       var dmgWidthIdx = 0;
 
-      if (!this.game.paused && this.health > 0) {
+      if (!this.game.paused) {
         if (this.check < 7) {
           if (this.player && this.health > 0 && this.game.goku === this) {
             ctx.clearRect(75, 100, 512, 512);
@@ -427,14 +427,11 @@ function (_Sprite) {
           if (this.currentFrame === this.totalFrames) {
             if (this.dir === "dmg" && this.player && !this.dontMove) {
               this.dir = "idle";
-              this.shift = this.GOKUDIRS.idle.slice();
               this.handleDir();
             } else if (this.dir === "dmg" && !this.player) {
               this.dir = "idleLeft";
-              this.shift = this.GOKUDIRS.idleLeft.slice();
               this.handleDir();
             } else if (this.dir === "dead") {
-              ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
               this.handleDir();
             } else {
               this.shift = this.GOKUDIRS[this.dir].slice();
@@ -462,7 +459,6 @@ function (_Sprite) {
           ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
 
           if (this.dir === "dead") {
-            ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
             this.shift = [204, 1266];
             this.dontMove = true;
           } else if (this.dir === "left") {
@@ -989,7 +985,7 @@ function () {
           _this.ichigo.handleDir();
 
           _this.gameLoop();
-        }, 3000);
+        }, 2000);
       } else {
         this.gameOver = true;
         this.gameLoop();
@@ -1030,6 +1026,7 @@ function () {
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
+            this.computer.handleDir();
             this.computer.currentFrame = 0;
 
             if (!this.once) {
@@ -1053,6 +1050,7 @@ function () {
 
           if (this.computer.health <= 0) {
             this.computer.dir = "dead";
+            this.computer.handleDir();
             this.computer.currentFrame = 0;
 
             if (!this.once) {
@@ -1067,11 +1065,13 @@ function () {
       } else if (char.dir === "leftPunch") {
         if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
           this.goku.dir = "dmg";
+          this.goku.handleDir();
           this.goku.dmgSound.play();
           this.goku.health -= 10;
 
           if (this.goku.health <= 0) {
             this.goku.dir = "dead";
+            this.goku.handleDir();
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
             this.goku.deadSound.play();
             this.goku.handleDir(); // this.goku.dontMove = true;
@@ -1085,6 +1085,8 @@ function () {
       } else if (char.dir === "shlice") {
         if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
           this.goku.dir = "dmg";
+          this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
+          this.goku.handleDir();
           this.goku.dmgSound.play();
           this.goku.health -= 5;
 
@@ -1104,7 +1106,8 @@ function () {
       } else if (char.dir === "flashy") {
         if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
           this.goku.dir = "dmg";
-          this.goku.move("dmg", this.goku);
+          this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
+          this.goku.handleDir();
           this.goku.dmgSound.play();
           this.goku.health -= 5;
 
@@ -1200,33 +1203,7 @@ function () {
       this.ctx.clearRect(0, 0, 512, 512);
       delete this.goku;
       delete this.otherKu;
-      delete this.ichigo; // this.goku = new Goku({
-      //     width: 33,
-      //     height: 40,
-      //     imgUrl: "images/goku.png",
-      //     startPos: [200, 450],
-      //     player: true,
-      //     game: this,
-      // });
-      // this.otherKu = new Goku({
-      //     width: 33,
-      //     height: 40,
-      //     imgUrl: "images/goku_left.png",
-      //     startPos: [300, 450],
-      //     player: false,
-      //     game: this,
-      //     goku: this.goku,
-      // });
-      // this.ichigo = new Ichigo({
-      //     imgUrl: "images/ichigo_left.png",
-      //     startPos: [7000, 450],
-      //     game: this,
-      //     goku: this.goku,
-      // });
-      // this.goku.pos = [1000, 1000];
-      // this.computer.pos = [1220, 1220];
-      // this.computer.dontMove = true;
-
+      delete this.ichigo;
       this.started = false;
       var game = new Game(this.ctx);
       game.start();

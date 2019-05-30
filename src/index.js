@@ -91,7 +91,7 @@ export default class Game {
                 this.ichigo.pos = [350, 450];
                 this.ichigo.handleDir();
                 this.gameLoop();
-            }, 3000);
+            }, 2000);
         } else {
             this.gameOver = true;
             this.gameLoop();
@@ -124,6 +124,7 @@ export default class Game {
                 this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
+                    this.computer.handleDir();
                     this.computer.currentFrame = 0;
                     if (!this.once) {
                         this.computer.deadSound.play();
@@ -144,6 +145,7 @@ export default class Game {
                 this.computer.health -= 10;
                 if (this.computer.health <= 0) {
                     this.computer.dir = "dead";
+                    this.computer.handleDir();
                     this.computer.currentFrame = 0;
                     if (!this.once) {
                         this.computer.deadSound.play();
@@ -155,10 +157,12 @@ export default class Game {
         } else if (char.dir === "leftPunch") {
             if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
+                this.goku.handleDir();
                 this.goku.dmgSound.play();
                 this.goku.health -= 10;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
+                    this.goku.handleDir();
                     this.ctx.clearRect(
                         this.goku.pos[0],
                         this.goku.pos[1],
@@ -176,7 +180,8 @@ export default class Game {
         } else if (char.dir === "shlice") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
-
+                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
+                this.goku.handleDir();
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
                 if (this.goku.health <= 0) {
@@ -204,7 +209,8 @@ export default class Game {
         } else if (char.dir === "flashy") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
                 this.goku.dir = "dmg";
-                this.goku.move("dmg", this.goku);
+                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
+                this.goku.handleDir();
 
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
@@ -303,34 +309,6 @@ export default class Game {
         delete this.goku;
         delete this.otherKu;
         delete this.ichigo;
-
-        // this.goku = new Goku({
-        //     width: 33,
-        //     height: 40,
-        //     imgUrl: "images/goku.png",
-        //     startPos: [200, 450],
-        //     player: true,
-        //     game: this,
-        // });
-        // this.otherKu = new Goku({
-        //     width: 33,
-        //     height: 40,
-        //     imgUrl: "images/goku_left.png",
-        //     startPos: [300, 450],
-        //     player: false,
-        //     game: this,
-        //     goku: this.goku,
-        // });
-
-        // this.ichigo = new Ichigo({
-        //     imgUrl: "images/ichigo_left.png",
-        //     startPos: [7000, 450],
-        //     game: this,
-        //     goku: this.goku,
-        // });
-        // this.goku.pos = [1000, 1000];
-        // this.computer.pos = [1220, 1220];
-        // this.computer.dontMove = true;
         this.started = false;
         const game = new Game(this.ctx);
         game.start();
