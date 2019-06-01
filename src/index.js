@@ -262,17 +262,9 @@ export default class Game {
             this.ichigo.handleDir();
             this.ichigo.move(this.ichigo.dir, this.ichigo);
         } else if (!this.gameOver && this.computer === this.ichigo) {
-            // this.goku.move(this.goku.dir, this.goku);
-            // this.ichigo.animate(this.ctx);
-            // this.ichigo.animate(this.ctx);
             return;
         } else if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
             this.goku.winSound.play();
-            // document.removeEventListener(
-            //     "keydown",
-            //     this.handlekeydown.bind(this),
-            //     false
-            // );
             this.audio.pause();
             this.audio.currentTime = 0;
             this.btn = document.createElement("BUTTON");
@@ -285,7 +277,6 @@ export default class Game {
             this.restart.style.opacity = 1;
             this.once = true;
         } else if (!this.once) {
-            // document.removeEventListener("keydown", this.handlekeydown, false);
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
             this.audio.pause();
             this.audio.currentTime = 0;

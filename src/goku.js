@@ -10,17 +10,18 @@ export default class Goku extends Sprite {
         props.goku ? (this.goku = props.goku) : (this.goku = null);
         this.img = new Image();
         this.img.src = props.imgUrl;
+
         this.punchSound = new Audio("sounds/attack0.wav");
         this.kickSound = new Audio("sounds/attack1.wav");
         this.dmgSound = new Audio("sounds/hit1.wav");
         this.deadSound = new Audio("sounds/defeated.wav");
         this.winSound = new Audio("sounds/victory.wav");
+
         this.animate = this.animate.bind(this);
         this.dontMove = false;
-        // this.canvas = document.getElementById("canvas");
-        // this.ctx = this.canvas.getContext("2d");
         this.player ? (this.shift = [0, -1]) : (this.shift = [1151, 3]);
         this.totalFrames = 8;
+        // change currentFrame to 0 here when new animate is implemented
         this.currentFrame = 1;
         this.pos = props.startPos;
         this.check = 0;
@@ -66,6 +67,122 @@ export default class Goku extends Sprite {
             dmg: 7,
             dead: 1,
         };
+
+        this.idle = [
+            [-6, -3, 27, 37],
+            [-39, -3, 27, 37],
+            [-72, -4, 27, 36],
+            [-104, -4, 28, 36],
+            [-137, -3, 28, 37],
+            [-170, -3, 28, 37],
+            [-203, -2, 28, 38],
+            [-237, -2, 27, 38],
+        ];
+
+        this.running = [
+            [-2, -90, 27, 40],
+            [-36, -92, 27, 38],
+            [-69, -89, 28, 38],
+            [-104, -88, 27, 37],
+            [-134, -90, 28, 40],
+            [-168, -92, 27, 38],
+            [-201, -89, 28, 37],
+            [-236, -88, 27, 37],
+        ];
+        // longer animation will have to play around with it
+        this.punching = [
+            [-4, -479, 27, 36],
+            [-46, -479, 34, 36],
+            [-86, -479, 33, 36],
+            [-128, -479, 34, 36],
+            [-168, -479, 33, 36],
+            [-209, -479, 29, 36],
+            [-250, -479, 30, 36],
+            [-290, -478, 29, 37],
+            [-339, -477, 28, 38],
+            [-389, -480, 42, 35],
+            [-438, -478, 38, 37],
+            [-490, -479, 35, 36],
+            [-539, -479, 35, 36],
+            [-588, -478, 27, 37],
+            [-634, -479, 30, 36],
+        ];
+
+        this.kicking = [
+            [-4, -967, 30, 39],
+            [-64, -964, 45, 42],
+            [-121, -965, 38, 41],
+            [-180, -967, 27, 39],
+            [-238, -964, 31, 41],
+            [-298, -963, 41, 42],
+            [-355, -964, 32, 41],
+            [-402, -965, 27, 40],
+            [-451, -966, 26, 39],
+            [-501, -965, 24, 41],
+            [-551, -969, 26, 37],
+        ];
+
+        this.dmg = [
+            [-11, -1162, 28, 32],
+            [-59, -1160, 32, 34],
+            [-109, -1159, 30, 35],
+            [-151, -1159, 32, 35],
+            [-202, -1161, 30, 33],
+            [-253, -1158, 30, 36],
+            [-304, -1157, 29, 37],
+        ];
+
+        this.winPose = [
+            [-6, -1874, 25, 40],
+            [-45, -1875, 33, 39],
+            [-84, -1876, 33, 38],
+            [-126, -1875, 32, 39],
+            [-167, -1875, 32, 39],
+            [-208, -1875, 32, 39],
+            [-248, -1875, 33, 39],
+        ];
+
+        // otherKu specific animations
+
+        this.idleLeft = [
+            [-1151, -3, 27, 37],
+            [-1118, -3, 27, 37],
+            [-1085, -4, 27, 36],
+            [-1052, -4, 28, 36],
+            [-1019, -3, 28, 37],
+            [-986, -3, 28, 37],
+            [-953, -2, 28, 38],
+            [-920, -2, 27, 38],
+        ];
+
+        this.punchLeft = [
+            [-1153, -479, 27, 36],
+            [-1104, -479, 34, 36],
+            [-1065, -479, 33, 36],
+            [-1022, -479, 34, 36],
+            [-983, -479, 33, 36],
+            [-946, -479, 29, 36],
+            [-904, -479, 30, 36],
+            [-865, -478, 29, 37],
+            [-817, -477, 28, 38],
+            [-753, -480, 42, 35],
+            [-708, -478, 38, 37],
+            [-659, -479, 35, 36],
+            [-610, -479, 35, 36],
+            [-569, -478, 27, 37],
+            [-520, -479, 30, 36],
+        ];
+
+        this.runLeft = [
+            [-1155, -90, 27, 40],
+            [-1121, -92, 27, 38],
+            [-1087, -89, 28, 38],
+            [-1053, -88, 27, 37],
+            [-1022, -90, 28, 40],
+            [-989, -92, 27, 38],
+            [-955, -89, 28, 37],
+            [-921, -88, 27, 37],
+        ];
     }
 
     aiBehavior() {
@@ -185,64 +302,6 @@ export default class Goku extends Sprite {
         }
     }
 
-    // handlekeydown(e) {
-    //     e.preventDefault();
-
-    //     if (e.key === "a") {
-    //         this.dir = "left";
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.handleDir();
-    //     }
-    //     if (e.key === "d") {
-    //         this.dir = "right";
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.handleDir();
-    //     }
-    //     if (e.key === "j") {
-    //         this.dir = "punching";
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.handleDir();
-    //     }
-    //     if (e.key === "k") {
-    //         this.dir = "kicking";
-    //         this.ctx.clearRect(this.pos[0], this.pos[1], 512, 512);
-    //         this.handleDir();
-    //     }
-    // }
-
-    // handlekeyup() {
-    //     if (this.player) {
-    //         this.dir = "idle";
-    //         this.handleDir();
-    //     }
-    // }
-
-    // start() {
-    //     if (this.player) {
-    //         document.addEventListener("keydown", key =>
-    //             this.handlekeydown(key)
-    //         );
-    //         document.addEventListener("keyup", () => this.handlekeyup());
-    //     }
-    //     // this.animate();
-    // }
-
-    // punch(){
-
-    // }
-
-    // kick() {
-
-    // }
-    // inBounds() {
-    //     if (this.pos[0] > 480 && this.dir === "right") {
-    //         return false;
-    //     } else if (this.pos[0] < 0 && this.dir === "left") {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
     move(dir, char) {
         switch (dir) {
             case "right":
@@ -266,34 +325,6 @@ export default class Goku extends Sprite {
                 return;
         }
     }
-
-    // move(dir) {
-    //     debugger;
-    //     switch (dir) {
-    //         case "right":
-    //             if (this.game.inBounds()) {
-    //                 this.pos[0] += 1;
-    //             }
-    //             break;
-    //         case "left":
-    //             if (this.game.inBounds()) {
-    //                 this.pos[0] -= 1;
-    //             }
-    //             break;
-    //         case "up":
-    //             if (this.game.inBounds()) {
-    //                 this.pos[1] -= 1;
-    //             }
-    //             break;
-    //         case "down":
-    //             if (this.game.inBounds()) {
-    //                 this.pos[1] += 1;
-    //             }
-    //             break;
-    //         default:
-    //             return;
-    //     }
-    // }
 
     animate(ctx) {
         let kickIdx = 0;
