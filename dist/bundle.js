@@ -975,16 +975,6 @@ function () {
         this.goku.winSound.play();
         this.goku.health = 100;
         setTimeout(function () {
-          return _this.otherKu.pos = [700, 700];
-        }, 1000);
-        this.audio.src = "sounds/bleach.mp3";
-        this.audio.play();
-
-        if (this.goku.pos[0] > 100) {
-          this.goku.pos = [100, 450];
-        }
-
-        setTimeout(function () {
           _this.computer = _this.ichigo;
           _this.ichigo.dir = "powerUp";
           _this.ichigo.dontMove = true;
@@ -994,6 +984,15 @@ function () {
 
           _this.gameLoop();
         }, 2000);
+        setTimeout(function () {
+          return _this.otherKu.pos = [700, 700];
+        }, 2000);
+        this.audio.src = "sounds/bleach.mp3";
+        this.audio.play();
+
+        if (this.goku.pos[0] > 100) {
+          this.goku.pos = [100, 450];
+        }
       } else {
         this.gameOver = true;
         this.gameLoop();

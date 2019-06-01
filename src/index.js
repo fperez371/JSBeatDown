@@ -78,12 +78,6 @@ export default class Game {
             this.otherKu.deadSound.play();
             this.goku.winSound.play();
             this.goku.health = 100;
-            setTimeout(() => (this.otherKu.pos = [700, 700]), 1000);
-            this.audio.src = "sounds/bleach.mp3";
-            this.audio.play();
-            if (this.goku.pos[0] > 100) {
-                this.goku.pos = [100, 450];
-            }
             setTimeout(() => {
                 this.computer = this.ichigo;
                 this.ichigo.dir = "powerUp";
@@ -92,6 +86,12 @@ export default class Game {
                 this.ichigo.handleDir();
                 this.gameLoop();
             }, 2000);
+            setTimeout(() => (this.otherKu.pos = [700, 700]), 2000);
+            this.audio.src = "sounds/bleach.mp3";
+            this.audio.play();
+            if (this.goku.pos[0] > 100) {
+                this.goku.pos = [100, 450];
+            }
         } else {
             this.gameOver = true;
             this.gameLoop();
