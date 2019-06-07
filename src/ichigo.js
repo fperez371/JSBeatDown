@@ -168,9 +168,67 @@ export default class Ichigo {
         }
     }
 
-    animate(ctx) {
-        let adjY = 0;
+    draw(ctx, dir) {
         let adjX = 0;
+        let adjY = 0;
+
+        switch (this.dir) {
+            case "shlice":
+                if (this.currentFrame === this.totalFrames[this.dir] - 4) {
+                    this.game.hitCollision(this);
+                }
+                adjX = 0;
+                adjY = 0;
+                break;
+            case "flashy":
+                if (this.currentFrame === this.totalFrames[this.dir] - 4) {
+                    this.game.hitCollision(this);
+                }
+                adjX = 0;
+                adjY = 0;
+                break;
+            case "powerUp":
+                if (this.currentFrame === 5) {
+                    adjY = 120;
+                    adjX = 30;
+                } else if (this.currentFrame === 6) {
+                    adjY = 110;
+                    adjX = 25;
+                } else if (this.currentFrame === 7) {
+                    adjY = 120;
+                    adjX = 35;
+                } else {
+                    adjY = 0;
+                    adjX = 0;
+                }
+                break;
+            case "dmg":
+                if (this.currentFrame > 1 && this.currentFrame < 6) {
+                    adjY = -20;
+                } else {
+                    adjY = 0;
+                }
+                break;
+
+            default:
+                adjX = 0;
+                adjY = 0;
+        }
+
+        ctx.drawImage(
+            this.img,
+            this[dir][this.currentFrame][0],
+            this[dir][this.currentFrame][1],
+            this[dir][this.currentFrame][2],
+            this[dir][this.currentFrame][3],
+            this.pos[0] - adjX,
+            this.pos[1] - adjY,
+            this[dir][this.currentFrame][2],
+            this[dir][this.currentFrame][3]
+        );
+    }
+
+    animate(ctx) {
         if (!this.game.paused && this.health > 0) {
             if (this.check < 8) {
                 if (
@@ -215,131 +273,7 @@ export default class Ichigo {
                     this.dir = "idle";
                     this.handleDir();
                 }
-                switch (this.dir) {
-                    case "idle":
-                        ctx.drawImage(
-                            this.img,
-                            369,
-                            261,
-                            38,
-                            45,
-                            this.pos[0],
-                            this.pos[1],
-                            38,
-                            45
-                        );
-                        break;
-                    case "shlice":
-                        ctx.drawImage(
-                            this.img,
-                            this.shlice[this.currentFrame][0],
-                            this.shlice[this.currentFrame][1],
-                            this.shlice[this.currentFrame][2],
-                            this.shlice[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.shlice[this.currentFrame][2],
-                            this.shlice[this.currentFrame][3]
-                        );
-                        if (
-                            this.currentFrame ===
-                            this.totalFrames[this.dir] - 4
-                        ) {
-                            this.game.hitCollision(this);
-                        }
-                        break;
-                    case "flashy":
-                        ctx.drawImage(
-                            this.img,
-                            this.flashy[this.currentFrame][0],
-                            this.flashy[this.currentFrame][1],
-                            this.flashy[this.currentFrame][2],
-                            this.flashy[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.flashy[this.currentFrame][2],
-                            this.flashy[this.currentFrame][3]
-                        );
-                        if (
-                            this.currentFrame ===
-                            this.totalFrames[this.dir] - 4
-                        ) {
-                            this.game.hitCollision(this);
-                        }
-                        break;
-                    case "left":
-                        ctx.drawImage(
-                            this.img,
-                            this.left[this.currentFrame][0],
-                            this.left[this.currentFrame][1],
-                            this.left[this.currentFrame][2],
-                            this.left[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.left[this.currentFrame][2],
-                            this.left[this.currentFrame][3]
-                        );
-                        break;
-                    case "powerUp":
-                        if (this.currentFrame === 5) {
-                            adjY = 120;
-                            adjX = 30;
-                        } else if (this.currentFrame === 6) {
-                            adjY = 110;
-                            adjX = 25;
-                        } else if (this.currentFrame === 7) {
-                            adjY = 120;
-                            adjX = 35;
-                        } else {
-                            adjY = 0;
-                            adjX = 0;
-                        }
-                        ctx.drawImage(
-                            this.img,
-                            this.powerUp[this.currentFrame][0],
-                            this.powerUp[this.currentFrame][1],
-                            this.powerUp[this.currentFrame][2],
-                            this.powerUp[this.currentFrame][3],
-                            this.pos[0] - adjX,
-                            this.pos[1] - adjY,
-                            this.powerUp[this.currentFrame][2],
-                            this.powerUp[this.currentFrame][3]
-                        );
-                        break;
-                    case "dmg":
-                        if (this.currentFrame > 1 && this.currentFrame < 6) {
-                            adjY = 20;
-                        } else {
-                            adjY = 0;
-                        }
-                        ctx.drawImage(
-                            this.img,
-                            this.dmg[this.currentFrame][0],
-                            this.dmg[this.currentFrame][1],
-                            this.dmg[this.currentFrame][2],
-                            this.dmg[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1] + adjY,
-                            this.dmg[this.currentFrame][2],
-                            this.dmg[this.currentFrame][3]
-                        );
-                        break;
-                    case "dead":
-                        ctx.drawImage(
-                            this.img,
-                            332,
-                            1081,
-                            57,
-                            14,
-                            this.pos[0],
-                            this.pos[1],
-                            57,
-                            14
-                        );
-                        break;
-                    default:
-                        break;
-                }
+                this.draw(ctx, this.dir);
                 this.aiBehavior();
                 this.move(this.dir, this);
             } else {
@@ -353,132 +287,7 @@ export default class Ichigo {
                     ctx.fillStyle = "#FF0000";
                     ctx.fillRect(300, 100, (this.health / 200) * 140, 25);
                 }
-                switch (this.dir) {
-                    case "idle":
-                        ctx.drawImage(
-                            this.img,
-                            369,
-                            261,
-                            38,
-                            45,
-                            this.pos[0],
-                            this.pos[1],
-                            38,
-                            45
-                        );
-                        break;
-                    case "shlice":
-                        ctx.drawImage(
-                            this.img,
-                            this.shlice[this.currentFrame][0],
-                            this.shlice[this.currentFrame][1],
-                            this.shlice[this.currentFrame][2],
-                            this.shlice[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.shlice[this.currentFrame][2],
-                            this.shlice[this.currentFrame][3]
-                        );
-                        if (
-                            this.currentFrame ===
-                            this.totalFrames[this.dir] - 4
-                        ) {
-                            this.game.hitCollision(this);
-                        }
-                        break;
-                    case "flashy":
-                        ctx.drawImage(
-                            this.img,
-                            this.flashy[this.currentFrame][0],
-                            this.flashy[this.currentFrame][1],
-                            this.flashy[this.currentFrame][2],
-                            this.flashy[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.flashy[this.currentFrame][2],
-                            this.flashy[this.currentFrame][3]
-                        );
-                        if (
-                            this.currentFrame ===
-                            this.totalFrames[this.dir] - 4
-                        ) {
-                            this.game.hitCollision(this);
-                        }
-                        break;
-                    case "left":
-                        ctx.drawImage(
-                            this.img,
-                            this.left[this.currentFrame][0],
-                            this.left[this.currentFrame][1],
-                            this.left[this.currentFrame][2],
-                            this.left[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1],
-                            this.left[this.currentFrame][2],
-                            this.left[this.currentFrame][3]
-                        );
-                        break;
-                    case "powerUp":
-                        if (this.currentFrame === 5) {
-                            adjY = 120;
-                            adjX = 30;
-                        } else if (this.currentFrame === 6) {
-                            adjY = 110;
-                            adjX = 25;
-                        } else if (this.currentFrame === 7) {
-                            adjY = 120;
-                            adjX = 35;
-                        } else {
-                            adjY = 0;
-                            adjX = 0;
-                        }
-                        ctx.drawImage(
-                            this.img,
-                            this.powerUp[this.currentFrame][0],
-                            this.powerUp[this.currentFrame][1],
-                            this.powerUp[this.currentFrame][2],
-                            this.powerUp[this.currentFrame][3],
-                            this.pos[0] - adjX,
-                            this.pos[1] - adjY,
-                            this.powerUp[this.currentFrame][2],
-                            this.powerUp[this.currentFrame][3]
-                        );
-                        break;
-                    case "dmg":
-                        if (this.currentFrame > 1 && this.currentFrame < 6) {
-                            adjY = 20;
-                        } else {
-                            adjY = 0;
-                        }
-                        ctx.drawImage(
-                            this.img,
-                            this.dmg[this.currentFrame][0],
-                            this.dmg[this.currentFrame][1],
-                            this.dmg[this.currentFrame][2],
-                            this.dmg[this.currentFrame][3],
-                            this.pos[0],
-                            this.pos[1] + adjY,
-                            this.dmg[this.currentFrame][2],
-                            this.dmg[this.currentFrame][3]
-                        );
-                        break;
-                    case "dead":
-                        ctx.drawImage(
-                            this.img,
-                            332,
-                            1081,
-                            57,
-                            14,
-                            this.pos[0],
-                            this.pos[1],
-                            57,
-                            14
-                        );
-                        break;
-                    default:
-                        break;
-                }
-
+                this.draw(ctx, this.dir);
                 this.currentFrame++;
                 this.move(this.dir, this);
                 this.check = 0;

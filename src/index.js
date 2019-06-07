@@ -86,8 +86,9 @@ export default class Game {
                 this.ichigo.handleDir();
                 this.gameLoop();
             }, 2000);
+            let that = this;
             setTimeout(() => (this.otherKu.pos = [700, 700]), 2000);
-            this.audio.src = "sounds/bleach.mp3";
+            that.audio.src = "sounds/bleach.mp3";
             this.audio.play();
             if (this.goku.pos[0] > 100) {
                 this.goku.pos = [100, 450];
@@ -117,35 +118,41 @@ export default class Game {
                 char.pos[0] + range >= this.computer.pos[0] &&
                 char.pos[0] + range <= this.computer.pos[0] + 33
             ) {
+                let oldDir = this.computer.dir;
                 this.computer.dir = "dmg";
+                this.computer.handleDir(oldDir);
+
                 if (!this.once) {
                     this.computer.dmgSound.play();
                 }
-                this.computer.health -= 10;
+                this.computer.health -= 2;
                 if (this.computer.health <= 0) {
+                    let oldDir = this.computer.dir;
                     this.computer.dir = "dead";
-                    this.computer.handleDir();
                     this.computer.currentFrame = 0;
+                    this.computer.handleDir(oldDir);
                     if (!this.once) {
                         this.computer.deadSound.play();
                     }
                     this.endFight();
                 }
-                this.computer.handleDir();
+                this.computer.handleDir(oldDir);
             }
         } else if (char.dir === "punching") {
             if (
                 char.pos[0] + 33 >= this.computer.pos[0] &&
                 char.pos[0] + 33 <= this.computer.pos[0] + 33
             ) {
+                let oldDir = this.computer.dir;
                 this.computer.dir = "dmg";
                 if (!this.once) {
                     this.computer.dmgSound.play();
                 }
-                this.computer.health -= 10;
+                this.computer.health -= 2;
                 if (this.computer.health <= 0) {
+                    let oldDir = this.computer.dir;
                     this.computer.dir = "dead";
-                    this.computer.handleDir();
+                    this.computer.handleDir(oldDir);
                     this.computer.currentFrame = 0;
                     if (!this.once) {
                         this.computer.deadSound.play();
@@ -154,13 +161,13 @@ export default class Game {
                 }
                 this.computer.handleDir();
             }
-        } else if (char.dir === "leftPunch") {
+        } else if (char.dir === "punchLeft") {
             if (char.pos[0] - 33 <= this.goku.pos[0] + 33) {
+                let oldDir = this.goku.dir;
                 this.goku.dir = "dmg";
-                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
-                this.goku.handleDir();
+                this.goku.handleDir(oldDir);
                 this.goku.dmgSound.play();
-                this.goku.health -= 10;
+                this.goku.health -= 2;
                 if (this.goku.health <= 0) {
                     this.goku.dir = "dead";
                     this.ctx.clearRect(
@@ -169,7 +176,7 @@ export default class Game {
                         512,
                         512
                     );
-                    // this.goku.dontMove = true;
+                    this.goku.dontMove = true;
                     this.goku.deadSound.play();
                     this.ctx.clearRect(
                         this.goku.pos[0],
@@ -184,9 +191,9 @@ export default class Game {
             }
         } else if (char.dir === "shlice") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
+                let oldDir = this.goku.dir;
                 this.goku.dir = "dmg";
-                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
-                this.goku.handleDir();
+                this.goku.handleDir(oldDir);
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
                 if (this.goku.health <= 0) {
@@ -207,9 +214,9 @@ export default class Game {
             }
         } else if (char.dir === "flashy") {
             if (char.pos[0] - 35 <= this.goku.pos[0] + 33) {
+                let oldDir = this.goku.dir;
                 this.goku.dir = "dmg";
-                this.goku.shift = this.goku.GOKUDIRS.dmg.slice();
-                this.goku.handleDir();
+                this.goku.handleDir(oldDir);
 
                 this.goku.dmgSound.play();
                 this.goku.health -= 5;
@@ -219,7 +226,8 @@ export default class Game {
                     // this.goku.dontMove = true;
                     this.goku.deadSound.play();
                     this.ichigo.winSound.play();
-                    this.goku.handleDir();
+                    let oldDir = this.goku.dir;
+                    this.goku.handleDir(oldDir);
                     this.gameOver = true;
                     this.gameLoop();
                 }
@@ -229,23 +237,23 @@ export default class Game {
     }
 
     inBounds(char) {
-        if (char.pos[0] > 480 && char.dir === "right") {
+        if (char.pos[0] > 480 && char.dir === "runRight") {
             return false;
-        } else if (char.pos[0] < 0 && char.dir === "left") {
+        } else if (char.pos[0] < 0 && char.dir === "runLeft") {
             return false;
         } else if (
             char.pos[0] > this.computer.pos[0] - 33 &&
-            char.dir === "right"
+            char.dir === "runRight"
         ) {
             return false;
         } else if (
             char.pos[0] > this.computer.pos[0] + 33 &&
-            char.dir === "left"
+            char.dir === "runLeft"
         ) {
             return false;
         } else if (
             this.computer.pos[0] < this.goku.pos[0] + 33 &&
-            this.computer.dir === "left"
+            this.computer.dir === "runLeft"
         ) {
             return false;
         }
@@ -253,18 +261,27 @@ export default class Game {
     }
 
     gameLoop() {
-        if (!this.gameOver && this.computer === this.otherKu) {
-            this.goku.animate(this.ctx);
-            this.goku.move(this.goku.dir, this.goku);
-            this.computer.animate(this.ctx);
-            this.computer.move(this.computer.dir, this.computer);
-            this.ichigo.animate(this.ctx);
-            this.ichigo.handleDir();
-            this.ichigo.move(this.ichigo.dir, this.ichigo);
-        } else if (!this.gameOver && this.computer === this.ichigo) {
-            return;
-        } else if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
+        debugger;
+        // if (!this.gameOver && this.computer === this.otherKu) {
+        //     this.goku.animate(this.ctx);
+        //     this.goku.move(this.goku.dir, this.goku);
+        //     this.computer.animate(this.ctx);
+        //     this.computer.move(this.computer.dir, this.computer);
+        //     this.ichigo.animate(this.ctx);
+        //     this.ichigo.handleDir();
+        //     this.ichigo.move(this.ichigo.dir, this.ichigo);
+        // } else if (!this.gameOver && this.computer === this.ichigo) {
+        //     return;
+        // }
+        while (!this.gameOver && !this.once) {
+            debugger;
+            this.allChars.forEach(char => char.animate(this.ctx));
+            requestAnimationFrame(this.gameLoop);
+        }
+        if (this.gameOver && this.ichigo.health <= 0 && !this.once) {
             this.goku.winSound.play();
+            this.goku.dir = "winPose";
+            this.goku.handleDir();
             this.audio.pause();
             this.audio.currentTime = 0;
             this.btn = document.createElement("BUTTON");
@@ -306,30 +323,29 @@ export default class Game {
 
     handlekeydown(e) {
         e.preventDefault();
+        let oldDir = this.goku.dir;
         if (this.paused || this.started === false) {
             return;
         }
         if (e.code === "KeyA") {
-            this.goku.dir = "left";
+            this.goku.dir = "runLeft";
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
-            this.goku.handleDir();
+            this.goku.handleDir(oldDir);
         }
         if (e.code === "KeyD") {
-            this.goku.dir = "right";
+            this.goku.dir = "runRight";
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
-            this.goku.handleDir();
+            this.goku.handleDir(oldDir);
         }
         if (e.code === "KeyJ") {
             this.goku.dir = "punching";
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
-            this.goku.punchSound.play();
-            this.goku.handleDir();
+            this.goku.handleDir(oldDir);
         }
         if (e.code === "KeyK") {
             this.goku.dir = "kicking";
             this.ctx.clearRect(this.goku.pos[0], this.goku.pos[1], 512, 512);
-            this.goku.kickSound.play();
-            this.goku.handleDir();
+            this.goku.handleDir(oldDir);
         }
     }
 
