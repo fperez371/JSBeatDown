@@ -180,8 +180,6 @@ function (_Sprite) {
     value: function aiBehavior() {
       var _this2 = this;
 
-      return;
-
       if (!this.game.paused) {
         if (!this.player && this.health > 0 && this.dir !== "dmg" && this.goku.health > 0) {
           if (this.goku.pos[0] + 33 < this.pos[0]) {

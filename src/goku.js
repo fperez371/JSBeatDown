@@ -153,7 +153,6 @@ export default class Goku extends Sprite {
     }
 
     aiBehavior() {
-        return;
         if (!this.game.paused) {
             if (
                 !this.player &&
